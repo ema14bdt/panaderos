@@ -1,0 +1,17 @@
+# Sensitive config — never commit local credentials
+private-content/admin.local.php
+private-content/*.lock
+
+# Runtime data
+private-content/audit.log
+private-content/login-attempts.json
+private-content/backups/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
