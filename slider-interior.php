@@ -1,0 +1,1 @@
+<?php $site_base = isset($site_base) ? $site_base : ''; ?><section class="legacy-banner legacy-banner--interior"><div class="container"><p class="eyebrow">Sindicato de Obreros Panaderos de Lanús</p><h2>Organización, derechos<br>y comunidad.</h2></div></section>
