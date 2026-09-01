@@ -1,0 +1,1 @@
+<article class="archive-story"><p class="archive-story__text">Entrega de útiles y mochilas para el ciclo lectivo: una jornada de acompañamiento a las familias de las y los trabajadores panaderos.</p><a class="text-link" href="novedad.php">Ver el archivo completo <i class="fa fa-arrow-right" aria-hidden="true"></i></a></article>
