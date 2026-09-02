@@ -123,5 +123,6 @@ $home_content = site_content('home', site_home_defaults());
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
