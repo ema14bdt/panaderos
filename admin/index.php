@@ -5,7 +5,7 @@ admin_require_login();
 admin_render_start('Panel');
 ?>
 <main class="admin-shell">
-    <header class="admin-header"><a class="admin-mark" href="index.php">Panaderos <span>Administración</span></a><a class="admin-logout" href="logout.php">Cerrar sesión</a></header>
+    <?php admin_header_html(); ?>
     <section class="admin-intro"><p>Panel privado</p><h1>Contenido del sitio</h1><span>Todos los cambios se guardan con validación estricta y copia de respaldo automática en archivos JSON.</span></section>
     <section class="admin-cards" aria-label="Secciones editables">
         <a href="home.php">

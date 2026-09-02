@@ -58,6 +58,42 @@ function admin_configured_hash()
     return is_string($hash) && password_get_info($hash)['algo'] !== null ? $hash : null;
 }
 
+function admin_environment()
+{
+    $env = getenv('APP_ENV');
+    $localConfig = ADMIN_CONTENT_DIR . '/admin.local.php';
+    if ((!is_string($env) || $env === '') && is_file($localConfig)) {
+        $config = require $localConfig;
+        if (is_array($config) && !empty($config['app_env'])) {
+            $env = $config['app_env'];
+        }
+    }
+
+    if (is_string($env) && $env !== '') {
+        return strtolower(trim($env));
+    }
+
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+        return 'local';
+    }
+
+    return 'production';
+}
+
+function admin_environment_badge()
+{
+    $env = admin_environment();
+    $labels = array(
+        'local' => 'Local',
+        'development' => 'Desarrollo',
+        'staging' => 'Staging',
+        'production' => 'Producción'
+    );
+    $label = isset($labels[$env]) ? $labels[$env] : strtoupper($env);
+    return '<span class="admin-env-badge admin-env-badge--' . site_escape($env) . '" title="Entorno activo">' . site_escape($label) . '</span>';
+}
+
 function admin_csrf_token()
 {
     if (empty($_SESSION['admin_csrf'])) {
@@ -637,6 +673,19 @@ function admin_render_start($title)
 </head>
 <body>
 <?php
+}
+
+function admin_header_html()
+{
+    ?>
+    <header class="admin-header">
+        <a class="admin-mark" href="index.php">Panaderos <span>Administración</span></a>
+        <div class="admin-header-right">
+            <?php echo admin_environment_badge(); ?>
+            <a class="admin-logout" href="logout.php">Cerrar sesión</a>
+        </div>
+    </header>
+    <?php
 }
 
 function admin_render_end()

@@ -1,17 +1,27 @@
-# Sensitive config — never commit local credentials
+# Environment & Sensitive configuration
 private-content/admin.local.php
-private-content/*.lock
+.env
 
-# Runtime data
+# Runtime content store (Independent per environment)
+private-content/*.json
+!private-content/seeds/*.json
+!private-content/admin.local.example.php
+private-content/*.lock
+private-content/*.tmp
 private-content/audit.log
 private-content/login-attempts.json
 private-content/backups/
 
-# OS files
+# User-uploaded dynamic media (Excluded from Git so environments don't overwrite each other)
+images/directivos/*-*.*
+images/instalaciones/*-*.*
+images/novedades/*-*.*
+images/uploads/
+uploads/
+
+# OS and Editor files
 .DS_Store
 Thumbs.db
-
-# Editor files
 *.swp
 *.swo
 *~

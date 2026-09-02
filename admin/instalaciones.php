@@ -30,10 +30,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 admin_render_start('Editar instalaciones');
 ?>
 <main class="admin-shell">
-    <header class="admin-header">
-        <a class="admin-mark" href="index.php">Panaderos <span>Administración</span></a>
-        <a class="admin-logout" href="logout.php">Cerrar sesión</a>
-    </header>
+    <?php admin_header_html(); ?>
     <nav class="admin-breadcrumb"><a href="index.php">Panel</a><span>/</span> Instalaciones y espacios</nav>
     <section class="editor-heading">
         <div>

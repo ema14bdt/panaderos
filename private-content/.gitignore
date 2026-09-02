@@ -1,4 +1,9 @@
 admin.local.php
+*.json
+!seeds/*.json
+!admin.local.example.php
+*.lock
+*.tmp
 login-attempts.json
 audit.log
-backups/*.json
+backups/

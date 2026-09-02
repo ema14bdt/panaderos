@@ -23,7 +23,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 admin_render_start('Editar home');
 ?>
 <main class="admin-shell">
-    <header class="admin-header"><a class="admin-mark" href="index.php">Panaderos <span>Administración</span></a><a class="admin-logout" href="logout.php">Cerrar sesión</a></header>
+    <?php admin_header_html(); ?>
     <nav class="admin-breadcrumb"><a href="index.php">Panel</a><span>/</span> Home y contacto</nav>
     <section class="editor-heading"><div><p>Edición de contenido</p><h1>Home y <em>contacto.</em></h1></div><a href="../index.php" target="_blank" rel="noopener noreferrer">Ver sitio <span>↗</span></a></section>
     <?php if ($message !== '') { ?><p class="admin-success" role="status"><?php echo site_escape($message); ?></p><?php } ?>

@@ -4,6 +4,12 @@ body { min-height:100vh; margin:0; color:var(--ink); background:var(--cream); fo
 a { color:inherit; }
 .admin-shell { width:min(1120px,calc(100% - 48px)); margin:0 auto; padding:28px 0 80px; }
 .admin-header { display:flex; align-items:center; justify-content:space-between; padding-bottom:24px; border-bottom:1px solid var(--line); }
+.admin-header-right { display:flex; align-items:center; gap:16px; }
+.admin-env-badge { display:inline-flex; align-items:center; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.admin-env-badge--local { background:#e8f4fd; color:#0b6399; border:1px solid #b8daf5; }
+.admin-env-badge--development { background:#fef3d6; color:#9a6b02; border:1px solid #f9df94; }
+.admin-env-badge--staging { background:#f3e8ff; color:#6b21a8; border:1px solid #d8b4fe; }
+.admin-env-badge--production { background:#def7ec; color:#03543f; border:1px solid #84e1bc; }
 .admin-mark { color:var(--ink); font-size:18px; font-weight:700; letter-spacing:-.05em; text-decoration:none; text-transform:uppercase; }
 .admin-mark span { display:block; margin-top:2px; color:#69685c; font-size:9px; font-weight:600; letter-spacing:.12em; }
 .admin-logout,.admin-return,.editor-heading a { color:var(--ink); font-size:11px; font-weight:700; letter-spacing:.06em; text-decoration:none; text-transform:uppercase; }
