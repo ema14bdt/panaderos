@@ -1,0 +1,48 @@
+{
+  "page_label": "Información para defender tus derechos",
+  "page_title": "Normativas y documentos",
+  "page_intro": "Consultá las normas, convenios y escalas que orientan el trabajo en la actividad panadera.",
+  "section_kicker": "Marco legal",
+  "section_title": "Documentación de referencia.",
+  "items": [
+    {
+      "kicker": "Convenio colectivo",
+      "title": "CCT\n231/94",
+      "url": "pdf/covenio231-94.pdf",
+      "is_featured": true
+    },
+    {
+      "kicker": "Ley de Contrato de Trabajo",
+      "title": "Ley 20.744",
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-20744-25552",
+      "is_featured": false
+    },
+    {
+      "kicker": "Asociaciones sindicales",
+      "title": "Ley 23.551",
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-23551-20993",
+      "is_featured": false
+    },
+    {
+      "kicker": "Higiene y seguridad",
+      "title": "Ley 19.587",
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-19587-17612",
+      "is_featured": false
+    },
+    {
+      "kicker": "Registro de establecimientos",
+      "title": "Ley 13.006",
+      "url": "https://www.argentina.gob.ar/normativa/nacional/ley-13006-51221",
+      "is_featured": false
+    },
+    {
+      "kicker": "Regulación de alimentos",
+      "title": "Código Alimentario",
+      "url": "https://www.argentina.gob.ar/anmat/codigoalimentario",
+      "is_featured": false
+    }
+  ],
+  "note_text": "Los documentos publicados se ofrecen como material de consulta. Para orientación sobre un caso particular, comunicate con el sindicato.",
+  "note_action_text": "Hacer una consulta",
+  "note_email": "info@panaderoslanus.ar"
+}

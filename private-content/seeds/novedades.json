@@ -1,0 +1,41 @@
+{
+  "page_label": "Información y comunidad",
+  "page_title": "Actualidad del sindicato",
+  "page_intro": "Para conocer comunicados y actividad reciente, seguí los canales oficiales de Panaderos de Lanús en Instagram y Facebook.",
+  "social_kicker": "Canal oficial",
+  "social_title": "Las novedades, donde pasan.",
+  "social_intro": "Instagram es nuestro canal más directo para compartir comunicaciones, información gremial, actividades y beneficios para afiliados.",
+  "archive_kicker": "Memoria institucional",
+  "archive_title": "Archivo histórico",
+  "archive_intro": "Una selección de actividades y encuentros que forman parte de la historia del sindicato.",
+  "archive_items": [
+    {
+      "title": "El sindicato marchó por #NiUnaMenos",
+      "tag": "Archivo",
+      "url": "novedades/ni-una-menos/index.php",
+      "image": "novedades/ni-una-menos/fotos/17.jpg",
+      "alt": "Movilización Ni Una Menos"
+    },
+    {
+      "title": "Centenario del Club El Porvenir",
+      "tag": "Archivo",
+      "url": "novedades/centenario-porvenir/index.php",
+      "image": "novedades/centenario-porvenir/fotos/01.jpg",
+      "alt": "Centenario del Club El Porvenir"
+    },
+    {
+      "title": "Asamblea General Ordinaria",
+      "tag": "Archivo",
+      "url": "novedades/asamblea-2015/asamblea-2015.php",
+      "image": "novedades/asamblea-2015/fotos/full/01.jpg",
+      "alt": "Asamblea General Ordinaria"
+    },
+    {
+      "title": "Jornada en familia en las piletas del Porve",
+      "tag": "Archivo",
+      "url": "novedades/pileta-porve.php",
+      "image": "images/novedades/pileta-porve/full/porve-01.jpg",
+      "alt": "Jornada familiar"
+    }
+  ]
+}

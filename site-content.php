@@ -254,7 +254,17 @@ function site_content($name, array $defaults)
     }
 
     $path = __DIR__ . '/private-content/' . $name . '.json';
-    if (!is_file($path) || !is_readable($path)) {
+    $seedPath = __DIR__ . '/private-content/seeds/' . $name . '.json';
+
+    if (!is_file($path)) {
+        if (is_file($seedPath) && is_readable($seedPath)) {
+            $path = $seedPath;
+        } else {
+            return $defaults;
+        }
+    }
+
+    if (!is_readable($path)) {
         return $defaults;
     }
 
