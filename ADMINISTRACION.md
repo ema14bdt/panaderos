@@ -6,6 +6,30 @@ El directorio `private-content/` incluye directivas Apache (`.htaccess`) para bl
 
 ---
 
+## Separación de Entornos (Código vs Contenido)
+
+Para evitar que los textos editados o imágenes subidas en entorno local sobrescriban el contenido del servidor de desarrollo o producción:
+
+1. **El código viaja por Git; el contenido vive en cada entorno**:
+   - Los archivos de contenido en tiempo de ejecución (`private-content/*.json`) y las fotos dinámicas subidas están excluidos de Git (`.gitignore`).
+   - Cada entorno (Local, Desarrollo, Producción) mantiene su propio contenido de forma independiente.
+2. **Plantillas iniciales base (`private-content/seeds/`)**:
+   - La carpeta `private-content/seeds/*.json` contiene la estructura y textos base versionados en Git.
+   - Si un entorno nuevo inicia sin archivos JSON, el sistema carga automáticamente los valores base desde `seeds/`.
+3. **Herramientas de sincronización (CLI)**:
+   - **Inicializar contenido desde seeds**:
+     ```sh
+     php tools/seed-content.php
+     # Para sobreescribir contenido existente:
+     php tools/seed-content.php --force
+     ```
+   - **Exportar contenido del entorno actual a los seeds del repositorio**:
+     ```sh
+     php tools/export-content.php
+     ```
+
+---
+
 ## Secciones Administrables
 
 | Sección | Archivo JSON | Editor en Panel | Página Pública |
@@ -32,10 +56,11 @@ Por seguridad, no existe ninguna contraseña predeterminada ni usuario almacenad
    ```php
    <?php
    return array(
+       'app_env' => 'local', // 'local', 'development', 'staging', 'production'
        'password_hash' => '$2y$10$...'
    );
    ```
-3. Alternativamente, podés definir la variable de entorno `PANADEROS_ADMIN_PASSWORD_HASH` en el servidor web.
+3. Alternativamente, podés definir la variable de entorno `PANADEROS_ADMIN_PASSWORD_HASH` y `APP_ENV` en el servidor web.
 
 ---
 
