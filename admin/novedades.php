@@ -52,31 +52,33 @@ admin_render_start('Editar novedades y archivo');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Cabecera de la sección</h2>
             <div class="form-grid">
-                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 100); ?>
-                <?php admin_field('page_title', 'Título de la página', $content, 'text', 100); ?>
+                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 45); ?>
+                <?php admin_field('page_title', 'Título de la página', $content, 'text', 40); ?>
             </div>
-            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 400); ?>
+            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 250); ?>
         </section>
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>02</span> Canales oficiales de actualidad</h2>
             <div class="form-grid">
-                <?php admin_field('social_kicker', 'Antetítulo de redes', $content, 'text', 80); ?>
-                <?php admin_field('social_title', 'Título destacado', $content, 'text', 120); ?>
+                <?php admin_field('social_kicker', 'Antetítulo de redes', $content, 'text', 35); ?>
+                <?php admin_field('social_title', 'Título destacado', $content, 'text', 60); ?>
             </div>
-            <?php admin_field('social_intro', 'Texto descriptivo', $content, 'textarea', 400); ?>
+            <?php admin_field('social_intro', 'Texto descriptivo', $content, 'textarea', 200); ?>
         </section>
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>03</span> Artículos del archivo institucional</h2>
             <div class="form-grid">
-                <?php admin_field('archive_kicker', 'Antetítulo del archivo', $content, 'text', 80); ?>
-                <?php admin_field('archive_title', 'Título del archivo', $content, 'text', 120); ?>
+                <?php admin_field('archive_kicker', 'Antetítulo del archivo', $content, 'text', 35); ?>
+                <?php admin_field('archive_title', 'Título del archivo', $content, 'text', 50); ?>
             </div>
-            <?php admin_field('archive_intro', 'Texto de presentación del archivo', $content, 'textarea', 400); ?>
+            <?php admin_field('archive_intro', 'Texto de presentación del archivo', $content, 'textarea', 200); ?>
 
             <div id="archive-container" class="repeater-list mt-20" data-array-name="archive_items">
-                <?php foreach ($content['archive_items'] as $index => $item) { ?>
+                <?php foreach ($content['archive_items'] as $index => $item) {
+                    $imgPath = isset($item['image']) && trim((string)$item['image']) !== '' ? $item['image'] : 'images/periodico.jpg';
+                ?>
                 <div class="repeater-item" data-index="<?php echo $index; ?>">
                     <div class="repeater-head">
                         <strong>Artículo #<span class="item-number"><?php echo $index + 1; ?></span>: <span class="item-title-preview"><?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?></span></strong>
@@ -86,40 +88,56 @@ admin_render_start('Editar novedades y archivo');
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Título del artículo</span>
-                                <span class="admin-field-limit">máx. 150</span>
+                                <span class="admin-field-limit">máx. 50 car.</span>
                             </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="150" required>
+                            <input type="text" name="archive_items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="50" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Etiqueta visible</span>
-                                <span class="admin-field-limit">máx. 40</span>
+                                <span class="admin-field-limit">máx. 20 car.</span>
                             </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][tag]" value="<?php echo site_escape(isset($item['tag']) ? $item['tag'] : 'Archivo'); ?>" maxlength="40" required>
+                            <input type="text" name="archive_items[<?php echo $index; ?>][tag]" value="<?php echo site_escape(isset($item['tag']) ? $item['tag'] : 'Archivo'); ?>" maxlength="20" required>
                         </label>
                     </div>
-                    <div class="form-grid--3 mt-14">
+                    <div class="form-grid">
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Ruta o URL del enlace</span>
-                                <span class="admin-field-limit">máx. 500</span>
+                                <span class="admin-field-limit">máx. 200 car.</span>
                             </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="500" required>
-                        </label>
-                        <label class="admin-field">
-                            <div class="admin-field-head">
-                                <span>Ruta de la imagen</span>
-                                <span class="admin-field-limit">máx. 500</span>
-                            </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][image]" value="<?php echo site_escape(isset($item['image']) ? $item['image'] : ''); ?>" maxlength="500" required>
+                            <input type="text" name="archive_items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="200" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Texto alternativo (alt)</span>
-                                <span class="admin-field-limit">máx. 150</span>
+                                <span class="admin-field-limit">máx. 60 car.</span>
                             </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][alt]" value="<?php echo site_escape(isset($item['alt']) ? $item['alt'] : ''); ?>" maxlength="150" required>
+                            <input type="text" name="archive_items[<?php echo $index; ?>][alt]" value="<?php echo site_escape(isset($item['alt']) ? $item['alt'] : ''); ?>" maxlength="60" required>
                         </label>
+                    </div>
+                    
+                    <div class="image-picker-field" data-folder="novedades">
+                        <div class="admin-field-head">
+                            <span>Imagen de portada</span>
+                            <span class="admin-field-limit">máx. 200 car.</span>
+                        </div>
+                        <div class="image-picker-wrap">
+                            <div class="image-preview-thumb image-preview-thumb--rect">
+                                <img src="../<?php echo site_escape($imgPath); ?>" alt="Previsualización">
+                            </div>
+                            <div class="image-picker-body">
+                                <div class="image-guideline">
+                                    <span><strong>Formato recomendado:</strong> 4:3 o 16:9 Horizontal (600 × 450 px u 800 × 600 px) · Peso máx. 2 MB (JPG, PNG o WebP)</span>
+                                </div>
+                                <div class="image-picker-actions">
+                                    <button type="button" class="image-upload-btn"><i class="fa fa-image"></i> Subir imagen...</button>
+                                    <input type="file" class="image-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                                    <input type="text" class="image-path-input" name="archive_items[<?php echo $index; ?>][image]" value="<?php echo site_escape($imgPath); ?>" maxlength="200" required>
+                                </div>
+                                <span class="image-status-badge"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <?php } ?>
@@ -144,40 +162,55 @@ admin_render_start('Editar novedades y archivo');
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Título del artículo</span>
-                    <span class="admin-field-limit">máx. 150</span>
+                    <span class="admin-field-limit">máx. 50 car.</span>
                 </div>
-                <input type="text" name="archive_items[__INDEX__][title]" maxlength="150" required>
+                <input type="text" name="archive_items[__INDEX__][title]" maxlength="50" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Etiqueta visible</span>
-                    <span class="admin-field-limit">máx. 40</span>
+                    <span class="admin-field-limit">máx. 20 car.</span>
                 </div>
-                <input type="text" name="archive_items[__INDEX__][tag]" value="Archivo" maxlength="40" required>
+                <input type="text" name="archive_items[__INDEX__][tag]" value="Archivo" maxlength="20" required>
             </label>
         </div>
-        <div class="form-grid--3 mt-14">
+        <div class="form-grid">
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Ruta o URL del enlace</span>
-                    <span class="admin-field-limit">máx. 500</span>
+                    <span class="admin-field-limit">máx. 200 car.</span>
                 </div>
-                <input type="text" name="archive_items[__INDEX__][url]" maxlength="500" required>
-            </label>
-            <label class="admin-field">
-                <div class="admin-field-head">
-                    <span>Ruta de la imagen</span>
-                    <span class="admin-field-limit">máx. 500</span>
-                </div>
-                <input type="text" name="archive_items[__INDEX__][image]" maxlength="500" required>
+                <input type="text" name="archive_items[__INDEX__][url]" maxlength="200" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Texto alternativo (alt)</span>
-                    <span class="admin-field-limit">máx. 150</span>
+                    <span class="admin-field-limit">máx. 60 car.</span>
                 </div>
-                <input type="text" name="archive_items[__INDEX__][alt]" maxlength="150" required>
+                <input type="text" name="archive_items[__INDEX__][alt]" maxlength="60" required>
             </label>
+        </div>
+        <div class="image-picker-field" data-folder="novedades">
+            <div class="admin-field-head">
+                <span>Imagen de portada</span>
+                <span class="admin-field-limit">máx. 200 car.</span>
+            </div>
+            <div class="image-picker-wrap">
+                <div class="image-preview-thumb image-preview-thumb--rect">
+                    <img src="../images/periodico.jpg" alt="Previsualización">
+                </div>
+                <div class="image-picker-body">
+                    <div class="image-guideline">
+                        <span><strong>Formato recomendado:</strong> 4:3 o 16:9 Horizontal (600 × 450 px u 800 × 600 px) · Peso máx. 2 MB (JPG, PNG o WebP)</span>
+                    </div>
+                    <div class="image-picker-actions">
+                        <button type="button" class="image-upload-btn"><i class="fa fa-image"></i> Subir imagen...</button>
+                        <input type="file" class="image-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                        <input type="text" class="image-path-input" name="archive_items[__INDEX__][image]" value="images/periodico.jpg" maxlength="200" required>
+                    </div>
+                    <span class="image-status-badge"></span>
+                </div>
+            </div>
         </div>
     </div>
 </template>

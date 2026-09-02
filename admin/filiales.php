@@ -52,13 +52,13 @@ admin_render_start('Editar directorio de filiales');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Cabecera y presentación</h2>
             <div class="form-grid">
-                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 100); ?>
-                <?php admin_field('page_title', 'Título de la página', $content, 'text', 100); ?>
+                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 45); ?>
+                <?php admin_field('page_title', 'Título de la página', $content, 'text', 40); ?>
             </div>
-            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 400); ?>
+            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 250); ?>
             <div class="form-grid">
-                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 80); ?>
-                <?php admin_field('section_title', 'Título de sección', $content, 'text', 120); ?>
+                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 35); ?>
+                <?php admin_field('section_title', 'Título de sección', $content, 'text', 60); ?>
             </div>
         </section>
 
@@ -75,32 +75,32 @@ admin_render_start('Editar directorio de filiales');
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Nombre de la filial</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][name]" value="<?php echo site_escape(isset($item['name']) ? $item['name'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="items[<?php echo $index; ?>][name]" value="<?php echo site_escape(isset($item['name']) ? $item['name'] : ''); ?>" maxlength="35" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Dirección y código postal</span>
-                                <span class="admin-field-limit">máx. 180</span>
+                                <span class="admin-field-limit">máx. 50 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][address]" value="<?php echo site_escape(isset($item['address']) ? $item['address'] : ''); ?>" maxlength="180" required>
+                            <input type="text" name="items[<?php echo $index; ?>][address]" value="<?php echo site_escape(isset($item['address']) ? $item['address'] : ''); ?>" maxlength="50" required>
                         </label>
                     </div>
                     <div class="form-grid mt-14">
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Teléfono(s) de contacto</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][phone]" value="<?php echo site_escape(isset($item['phone']) ? $item['phone'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="items[<?php echo $index; ?>][phone]" value="<?php echo site_escape(isset($item['phone']) ? $item['phone'] : ''); ?>" maxlength="35" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Secretaría general / Responsable</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][secretary]" value="<?php echo site_escape(isset($item['secretary']) ? $item['secretary'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="items[<?php echo $index; ?>][secretary]" value="<?php echo site_escape(isset($item['secretary']) ? $item['secretary'] : ''); ?>" maxlength="35" required>
                         </label>
                     </div>
                 </div>
@@ -126,32 +126,32 @@ admin_render_start('Editar directorio de filiales');
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Nombre de la filial</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][name]" maxlength="100" required>
+                <input type="text" name="items[__INDEX__][name]" maxlength="35" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Dirección y código postal</span>
-                    <span class="admin-field-limit">máx. 180</span>
+                    <span class="admin-field-limit">máx. 50 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][address]" maxlength="180" required>
+                <input type="text" name="items[__INDEX__][address]" maxlength="50" required>
             </label>
         </div>
         <div class="form-grid mt-14">
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Teléfono(s) de contacto</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][phone]" maxlength="100" required>
+                <input type="text" name="items[__INDEX__][phone]" maxlength="35" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Secretaría general / Responsable</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][secretary]" maxlength="100" required>
+                <input type="text" name="items[__INDEX__][secretary]" maxlength="35" required>
             </label>
         </div>
     </div>

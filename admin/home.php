@@ -34,39 +34,39 @@ admin_render_start('Editar home');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Portada</h2>
             <div class="form-grid">
-                <?php admin_field('hero_eyebrow', 'Antetítulo', $content, 'text', 120); ?>
-                <?php admin_field('hero_title', 'Título principal', $content, 'text', 80); ?>
-                <?php admin_field('hero_emphasis', 'Palabra en cursiva', $content, 'text', 80); ?>
-                <?php admin_field('hero_after', 'Cierre del título', $content, 'text', 80); ?>
+                <?php admin_field('hero_eyebrow', 'Antetítulo', $content, 'text', 45); ?>
+                <?php admin_field('hero_title', 'Título principal', $content, 'text', 25); ?>
+                <?php admin_field('hero_emphasis', 'Palabra en cursiva', $content, 'text', 20); ?>
+                <?php admin_field('hero_after', 'Cierre del título', $content, 'text', 20); ?>
             </div>
-            <?php admin_field('hero_lead', 'Texto de presentación', $content, 'textarea', 350); ?>
+            <?php admin_field('hero_lead', 'Texto de presentación', $content, 'textarea', 200); ?>
             <div class="form-grid">
-                <?php admin_field('hero_quote', 'Cita', $content, 'textarea', 260); ?>
-                <?php admin_field('hero_quote_author', 'Autor de la cita', $content, 'text', 120); ?>
+                <?php admin_field('hero_quote', 'Cita', $content, 'textarea', 140); ?>
+                <?php admin_field('hero_quote_author', 'Autor de la cita', $content, 'text', 35); ?>
             </div>
         </section>
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>02</span> Escala salarial y redes</h2>
             <div class="form-grid">
-                <?php admin_field('salary_url', 'URL de la escala salarial vigente', $content, 'url', 2000); ?>
-                <?php admin_field('instagram_url', 'URL de Instagram', $content, 'url', 2000); ?>
-                <?php admin_field('instagram_label', 'Nombre visible en Instagram', $content, 'text', 80); ?>
-                <?php admin_field('facebook_url', 'URL de Facebook', $content, 'url', 2000); ?>
-                <?php admin_field('facebook_label', 'Nombre visible en Facebook', $content, 'text', 100); ?>
+                <?php admin_field('salary_url', 'URL de la escala salarial vigente', $content, 'url', 300); ?>
+                <?php admin_field('instagram_url', 'URL de Instagram', $content, 'url', 300); ?>
+                <?php admin_field('instagram_label', 'Nombre visible en Instagram', $content, 'text', 25); ?>
+                <?php admin_field('facebook_url', 'URL de Facebook', $content, 'url', 300); ?>
+                <?php admin_field('facebook_label', 'Nombre visible en Facebook', $content, 'text', 30); ?>
             </div>
-            <?php admin_field('social_intro', 'Texto del bloque de canales oficiales', $content, 'textarea', 450); ?>
+            <?php admin_field('social_intro', 'Texto del bloque de canales oficiales', $content, 'textarea', 200); ?>
         </section>
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>03</span> Sede y contacto</h2>
             <div class="form-grid">
-                <?php admin_field('address', 'Dirección visible', $content, 'text', 180); ?>
-                <?php admin_field('phone', 'Teléfono para llamar', $content, 'tel', 30, 'Solo números, espacios y los símbolos + ( ) . -'); ?>
-                <?php admin_field('phone_label', 'Teléfono visible', $content, 'text', 60); ?>
-                <?php admin_field('email', 'Correo electrónico', $content, 'email', 180); ?>
-                <?php admin_field('maps_url', 'URL para abrir Google Maps', $content, 'url', 2000); ?>
-                <?php admin_field('maps_embed_url', 'URL del mapa embebido', $content, 'url', 2000, 'Solo se aceptan enlaces HTTPS de www.google.com.'); ?>
+                <?php admin_field('address', 'Dirección visible', $content, 'text', 50); ?>
+                <?php admin_field('phone', 'Teléfono para llamar', $content, 'tel', 25, 'Solo números, espacios y los símbolos + ( ) . -'); ?>
+                <?php admin_field('phone_label', 'Teléfono visible', $content, 'text', 30); ?>
+                <?php admin_field('email', 'Correo electrónico', $content, 'email', 45); ?>
+                <?php admin_field('maps_url', 'URL para abrir Google Maps', $content, 'url', 400); ?>
+                <?php admin_field('maps_embed_url', 'URL del mapa embebido', $content, 'url', 400, 'Solo se aceptan enlaces HTTPS de www.google.com.'); ?>
             </div>
         </section>
 

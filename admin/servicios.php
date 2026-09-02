@@ -52,13 +52,13 @@ admin_render_start('Editar servicios y beneficios');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Cabecera y presentación</h2>
             <div class="form-grid">
-                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 100); ?>
-                <?php admin_field('page_title', 'Título de la página', $content, 'text', 100); ?>
+                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 45); ?>
+                <?php admin_field('page_title', 'Título de la página', $content, 'text', 40); ?>
             </div>
-            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 400); ?>
+            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 250); ?>
             <div class="form-grid">
-                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 80); ?>
-                <?php admin_field('section_title', 'Título de sección', $content, 'text', 120); ?>
+                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 35); ?>
+                <?php admin_field('section_title', 'Título de sección', $content, 'text', 60); ?>
             </div>
         </section>
 
@@ -75,16 +75,16 @@ admin_render_start('Editar servicios y beneficios');
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Título</span>
-                                <span class="admin-field-limit">máx. 80</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="80" required>
+                            <input type="text" name="items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="35" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Icono FontAwesome</span>
-                                <span class="admin-field-limit">máx. 40</span>
+                                <span class="admin-field-limit">máx. 30 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][icon]" value="<?php echo site_escape(isset($item['icon']) ? $item['icon'] : 'fa-check'); ?>" maxlength="40" required>
+                            <input type="text" name="items[<?php echo $index; ?>][icon]" value="<?php echo site_escape(isset($item['icon']) ? $item['icon'] : 'fa-check'); ?>" maxlength="30" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
@@ -100,16 +100,16 @@ admin_render_start('Editar servicios y beneficios');
                     <label class="admin-field mt-14">
                         <div class="admin-field-head">
                             <span>Descripción breve</span>
-                            <span class="admin-field-limit">máx. 300</span>
+                            <span class="admin-field-limit">máx. 140 car.</span>
                         </div>
-                        <input type="text" name="items[<?php echo $index; ?>][description]" value="<?php echo site_escape(isset($item['description']) ? $item['description'] : ''); ?>" maxlength="300" required>
+                        <input type="text" name="items[<?php echo $index; ?>][description]" value="<?php echo site_escape(isset($item['description']) ? $item['description'] : ''); ?>" maxlength="140" required>
                     </label>
                     <label class="admin-field mt-14">
                         <div class="admin-field-head">
                             <span>Detalles / Requisitos / Horarios</span>
-                            <span class="admin-field-limit">máx. 300</span>
+                            <span class="admin-field-limit">máx. 140 car.</span>
                         </div>
-                        <textarea name="items[<?php echo $index; ?>][detail]" rows="2" maxlength="300" required><?php echo site_escape(isset($item['detail']) ? $item['detail'] : ''); ?></textarea>
+                        <textarea name="items[<?php echo $index; ?>][detail]" rows="2" maxlength="140" required><?php echo site_escape(isset($item['detail']) ? $item['detail'] : ''); ?></textarea>
                     </label>
                 </div>
                 <?php } ?>
@@ -120,11 +120,11 @@ admin_render_start('Editar servicios y beneficios');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>03</span> Bloque de consultas y contacto</h2>
             <div class="form-grid">
-                <?php admin_field('callout_kicker', 'Antetítulo de consulta', $content, 'text', 80); ?>
-                <?php admin_field('callout_action_text', 'Texto del enlace', $content, 'text', 80); ?>
+                <?php admin_field('callout_kicker', 'Antetítulo de consulta', $content, 'text', 35); ?>
+                <?php admin_field('callout_action_text', 'Texto del enlace', $content, 'text', 30); ?>
             </div>
-            <?php admin_field('callout_title', 'Texto destacado', $content, 'text', 200); ?>
-            <?php admin_field('callout_email', 'Correo para consultas', $content, 'email', 180); ?>
+            <?php admin_field('callout_title', 'Texto destacado', $content, 'text', 80); ?>
+            <?php admin_field('callout_email', 'Correo para consultas', $content, 'email', 50); ?>
         </section>
 
         <div class="editor-actions">
@@ -144,16 +144,16 @@ admin_render_start('Editar servicios y beneficios');
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Título</span>
-                    <span class="admin-field-limit">máx. 80</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][title]" maxlength="80" required>
+                <input type="text" name="items[__INDEX__][title]" maxlength="35" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Icono FontAwesome</span>
-                    <span class="admin-field-limit">máx. 40</span>
+                    <span class="admin-field-limit">máx. 30 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][icon]" value="fa-check" maxlength="40" required>
+                <input type="text" name="items[__INDEX__][icon]" value="fa-check" maxlength="30" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
@@ -169,16 +169,16 @@ admin_render_start('Editar servicios y beneficios');
         <label class="admin-field mt-14">
             <div class="admin-field-head">
                 <span>Descripción breve</span>
-                <span class="admin-field-limit">máx. 300</span>
+                <span class="admin-field-limit">máx. 140 car.</span>
             </div>
-            <input type="text" name="items[__INDEX__][description]" maxlength="300" required>
+            <input type="text" name="items[__INDEX__][description]" maxlength="140" required>
         </label>
         <label class="admin-field mt-14">
             <div class="admin-field-head">
                 <span>Detalles / Requisitos / Horarios</span>
-                <span class="admin-field-limit">máx. 300</span>
+                <span class="admin-field-limit">máx. 140 car.</span>
             </div>
-            <textarea name="items[__INDEX__][detail]" rows="2" maxlength="300" required></textarea>
+            <textarea name="items[__INDEX__][detail]" rows="2" maxlength="140" required></textarea>
         </label>
     </div>
 </template>

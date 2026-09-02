@@ -52,13 +52,13 @@ admin_render_start('Editar normativas y documentos');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Cabecera y presentación</h2>
             <div class="form-grid">
-                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 100); ?>
-                <?php admin_field('page_title', 'Título de la página', $content, 'text', 100); ?>
+                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 45); ?>
+                <?php admin_field('page_title', 'Título de la página', $content, 'text', 40); ?>
             </div>
-            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 400); ?>
+            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 250); ?>
             <div class="form-grid">
-                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 80); ?>
-                <?php admin_field('section_title', 'Título de sección', $content, 'text', 120); ?>
+                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 35); ?>
+                <?php admin_field('section_title', 'Título de sección', $content, 'text', 60); ?>
             </div>
         </section>
 
@@ -75,25 +75,25 @@ admin_render_start('Editar normativas y documentos');
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Categoría / Antetítulo</span>
-                                <span class="admin-field-limit">máx. 80</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][kicker]" value="<?php echo site_escape(isset($item['kicker']) ? $item['kicker'] : ''); ?>" maxlength="80" required>
+                            <input type="text" name="items[<?php echo $index; ?>][kicker]" value="<?php echo site_escape(isset($item['kicker']) ? $item['kicker'] : ''); ?>" maxlength="35" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Título visible (ej. CCT 231/94)</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 30 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="items[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?>" maxlength="30" required>
                         </label>
                     </div>
                     <div class="form-grid mt-14">
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>URL o ruta del documento</span>
-                                <span class="admin-field-limit">máx. 500</span>
+                                <span class="admin-field-limit">máx. 200 car.</span>
                             </div>
-                            <input type="text" name="items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="500" required>
+                            <input type="text" name="items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="200" required>
                         </label>
                         <div class="admin-field">
                             <div class="admin-field-head">
@@ -101,7 +101,7 @@ admin_render_start('Editar normativas y documentos');
                             </div>
                             <label class="checkbox-field">
                                 <input type="checkbox" name="items[<?php echo $index; ?>][is_featured]" value="1" <?php echo !empty($item['is_featured']) ? 'checked' : ''; ?>>
-                                <span>Mostrar como tarjeta destacada (fondo oscuro)</span>
+                                <span>Mostrar como tarjeta destacada (fondo dorado)</span>
                             </label>
                         </div>
                     </div>
@@ -113,10 +113,10 @@ admin_render_start('Editar normativas y documentos');
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>03</span> Nota al pie y contacto</h2>
-            <?php admin_field('note_text', 'Texto aclaratorio', $content, 'textarea', 400); ?>
+            <?php admin_field('note_text', 'Texto aclaratorio', $content, 'textarea', 180); ?>
             <div class="form-grid">
-                <?php admin_field('note_action_text', 'Texto del botón / enlace', $content, 'text', 80); ?>
-                <?php admin_field('note_email', 'Correo de consulta', $content, 'email', 180); ?>
+                <?php admin_field('note_action_text', 'Texto del botón / enlace', $content, 'text', 30); ?>
+                <?php admin_field('note_email', 'Correo de consulta', $content, 'email', 50); ?>
             </div>
         </section>
 
@@ -137,25 +137,25 @@ admin_render_start('Editar normativas y documentos');
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Categoría / Antetítulo</span>
-                    <span class="admin-field-limit">máx. 80</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][kicker]" maxlength="80" required>
+                <input type="text" name="items[__INDEX__][kicker]" maxlength="35" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Título visible</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 30 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][title]" maxlength="100" required>
+                <input type="text" name="items[__INDEX__][title]" maxlength="30" required>
             </label>
         </div>
         <div class="form-grid mt-14">
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>URL o ruta del documento</span>
-                    <span class="admin-field-limit">máx. 500</span>
+                    <span class="admin-field-limit">máx. 200 car.</span>
                 </div>
-                <input type="text" name="items[__INDEX__][url]" maxlength="500" required>
+                <input type="text" name="items[__INDEX__][url]" maxlength="200" required>
             </label>
             <div class="admin-field">
                 <div class="admin-field-head">
@@ -163,7 +163,7 @@ admin_render_start('Editar normativas y documentos');
                 </div>
                 <label class="checkbox-field">
                     <input type="checkbox" name="items[__INDEX__][is_featured]" value="1">
-                    <span>Mostrar como tarjeta destacada (fondo oscuro)</span>
+                    <span>Mostrar como tarjeta destacada (fondo dorado)</span>
                 </label>
             </div>
         </div>

@@ -52,47 +52,65 @@ admin_render_start('Editar comisión directiva');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Cabecera y presentación</h2>
             <div class="form-grid">
-                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 100); ?>
-                <?php admin_field('page_title', 'Título de la página', $content, 'text', 100); ?>
+                <?php admin_field('page_label', 'Etiqueta superior', $content, 'text', 45); ?>
+                <?php admin_field('page_title', 'Título de la página', $content, 'text', 40); ?>
             </div>
-            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 400); ?>
+            <?php admin_field('page_intro', 'Texto introductorio', $content, 'textarea', 250); ?>
             <div class="form-grid">
-                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 80); ?>
-                <?php admin_field('section_title', 'Título de sección', $content, 'text', 120); ?>
+                <?php admin_field('section_kicker', 'Antetítulo de sección', $content, 'text', 35); ?>
+                <?php admin_field('section_title', 'Título de sección', $content, 'text', 60); ?>
             </div>
         </section>
 
         <section class="editor-section">
             <h2 class="editor-section-title"><span>02</span> Integrantes de la conducción</h2>
             <div id="members-container" class="repeater-list" data-array-name="members">
-                <?php foreach ($content['members'] as $index => $member) { ?>
+                <?php foreach ($content['members'] as $index => $member) {
+                    $photoPath = isset($member['photo']) && trim((string)$member['photo']) !== '' ? $member['photo'] : 'images/directivos/sin-foto.jpg';
+                ?>
                 <div class="repeater-item" data-index="<?php echo $index; ?>">
                     <div class="repeater-head">
                         <strong>Integrante #<span class="item-number"><?php echo $index + 1; ?></span>: <span class="item-title-preview"><?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?></span></strong>
                         <button type="button" class="btn-remove">Eliminar</button>
                     </div>
-                    <div class="form-grid--3">
+                    <div class="form-grid">
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Nombre y apellido</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 35 car.</span>
                             </div>
-                            <input type="text" name="members[<?php echo $index; ?>][name]" value="<?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="members[<?php echo $index; ?>][name]" value="<?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?>" maxlength="35" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Cargo / Secretaría</span>
-                                <span class="admin-field-limit">máx. 100</span>
+                                <span class="admin-field-limit">máx. 45 car.</span>
                             </div>
-                            <input type="text" name="members[<?php echo $index; ?>][role]" value="<?php echo site_escape(isset($member['role']) ? $member['role'] : ''); ?>" maxlength="100" required>
+                            <input type="text" name="members[<?php echo $index; ?>][role]" value="<?php echo site_escape(isset($member['role']) ? $member['role'] : ''); ?>" maxlength="45" required>
                         </label>
-                        <label class="admin-field">
-                            <div class="admin-field-head">
-                                <span>Ruta de la fotografía</span>
-                                <span class="admin-field-limit">máx. 300</span>
+                    </div>
+
+                    <div class="image-picker-field" data-folder="directivos">
+                        <div class="admin-field-head">
+                            <span>Fotografía del integrante</span>
+                            <span class="admin-field-limit">máx. 120 car.</span>
+                        </div>
+                        <div class="image-picker-wrap">
+                            <div class="image-preview-thumb image-preview-thumb--circle">
+                                <img src="../<?php echo site_escape($photoPath); ?>" alt="Previsualización">
                             </div>
-                            <input type="text" name="members[<?php echo $index; ?>][photo]" value="<?php echo site_escape(isset($member['photo']) ? $member['photo'] : 'images/directivos/sin-foto.jpg'); ?>" maxlength="300" required>
-                        </label>
+                            <div class="image-picker-body">
+                                <div class="image-guideline">
+                                    <span><strong>Formato recomendado:</strong> 1:1 Cuadrado (300 × 300 px) · Peso máx. 2 MB (JPG, PNG o WebP)</span>
+                                </div>
+                                <div class="image-picker-actions">
+                                    <button type="button" class="image-upload-btn"><i class="fa fa-camera"></i> Subir foto...</button>
+                                    <input type="file" class="image-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                                    <input type="text" class="image-path-input" name="members[<?php echo $index; ?>][photo]" value="<?php echo site_escape($photoPath); ?>" maxlength="120" required>
+                                </div>
+                                <span class="image-status-badge"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <?php } ?>
@@ -113,28 +131,43 @@ admin_render_start('Editar comisión directiva');
             <strong>Integrante #<span class="item-number">__NUMBER__</span></strong>
             <button type="button" class="btn-remove">Eliminar</button>
         </div>
-        <div class="form-grid--3">
+        <div class="form-grid">
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Nombre y apellido</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 35 car.</span>
                 </div>
-                <input type="text" name="members[__INDEX__][name]" maxlength="100" required>
+                <input type="text" name="members[__INDEX__][name]" maxlength="35" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Cargo / Secretaría</span>
-                    <span class="admin-field-limit">máx. 100</span>
+                    <span class="admin-field-limit">máx. 45 car.</span>
                 </div>
-                <input type="text" name="members[__INDEX__][role]" maxlength="100" required>
+                <input type="text" name="members[__INDEX__][role]" maxlength="45" required>
             </label>
-            <label class="admin-field">
-                <div class="admin-field-head">
-                    <span>Ruta de la fotografía</span>
-                    <span class="admin-field-limit">máx. 300</span>
+        </div>
+        <div class="image-picker-field" data-folder="directivos">
+            <div class="admin-field-head">
+                <span>Fotografía del integrante</span>
+                <span class="admin-field-limit">máx. 120 car.</span>
+            </div>
+            <div class="image-picker-wrap">
+                <div class="image-preview-thumb image-preview-thumb--circle">
+                    <img src="../images/directivos/sin-foto.jpg" alt="Previsualización">
                 </div>
-                <input type="text" name="members[__INDEX__][photo]" value="images/directivos/sin-foto.jpg" maxlength="300" required>
-            </label>
+                <div class="image-picker-body">
+                    <div class="image-guideline">
+                        <span><strong>Formato recomendado:</strong> 1:1 Cuadrado (300 × 300 px) · Peso máx. 2 MB (JPG, PNG o WebP)</span>
+                    </div>
+                    <div class="image-picker-actions">
+                        <button type="button" class="image-upload-btn"><i class="fa fa-camera"></i> Subir foto...</button>
+                        <input type="file" class="image-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                        <input type="text" class="image-path-input" name="members[__INDEX__][photo]" value="images/directivos/sin-foto.jpg" maxlength="120" required>
+                    </div>
+                    <span class="image-status-badge"></span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
