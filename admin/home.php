@@ -34,7 +34,7 @@ admin_render_start('Editar home');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>01</span> Portada</h2>
             <div class="form-grid">
-                <?php admin_field('hero_eyebrow', 'Antetítulo', $content, 'text', 45); ?>
+                <?php admin_field('hero_eyebrow', 'Antetítulo', $content, 'text', 60); ?>
                 <?php admin_field('hero_title', 'Título principal', $content, 'text', 25); ?>
                 <?php admin_field('hero_emphasis', 'Palabra en cursiva', $content, 'text', 20); ?>
                 <?php admin_field('hero_after', 'Cierre del título', $content, 'text', 20); ?>

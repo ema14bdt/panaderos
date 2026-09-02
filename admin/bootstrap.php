@@ -288,7 +288,7 @@ function admin_safe_url($value, $maximum = 2000)
 function admin_validate_home(array $input)
 {
     $limits = array(
-        'hero_eyebrow' => 45, 'hero_title' => 25, 'hero_emphasis' => 20, 'hero_after' => 20,
+        'hero_eyebrow' => 60, 'hero_title' => 25, 'hero_emphasis' => 20, 'hero_after' => 20,
         'hero_lead' => 200, 'hero_quote' => 140, 'hero_quote_author' => 35, 'social_intro' => 200,
         'instagram_label' => 25, 'facebook_label' => 30, 'address' => 50,
         'phone' => 25, 'phone_label' => 30, 'email' => 45
