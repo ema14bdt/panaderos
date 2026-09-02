@@ -110,7 +110,6 @@ $home_content = site_content('home', site_home_defaults());
                     <p class="eyebrow">Dónde encontrarnos</p>
                     <h2 id="location-title">La sede, <em>cerca.</em></h2>
                     <p><?php echo site_escape($home_content['address']); ?></p>
-                    <a class="button button--quiet" href="<?php echo site_escape($home_content['maps_url']); ?>" target="_blank" rel="noopener noreferrer">Abrir en Google Maps <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </div>
                 <div class="location-map">
                     <iframe title="Ubicación del Sindicato de Obreros y Empleados Panaderos de Lanús" src="<?php echo site_escape($home_content['maps_embed_url']); ?>" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
