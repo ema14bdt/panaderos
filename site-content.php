@@ -227,9 +227,28 @@ function site_novedades_defaults()
     );
 }
 
+function site_instalaciones_defaults()
+{
+    return array(
+        'page_label' => 'Espacios para encontrarnos',
+        'page_title' => 'Nuestras instalaciones',
+        'page_intro' => 'Conocé los espacios que forman parte de la vida cotidiana del sindicato y de sus afiliados.',
+        'section_kicker' => 'Galería',
+        'section_title' => 'Un lugar para estar cerca.',
+        'items' => array(
+            array('image' => 'images/instalaciones/instalaciones-01.jpg', 'title' => 'Sede central e instalaciones'),
+            array('image' => 'images/instalaciones/instalaciones-02.jpg', 'title' => 'Espacios de atención y encuentro'),
+            array('image' => 'images/instalaciones/instalaciones-03.jpg', 'title' => 'Áreas recreativas y deportivas'),
+            array('image' => 'images/instalaciones/instalaciones-04.jpg', 'title' => 'Salón de usos múltiples'),
+            array('image' => 'images/instalaciones/instalaciones-05.jpg', 'title' => 'Predio e infraestructura'),
+            array('image' => 'images/instalaciones/instalaciones-06.jpg', 'title' => 'Servicios e instalaciones gremiales')
+        )
+    );
+}
+
 function site_content($name, array $defaults)
 {
-    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades');
+    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones');
     if (!in_array($name, $allowed, true)) {
         return $defaults;
     }

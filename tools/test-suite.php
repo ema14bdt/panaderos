@@ -47,6 +47,9 @@ assert_test("site_content('comision') retorna miembros de conducción", is_array
 $novedades = site_content('novedades', site_novedades_defaults());
 assert_test("site_content('novedades') retorna archivo histórico", is_array($novedades) && count($novedades['archive_items']) >= 4);
 
+$instalaciones = site_content('instalaciones', site_instalaciones_defaults());
+assert_test("site_content('instalaciones') retorna galería de espacios", is_array($instalaciones) && count($instalaciones['items']) >= 4);
+
 $disallowed = site_content('hack_attempt', array('safe' => true));
 assert_test("site_content() bloquea nombres de archivo no autorizados", $disallowed === array('safe' => true));
 
@@ -119,6 +122,14 @@ try {
     assert_test("admin_validate_novedades falló con datos válidos: " . $e->getMessage(), false);
 }
 
+// Instalaciones validation
+try {
+    $validInstalaciones = admin_validate_instalaciones($instalaciones);
+    assert_test("admin_validate_instalaciones acepta datos válidos", is_array($validInstalaciones));
+} catch (Exception $e) {
+    assert_test("admin_validate_instalaciones falló con datos válidos: " . $e->getMessage(), false);
+}
+
 // 3. Escritura atómica y respaldos
 echo "\n3. Validando escritura atómica, locking y generación de backups:\n";
 $testKey = 'test_time_' . time();
@@ -128,14 +139,20 @@ $initialBackups = glob($backupDir . '/*.json');
 $countBefore = is_array($initialBackups) ? count($initialBackups) : 0;
 
 admin_atomic_json('home.json', $home, true);
+admin_atomic_json('instalaciones.json', $instalaciones, true);
 $afterBackups = glob($backupDir . '/*.json');
 $countAfter = is_array($afterBackups) ? count($afterBackups) : 0;
-assert_test("admin_atomic_json genera archivo de backup en private-content/backups/", $countAfter >= $countBefore);
+assert_test("admin_atomic_json guarda y genera backups de home.json e instalaciones.json", $countAfter >= $countBefore);
 
 // Auditoría
 admin_audit('test_suite_run');
 $auditLog = ADMIN_CONTENT_DIR . '/audit.log';
 assert_test("admin_audit registra entradas en audit.log", is_file($auditLog) && strpos(file_get_contents($auditLog), 'test_suite_run') !== false);
+
+// 3b. Directorios de imágenes
+assert_test("Carpeta images/directivos es accesible y escribible", is_dir($baseDir . '/images/directivos') && is_writable($baseDir . '/images/directivos'));
+assert_test("Carpeta images/novedades es accesible y escribible", is_dir($baseDir . '/images/novedades') && is_writable($baseDir . '/images/novedades'));
+assert_test("Carpeta images/instalaciones es accesible y escribible", is_dir($baseDir . '/images/instalaciones') && is_writable($baseDir . '/images/instalaciones'));
 
 // 4. Rate Limiting de login
 echo "\n4. Validando control de intentos de acceso (Rate-Limiting):\n";
@@ -157,6 +174,7 @@ $pages = array(
     'filiales.php',
     'comision-directiva.php',
     'novedades.php',
+    'instalaciones.php',
     'novedades-home.php',
     'footer.php',
     'menu.php'

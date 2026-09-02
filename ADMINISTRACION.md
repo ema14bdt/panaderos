@@ -16,6 +16,7 @@ El directorio `private-content/` incluye directivas Apache (`.htaccess`) para bl
 | **04. Directorio de filiales** | `private-content/filiales.json` | `admin/filiales.php` | `filiales.php` |
 | **05. Comisión directiva** | `private-content/comision.json` | `admin/comision.php` | `comision-directiva.php` |
 | **06. Novedades y archivo** | `private-content/novedades.json` | `admin/novedades.php` | `novedades.php` |
+| **07. Instalaciones y espacios** | `private-content/instalaciones.json` | `admin/instalaciones.php` | `instalaciones.php` |
 
 ---
 
