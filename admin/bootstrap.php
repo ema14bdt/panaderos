@@ -394,6 +394,22 @@ function admin_validate_servicios(array $input)
         }
         $theme = isset($item['theme']) && in_array($item['theme'], array('ink', 'sun', '')) ? $item['theme'] : '';
 
+        $address = '';
+        if (isset($item['address']) && trim((string) $item['address']) !== '') {
+            $address = admin_text($item['address'], 70);
+            if ($address === null) {
+                throw new InvalidArgumentException('La dirección del beneficio no puede superar los 70 caracteres.');
+            }
+        }
+
+        $image = '';
+        if (isset($item['image']) && trim((string) $item['image']) !== '') {
+            $image = admin_safe_url($item['image'], 200);
+            if ($image === null) {
+                throw new InvalidArgumentException('La ruta o URL de la imagen del beneficio no es válida.');
+            }
+        }
+
         if ($title === null || $desc === null || $detail === null) {
             throw new InvalidArgumentException('Todos los campos de cada servicio son obligatorios y deben respetar los límites de longitud.');
         }
@@ -403,7 +419,9 @@ function admin_validate_servicios(array $input)
             'theme' => $theme,
             'title' => $title,
             'description' => $desc,
-            'detail' => $detail
+            'detail' => $detail,
+            'address' => $address,
+            'image' => $image
         );
     }
 

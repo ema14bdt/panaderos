@@ -39,35 +39,45 @@ function site_servicios_defaults()
                 'theme' => 'ink',
                 'title' => 'Laboratorios',
                 'description' => 'Análisis clínicos, bacteriológicos y de alta complejidad.',
-                'detail' => "Ituzaingó 1807 · Lanús Este\n4225-3230 · Lun. a vie., 8:00 a 18:30"
+                'detail' => "Ituzaingó 1807 · Lanús Este\n4225-3230 · Lun. a vie., 8:00 a 18:30",
+                'address' => 'Ituzaingó 1807, Lanús Este',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-heart',
                 'theme' => 'sun',
                 'title' => 'Casamiento',
                 'description' => 'Remise al Registro Civil o iglesia y una torta alegórica para la celebración.',
-                'detail' => 'Presentá recibo de sueldo, certificado prenupcial y DNI.'
+                'detail' => 'Presentá recibo de sueldo, certificado prenupcial y DNI.',
+                'address' => '',
+                'image' => ''
             ),
             array(
-                'icon' => 'fa-child',
+                'icon' => 'fa-users',
                 'theme' => '',
                 'title' => 'Nacimiento',
                 'description' => 'Bolso de pañales descartables y ajuar para acompañar a la familia.',
-                'detail' => 'Presentá recibo de sueldo, certificado de nacimiento y DNI.'
+                'detail' => 'Presentá recibo de sueldo, certificado de nacimiento y DNI.',
+                'address' => '',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-plus-square',
                 'theme' => '',
                 'title' => 'Farmacia',
                 'description' => 'Reintegro del 50% en medicamentos para el afiliado y su grupo familiar.',
-                'detail' => 'Sitio de Montevideo 1640 · Lanús Oeste'
+                'detail' => 'Sitio de Montevideo 1640 · Lanús Oeste',
+                'address' => 'Sitio de Montevideo 1640, Lanús Oeste',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-truck',
                 'theme' => 'ink',
                 'title' => 'Mudanzas',
                 'description' => 'Reintegro de hasta el 50% del servicio de transporte de mudanza.',
-                'detail' => 'Presentá la boleta a nombre del afiliado y el último recibo de sueldo.'
+                'detail' => 'Presentá la boleta a nombre del afiliado y el último recibo de sueldo.',
+                'address' => '',
+                'image' => ''
             )
         ),
         'callout_kicker' => '¿Tenés una consulta?',

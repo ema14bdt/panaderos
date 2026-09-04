@@ -86,6 +86,13 @@ try {
 try {
     $validServicios = admin_validate_servicios($servicios);
     assert_test("admin_validate_servicios acepta datos válidos", is_array($validServicios));
+
+    // Validar beneficio con imagen y dirección
+    $serviciosConFoto = $servicios;
+    $serviciosConFoto['items'][0]['image'] = 'images/servicios/laboratorio.jpg';
+    $serviciosConFoto['items'][0]['address'] = 'Ituzaingó 1807, Lanús Este';
+    $validConFoto = admin_validate_servicios($serviciosConFoto);
+    assert_test("admin_validate_servicios acepta beneficio con imagen y dirección", $validConFoto['items'][0]['image'] === 'images/servicios/laboratorio.jpg' && $validConFoto['items'][0]['address'] === 'Ituzaingó 1807, Lanús Este');
 } catch (Exception $e) {
     assert_test("admin_validate_servicios falló con datos válidos: " . $e->getMessage(), false);
 }
@@ -153,6 +160,7 @@ assert_test("admin_audit registra entradas en audit.log", is_file($auditLog) && 
 assert_test("Carpeta images/directivos es accesible y escribible", is_dir($baseDir . '/images/directivos') && is_writable($baseDir . '/images/directivos'));
 assert_test("Carpeta images/novedades es accesible y escribible", is_dir($baseDir . '/images/novedades') && is_writable($baseDir . '/images/novedades'));
 assert_test("Carpeta images/instalaciones es accesible y escribible", is_dir($baseDir . '/images/instalaciones') && is_writable($baseDir . '/images/instalaciones'));
+assert_test("Carpeta images/servicios es accesible y escribible", is_dir($baseDir . '/images/servicios') && is_writable($baseDir . '/images/servicios'));
 
 // 4. Rate Limiting de login
 echo "\n4. Validando control de intentos de acceso (Rate-Limiting):\n";

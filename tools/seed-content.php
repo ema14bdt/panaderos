@@ -41,6 +41,10 @@ foreach ($files as $file) {
         continue;
     }
 
+    if (is_file($targetFile) && $force) {
+        @unlink($targetFile);
+    }
+
     if (copy($seedFile, $targetFile)) {
         chmod($targetFile, 0666);
         echo " [OK] $file inicializado correctamente\n";
