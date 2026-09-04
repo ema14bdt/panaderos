@@ -46,21 +46,47 @@
             var pathInput = field.querySelector('.image-path-input');
             var fileInput = field.querySelector('.image-file-input');
             var uploadBtn = field.querySelector('.image-upload-btn');
+            var clearBtn = field.querySelector('.btn-clear-image');
             var previewImg = field.querySelector('.image-preview-thumb img');
+            var previewEmpty = field.querySelector('.image-preview-empty');
             var statusBadge = field.querySelector('.image-status-badge');
             var folder = field.getAttribute('data-folder') || 'directivos';
 
             function updatePreview(src) {
                 if (!previewImg) return;
-                if (!src) {
+                var clean = (src || '').trim();
+                if (!clean) {
                     previewImg.style.display = 'none';
+                    if (previewEmpty) previewEmpty.style.display = 'flex';
                     return;
                 }
-                previewImg.src = resolveAdminImgSrc(src);
+                previewImg.src = resolveAdminImgSrc(clean);
                 previewImg.style.display = 'block';
+                if (previewEmpty) previewEmpty.style.display = 'none';
                 previewImg.onerror = function() {
-                    previewImg.src = '../images/directivos/sin-foto.jpg';
+                    if (folder === 'servicios') {
+                        previewImg.style.display = 'none';
+                        if (previewEmpty) previewEmpty.style.display = 'flex';
+                    } else {
+                        previewImg.src = '../images/directivos/sin-foto.jpg';
+                    }
                 };
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (pathInput) {
+                        pathInput.value = '';
+                        updatePreview('');
+                    }
+                    if (fileInput) {
+                        fileInput.value = '';
+                    }
+                    if (statusBadge) {
+                        statusBadge.className = 'image-status-badge';
+                        statusBadge.textContent = 'Foto quitada';
+                    }
+                });
             }
 
             if (pathInput) {
@@ -217,11 +243,100 @@
                 }
             }
         });
+
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.matches('input[name$="[title]"], input[name$="[name]"]')) {
+                var item = e.target.closest('.repeater-item');
+                if (item) {
+                    var titleSpan = item.querySelector('.item-title-preview');
+                    if (titleSpan) {
+                        titleSpan.textContent = e.target.value ? ': ' + e.target.value : '';
+                    }
+                }
+            }
+        });
+    }
+
+    function initIconPickers() {
+        document.addEventListener('click', function(e) {
+            var target = e.target;
+            if (!target) return;
+
+            // Botón para abrir/cerrar catálogo de iconos
+            var toggleBtn = target.closest('.btn-toggle-icon-palette');
+            if (toggleBtn) {
+                var field = toggleBtn.closest('.icon-picker-field');
+                if (!field) return;
+                var palette = field.querySelector('.icon-picker-palette');
+                if (!palette) return;
+
+                var isVisible = palette.style.display !== 'none';
+                document.querySelectorAll('.icon-picker-palette').forEach(function(p) {
+                    if (p !== palette) p.style.display = 'none';
+                });
+                palette.style.display = isVisible ? 'none' : 'block';
+                return;
+            }
+
+            // Botón para cerrar paleta (cruz)
+            var closeBtn = target.closest('.btn-close-palette');
+            if (closeBtn) {
+                var paletteToClose = closeBtn.closest('.icon-picker-palette');
+                if (paletteToClose) paletteToClose.style.display = 'none';
+                return;
+            }
+
+            // Clic en una opción de icono
+            var optionBtn = target.closest('.icon-option');
+            if (optionBtn) {
+                var iconField = optionBtn.closest('.icon-picker-field');
+                if (!iconField) return;
+
+                var iconClass = optionBtn.getAttribute('data-icon');
+                var iconName = optionBtn.getAttribute('data-name');
+                var input = iconField.querySelector('.icon-picker-input');
+                var previewIcon = iconField.querySelector('.icon-preview-box i');
+                var previewName = iconField.querySelector('.icon-preview-name');
+                var previewCode = iconField.querySelector('.icon-preview-code');
+                var paletteContainer = iconField.querySelector('.icon-picker-palette');
+
+                if (input) {
+                    input.value = iconClass;
+                }
+                if (previewIcon) {
+                    previewIcon.className = 'fa ' + iconClass;
+                }
+                if (previewName) {
+                    previewName.textContent = iconName;
+                }
+                if (previewCode) {
+                    previewCode.textContent = iconClass;
+                }
+
+                iconField.querySelectorAll('.icon-option').forEach(function(btn) {
+                    btn.classList.remove('is-selected');
+                });
+                optionBtn.classList.add('is-selected');
+
+                if (paletteContainer) {
+                    paletteContainer.style.display = 'none';
+                }
+                return;
+            }
+
+            // Clic fuera cierra las paletas abiertas
+            if (!target.closest('.icon-picker-field')) {
+                document.querySelectorAll('.icon-picker-palette').forEach(function(p) {
+                    p.style.display = 'none';
+                });
+            }
+        });
     }
 
     function init() {
         initRepeaters();
         initImagePickers();
+        initIconPickers();
     }
 
     if (document.readyState === 'loading') {

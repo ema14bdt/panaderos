@@ -63,12 +63,13 @@ try {
         throw new InvalidArgumentException('Tipo de contenido no admitido.');
     }
 
-    // Carpeta destino (directivos, novedades o instalaciones)
+    // Carpeta destino (directivos, novedades, instalaciones o servicios)
     $folder = isset($_POST['folder']) ? trim((string) $_POST['folder']) : 'directivos';
     $allowedFolders = array(
         'directivos'    => dirname(__DIR__) . '/images/directivos',
         'novedades'     => dirname(__DIR__) . '/images/novedades',
-        'instalaciones' => dirname(__DIR__) . '/images/instalaciones'
+        'instalaciones' => dirname(__DIR__) . '/images/instalaciones',
+        'servicios'     => dirname(__DIR__) . '/images/servicios'
     );
 
     if (!isset($allowedFolders[$folder])) {
