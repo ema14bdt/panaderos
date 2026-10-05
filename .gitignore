@@ -1,11 +1,15 @@
 # Environment & Sensitive configuration
 private-content/admin.local.php
+private-content/database.local.php
 .env
+*.csv
+!padron-ejemplo.csv
 
 # Runtime content store (Independent per environment)
 private-content/*.json
 !private-content/seeds/*.json
 !private-content/admin.local.example.php
+!private-content/database.local.example.php
 private-content/*.lock
 private-content/*.tmp
 private-content/audit.log
