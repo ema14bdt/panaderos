@@ -1,0 +1,33 @@
+{
+    "page_label": "Espacios para encontrarnos",
+    "page_title": "Nuestras instalaciones",
+    "page_intro": "Conocé los espacios que forman parte de la vida cotidiana del sindicato y de sus afiliados.",
+    "section_kicker": "Galería",
+    "section_title": "Un lugar para estar cerca.",
+    "items": [
+        {
+            "image": "images/instalaciones/instalaciones-01.jpg",
+            "title": "Sede central e instalaciones"
+        },
+        {
+            "image": "images/instalaciones/instalaciones-02.jpg",
+            "title": "Espacios de atención y encuentro"
+        },
+        {
+            "image": "images/instalaciones/instalaciones-03.jpg",
+            "title": "Áreas recreativas y deportivas"
+        },
+        {
+            "image": "images/instalaciones/instalaciones-04.jpg",
+            "title": "Salón de usos múltiples"
+        },
+        {
+            "image": "images/instalaciones/instalaciones-05.jpg",
+            "title": "Predio e infraestructura"
+        },
+        {
+            "image": "images/instalaciones/instalaciones-06.jpg",
+            "title": "Servicios e instalaciones gremiales"
+        }
+    ]
+}

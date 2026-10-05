@@ -10,7 +10,7 @@ $site_base = isset($site_base) ? $site_base : '';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="<?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?> | Sindicato de Obreros Panaderos de Lanús">
-    <meta name="theme-color" content="#16160f">
+    <meta name="theme-color" content="#3e4d5f">
     <title><?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?> | Panaderos de Lanús</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

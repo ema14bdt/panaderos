@@ -27,8 +27,10 @@ require_once('page-header.php');
             <p><?php echo site_escape($novedades_content['archive_intro']); ?></p>
         </div>
         <div class="archive-grid">
-            <?php foreach ($novedades_content['archive_items'] as $item) { ?>
-            <a href="<?php echo site_escape($item['url']); ?>" class="archive-card">
+            <?php foreach ($novedades_content['archive_items'] as $item) {
+                $isDirectImg = preg_match('/\.(jpg|jpeg|png|webp)$/i', $item['url']);
+            ?>
+            <a href="<?php echo site_escape($item['url']); ?>" class="archive-card" <?php echo $isDirectImg ? 'data-lightbox="novedades" data-caption="' . site_escape($item['title']) . '"' : ''; ?>>
                 <img src="<?php echo site_escape($item['image']); ?>" alt="<?php echo site_escape(isset($item['alt']) ? $item['alt'] : $item['title']); ?>">
                 <span><?php echo site_escape(isset($item['tag']) ? $item['tag'] : 'Archivo'); ?></span>
                 <h3><?php echo site_escape($item['title']); ?></h3>
@@ -38,5 +40,5 @@ require_once('page-header.php');
     </div>
 </section>
 <?php require_once('footer.php'); ?>
-<script src="js/jquery.js"></script><script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.js"></script><script src="js/bootstrap.min.js"></script><script src="js/main.js"></script>
 </body></html>

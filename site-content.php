@@ -39,35 +39,45 @@ function site_servicios_defaults()
                 'theme' => 'ink',
                 'title' => 'Laboratorios',
                 'description' => 'Análisis clínicos, bacteriológicos y de alta complejidad.',
-                'detail' => "Ituzaingó 1807 · Lanús Este\n4225-3230 · Lun. a vie., 8:00 a 18:30"
+                'detail' => "Ituzaingó 1807 · Lanús Este\n4225-3230 · Lun. a vie., 8:00 a 18:30",
+                'address' => 'Ituzaingó 1807, Lanús Este',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-heart',
                 'theme' => 'sun',
                 'title' => 'Casamiento',
                 'description' => 'Remise al Registro Civil o iglesia y una torta alegórica para la celebración.',
-                'detail' => 'Presentá recibo de sueldo, certificado prenupcial y DNI.'
+                'detail' => 'Presentá recibo de sueldo, certificado prenupcial y DNI.',
+                'address' => '',
+                'image' => ''
             ),
             array(
-                'icon' => 'fa-child',
+                'icon' => 'fa-users',
                 'theme' => '',
                 'title' => 'Nacimiento',
                 'description' => 'Bolso de pañales descartables y ajuar para acompañar a la familia.',
-                'detail' => 'Presentá recibo de sueldo, certificado de nacimiento y DNI.'
+                'detail' => 'Presentá recibo de sueldo, certificado de nacimiento y DNI.',
+                'address' => '',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-plus-square',
                 'theme' => '',
                 'title' => 'Farmacia',
                 'description' => 'Reintegro del 50% en medicamentos para el afiliado y su grupo familiar.',
-                'detail' => 'Sitio de Montevideo 1640 · Lanús Oeste'
+                'detail' => 'Sitio de Montevideo 1640 · Lanús Oeste',
+                'address' => 'Sitio de Montevideo 1640, Lanús Oeste',
+                'image' => ''
             ),
             array(
                 'icon' => 'fa-truck',
                 'theme' => 'ink',
                 'title' => 'Mudanzas',
                 'description' => 'Reintegro de hasta el 50% del servicio de transporte de mudanza.',
-                'detail' => 'Presentá la boleta a nombre del afiliado y el último recibo de sueldo.'
+                'detail' => 'Presentá la boleta a nombre del afiliado y el último recibo de sueldo.',
+                'address' => '',
+                'image' => ''
             )
         ),
         'callout_kicker' => '¿Tenés una consulta?',
@@ -227,15 +237,44 @@ function site_novedades_defaults()
     );
 }
 
+function site_instalaciones_defaults()
+{
+    return array(
+        'page_label' => 'Espacios para encontrarnos',
+        'page_title' => 'Nuestras instalaciones',
+        'page_intro' => 'Conocé los espacios que forman parte de la vida cotidiana del sindicato y de sus afiliados.',
+        'section_kicker' => 'Galería',
+        'section_title' => 'Un lugar para estar cerca.',
+        'items' => array(
+            array('image' => 'images/instalaciones/instalaciones-01.jpg', 'title' => 'Sede central e instalaciones'),
+            array('image' => 'images/instalaciones/instalaciones-02.jpg', 'title' => 'Espacios de atención y encuentro'),
+            array('image' => 'images/instalaciones/instalaciones-03.jpg', 'title' => 'Áreas recreativas y deportivas'),
+            array('image' => 'images/instalaciones/instalaciones-04.jpg', 'title' => 'Salón de usos múltiples'),
+            array('image' => 'images/instalaciones/instalaciones-05.jpg', 'title' => 'Predio e infraestructura'),
+            array('image' => 'images/instalaciones/instalaciones-06.jpg', 'title' => 'Servicios e instalaciones gremiales')
+        )
+    );
+}
+
 function site_content($name, array $defaults)
 {
-    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades');
+    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones');
     if (!in_array($name, $allowed, true)) {
         return $defaults;
     }
 
     $path = __DIR__ . '/private-content/' . $name . '.json';
-    if (!is_file($path) || !is_readable($path)) {
+    $seedPath = __DIR__ . '/private-content/seeds/' . $name . '.json';
+
+    if (!is_file($path)) {
+        if (is_file($seedPath) && is_readable($seedPath)) {
+            $path = $seedPath;
+        } else {
+            return $defaults;
+        }
+    }
+
+    if (!is_readable($path)) {
         return $defaults;
     }
 

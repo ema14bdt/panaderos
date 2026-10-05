@@ -30,5 +30,5 @@ require_once('page-header.php');
     </div>
 </section>
 <?php require_once('footer.php'); ?>
-<script src="js/jquery.js"></script><script src="js/bootstrap.min.js"></script>
+<script src="js/jquery.js"></script><script src="js/bootstrap.min.js"></script><script src="js/main.js"></script>
 </body></html>

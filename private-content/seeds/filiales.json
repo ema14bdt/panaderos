@@ -1,0 +1,141 @@
+{
+  "page_label": "Una red de representación",
+  "page_title": "Filiales",
+  "page_intro": "Encontrá las sedes, teléfonos y autoridades de las filiales que forman parte de la organización.",
+  "section_kicker": "Directorio",
+  "section_title": "Filiales en todo el país.",
+  "items": [
+    {
+      "name": "Adrogué · Alte. Brown",
+      "address": "Muratore 995 · CP 1846",
+      "phone": "(54 11) 4214 1980",
+      "secretary": "Moreno Carlos"
+    },
+    {
+      "name": "Avellaneda",
+      "address": "Belgrano 1218 · CP 1870",
+      "phone": "(54 11) 4203 6770",
+      "secretary": "Frutos Abel"
+    },
+    {
+      "name": "Capital Federal",
+      "address": "Av. Boedo 168 · CP 1206",
+      "phone": "(54 11) 4957 1177",
+      "secretary": "Sánchez José"
+    },
+    {
+      "name": "Florencio Varela",
+      "address": "Alte. Brown 473 · CP 1888",
+      "phone": "(54 11) 4255 1747",
+      "secretary": "Alvarez Pedro"
+    },
+    {
+      "name": "La Plata",
+      "address": "Calle 15 N° 878 · CP 1900",
+      "phone": "(54 0221) 483 6193",
+      "secretary": "Rodríguez Miguel Ángel"
+    },
+    {
+      "name": "Luján",
+      "address": "Mariano Moreno 1958 · CP 6700",
+      "phone": "(54 02323) 431 143 / 433 500",
+      "secretary": "Rodríguez Julio"
+    },
+    {
+      "name": "Morón",
+      "address": "Yatay 555 · CP 1708",
+      "phone": "(54 11) 4629 0684",
+      "secretary": "Durán Jesús"
+    },
+    {
+      "name": "Pergamino",
+      "address": "Catamarca 257 · CP 2700",
+      "phone": "(54 02477) 430 794 / 422 245",
+      "secretary": "Devia Pedro"
+    },
+    {
+      "name": "Quilmes",
+      "address": "M. Quintana 999 · CP 1879",
+      "phone": "(54 11) 4255 1747",
+      "secretary": "Gamarra Elsa"
+    },
+    {
+      "name": "Ramos Mejía",
+      "address": "Gral. Alvarado 372 · CP 1704",
+      "phone": "(54 11) 4654 6585",
+      "secretary": "Castro Rubén"
+    },
+    {
+      "name": "San Fernando",
+      "address": "Av. Juan D. Perón 325",
+      "phone": "(54 11) 4744 0992",
+      "secretary": "Roldán Julio"
+    },
+    {
+      "name": "San Isidro",
+      "address": "3 de Febrero 356 · CP 1642",
+      "phone": "(54 11) 4743 2290",
+      "secretary": "Altamirano Aníbal"
+    },
+    {
+      "name": "San Martín",
+      "address": "Av. Belgrano 3953, 2° Piso Of. H · CP 1650",
+      "phone": "(54 11) 4755 1133 / 2369",
+      "secretary": "Romero Ángel"
+    },
+    {
+      "name": "San Nicolás",
+      "address": "Balcarce 77, Dto. 1 · CP 2900",
+      "phone": "(54 03461) 421 499",
+      "secretary": "Cerviño Rodolfo"
+    },
+    {
+      "name": "Tres Arroyos",
+      "address": "Lucio V. López 435 · CP 7500",
+      "phone": "(54 02983) 430 794",
+      "secretary": "Salgado Juan Manuel"
+    },
+    {
+      "name": "Tres de Febrero",
+      "address": "San Martín 2374, 1° Piso Of. 5 · CP 1678",
+      "phone": "(54 11) 4734 5063",
+      "secretary": "Cepeda Abel"
+    },
+    {
+      "name": "Azul",
+      "address": "Lavalle 357 · CP 7300",
+      "phone": "(54 02281) 15520760 / 433 394",
+      "secretary": "Guardia Pedro"
+    },
+    {
+      "name": "Bahía Blanca",
+      "address": "Soler 644 · CP 8000",
+      "phone": "—",
+      "secretary": "—"
+    },
+    {
+      "name": "Bragado",
+      "address": "Pellegrini 999 · CP 6640",
+      "phone": "(54 02342) 426 970",
+      "secretary": "Figuerón Abel"
+    },
+    {
+      "name": "Junín",
+      "address": "República Libanesa 102 · CP 6000",
+      "phone": "(54 02362) 431 143",
+      "secretary": "Farías Roxana"
+    },
+    {
+      "name": "San Miguel",
+      "address": "—",
+      "phone": "—",
+      "secretary": "Gómez"
+    },
+    {
+      "name": "Mar del Plata",
+      "address": "Bolívar 4441 · CP 7600",
+      "phone": "(54 0223) 472 5680",
+      "secretary": "Coronel Ernesto"
+    }
+  ]
+}

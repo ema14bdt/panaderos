@@ -37,7 +37,7 @@ body,div,dl,dt,dd,ul,ol,li,pre,form,fieldset,input,textarea,p,blockquote,th,td {
 	transition: all 0.2s ease-in-out;
 }
 .es-carousel ul li.selected a{
-	border-color:#f8c301;
+	border-color:#49b8e7;
 }
 .es-carousel ul li a img{
 	display:block;

@@ -41,7 +41,7 @@ function admin_headers()
     header('X-Frame-Options: DENY');
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
 }
 
 function admin_configured_hash()
@@ -56,6 +56,42 @@ function admin_configured_hash()
     }
 
     return is_string($hash) && password_get_info($hash)['algo'] !== null ? $hash : null;
+}
+
+function admin_environment()
+{
+    $env = getenv('APP_ENV');
+    $localConfig = ADMIN_CONTENT_DIR . '/admin.local.php';
+    if ((!is_string($env) || $env === '') && is_file($localConfig)) {
+        $config = require $localConfig;
+        if (is_array($config) && !empty($config['app_env'])) {
+            $env = $config['app_env'];
+        }
+    }
+
+    if (is_string($env) && $env !== '') {
+        return strtolower(trim($env));
+    }
+
+    $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '';
+    if (strpos($host, 'localhost') !== false || strpos($host, '127.0.0.1') !== false) {
+        return 'local';
+    }
+
+    return 'production';
+}
+
+function admin_environment_badge()
+{
+    $env = admin_environment();
+    $labels = array(
+        'local' => 'Local',
+        'development' => 'Desarrollo',
+        'staging' => 'Staging',
+        'production' => 'Producción'
+    );
+    $label = isset($labels[$env]) ? $labels[$env] : strtoupper($env);
+    return '<span class="admin-env-badge admin-env-badge--' . site_escape($env) . '" title="Entorno activo">' . site_escape($label) . '</span>';
 }
 
 function admin_csrf_token()
@@ -137,6 +173,7 @@ function admin_atomic_json($filename, array $data, $backup = true)
         'filiales.json',
         'comision.json',
         'novedades.json',
+        'instalaciones.json',
         'login-attempts.json'
     );
     if (!in_array($filename, $allowed, true)) {
@@ -144,15 +181,30 @@ function admin_atomic_json($filename, array $data, $backup = true)
     }
 
     $path = ADMIN_CONTENT_DIR . '/' . $filename;
-    $lock = fopen($path . '.lock', 'c');
-    if ($lock === false || !flock($lock, LOCK_EX)) {
-        throw new RuntimeException('No fue posible bloquear el archivo de contenido.');
+    $lockPath = $path . '.lock';
+
+    $lock = @fopen($lockPath, 'c');
+    if ($lock === false) {
+        @unlink($lockPath);
+        $lock = @fopen($lockPath, 'c');
+    }
+
+    $locked = ($lock !== false && flock($lock, LOCK_EX));
+    if ($lock !== false) {
+        @chmod($lockPath, 0666);
     }
 
     try {
         if ($backup && is_file($path)) {
-            $backupPath = ADMIN_CONTENT_DIR . '/backups/' . basename($filename, '.json') . '-' . gmdate('Ymd-His') . '.json';
-            copy($path, $backupPath);
+            $backupDir = ADMIN_CONTENT_DIR . '/backups';
+            if (!is_dir($backupDir)) {
+                @mkdir($backupDir, 0777, true);
+                @chmod($backupDir, 0777);
+            }
+            $backupPath = $backupDir . '/' . basename($filename, '.json') . '-' . gmdate('Ymd-His') . '.json';
+            if (@copy($path, $backupPath)) {
+                @chmod($backupPath, 0666);
+            }
         }
 
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -161,20 +213,39 @@ function admin_atomic_json($filename, array $data, $backup = true)
         }
 
         $temporary = $path . '.' . bin2hex(random_bytes(8)) . '.tmp';
-        if (file_put_contents($temporary, $json . PHP_EOL, LOCK_EX) === false || !rename($temporary, $path)) {
+        if (file_put_contents($temporary, $json . PHP_EOL, LOCK_EX) === false) {
             @unlink($temporary);
             throw new RuntimeException('No fue posible guardar los cambios.');
         }
+        @chmod($temporary, 0666);
+
+        if (!@rename($temporary, $path)) {
+            if (@copy($temporary, $path)) {
+                @unlink($temporary);
+                @chmod($path, 0666);
+            } else {
+                @unlink($temporary);
+                throw new RuntimeException('No fue posible actualizar el archivo de contenido.');
+            }
+        } else {
+            @chmod($path, 0666);
+        }
     } finally {
-        flock($lock, LOCK_UN);
-        fclose($lock);
+        if ($lock !== false) {
+            if ($locked) {
+                flock($lock, LOCK_UN);
+            }
+            fclose($lock);
+        }
     }
 }
 
 function admin_audit($action)
 {
+    $logPath = ADMIN_CONTENT_DIR . '/audit.log';
     $line = gmdate('c') . "\t" . $action . "\t" . admin_client_key() . PHP_EOL;
-    @file_put_contents(ADMIN_CONTENT_DIR . '/audit.log', $line, FILE_APPEND | LOCK_EX);
+    @file_put_contents($logPath, $line, FILE_APPEND | LOCK_EX);
+    @chmod($logPath, 0666);
 }
 
 function admin_require_login()
@@ -253,16 +324,16 @@ function admin_safe_url($value, $maximum = 2000)
 function admin_validate_home(array $input)
 {
     $limits = array(
-        'hero_eyebrow' => 120, 'hero_title' => 80, 'hero_emphasis' => 80, 'hero_after' => 80,
-        'hero_lead' => 350, 'hero_quote' => 260, 'hero_quote_author' => 120, 'social_intro' => 450,
-        'instagram_label' => 80, 'facebook_label' => 100, 'address' => 180,
-        'phone' => 30, 'phone_label' => 60, 'email' => 180
+        'hero_eyebrow' => 60, 'hero_title' => 25, 'hero_emphasis' => 20, 'hero_after' => 20,
+        'hero_lead' => 200, 'hero_quote' => 140, 'hero_quote_author' => 35, 'social_intro' => 200,
+        'instagram_label' => 25, 'facebook_label' => 30, 'address' => 50,
+        'phone' => 25, 'phone_label' => 30, 'email' => 45
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -271,7 +342,7 @@ function admin_validate_home(array $input)
     }
 
     foreach (array('salary_url', 'instagram_url', 'facebook_url', 'maps_url', 'maps_embed_url') as $field) {
-        $content[$field] = admin_https_url(isset($input[$field]) ? $input[$field] : '');
+        $content[$field] = admin_https_url(isset($input[$field]) ? $input[$field] : '', 500);
         if ($content[$field] === null) {
             throw new InvalidArgumentException('La URL “' . $field . '” debe usar HTTPS y ser válida.');
         }
@@ -288,15 +359,15 @@ function admin_validate_home(array $input)
 function admin_validate_servicios(array $input)
 {
     $limits = array(
-        'page_label' => 100, 'page_title' => 100, 'page_intro' => 400,
-        'section_kicker' => 80, 'section_title' => 120,
-        'callout_kicker' => 80, 'callout_title' => 200, 'callout_action_text' => 80, 'callout_email' => 180
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'section_kicker' => 35, 'section_title' => 60,
+        'callout_kicker' => 35, 'callout_title' => 80, 'callout_action_text' => 30, 'callout_email' => 50
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -314,17 +385,33 @@ function admin_validate_servicios(array $input)
         if (!is_array($item)) {
             continue;
         }
-        $title = admin_text(isset($item['title']) ? $item['title'] : '', 80);
-        $desc = admin_text(isset($item['description']) ? $item['description'] : '', 300);
-        $detail = admin_multiline(isset($item['detail']) ? $item['detail'] : '', 300);
+        $title = admin_text(isset($item['title']) ? $item['title'] : '', 35);
+        $desc = admin_text(isset($item['description']) ? $item['description'] : '', 140);
+        $detail = admin_multiline(isset($item['detail']) ? $item['detail'] : '', 140);
         $icon = isset($item['icon']) ? trim(strip_tags((string) $item['icon'])) : 'fa-check';
         if (!preg_match('/^fa-[a-z0-9\-]+$/', $icon)) {
             $icon = 'fa-check';
         }
         $theme = isset($item['theme']) && in_array($item['theme'], array('ink', 'sun', '')) ? $item['theme'] : '';
 
+        $address = '';
+        if (isset($item['address']) && trim((string) $item['address']) !== '') {
+            $address = admin_text($item['address'], 70);
+            if ($address === null) {
+                throw new InvalidArgumentException('La dirección del beneficio no puede superar los 70 caracteres.');
+            }
+        }
+
+        $image = '';
+        if (isset($item['image']) && trim((string) $item['image']) !== '') {
+            $image = admin_safe_url($item['image'], 200);
+            if ($image === null) {
+                throw new InvalidArgumentException('La ruta o URL de la imagen del beneficio no es válida.');
+            }
+        }
+
         if ($title === null || $desc === null || $detail === null) {
-            throw new InvalidArgumentException('Todos los campos de cada servicio son obligatorios.');
+            throw new InvalidArgumentException('Todos los campos de cada servicio son obligatorios y deben respetar los límites de longitud.');
         }
 
         $items[] = array(
@@ -332,7 +419,9 @@ function admin_validate_servicios(array $input)
             'theme' => $theme,
             'title' => $title,
             'description' => $desc,
-            'detail' => $detail
+            'detail' => $detail,
+            'address' => $address,
+            'image' => $image
         );
     }
 
@@ -343,15 +432,15 @@ function admin_validate_servicios(array $input)
 function admin_validate_normativas(array $input)
 {
     $limits = array(
-        'page_label' => 100, 'page_title' => 100, 'page_intro' => 400,
-        'section_kicker' => 80, 'section_title' => 120,
-        'note_text' => 400, 'note_action_text' => 80, 'note_email' => 180
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'section_kicker' => 35, 'section_title' => 60,
+        'note_text' => 180, 'note_action_text' => 30, 'note_email' => 50
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -369,9 +458,9 @@ function admin_validate_normativas(array $input)
         if (!is_array($item)) {
             continue;
         }
-        $kicker = admin_text(isset($item['kicker']) ? $item['kicker'] : '', 80);
-        $title = admin_multiline(isset($item['title']) ? $item['title'] : '', 100);
-        $url = admin_safe_url(isset($item['url']) ? $item['url'] : '', 500);
+        $kicker = admin_text(isset($item['kicker']) ? $item['kicker'] : '', 35);
+        $title = admin_multiline(isset($item['title']) ? $item['title'] : '', 30);
+        $url = admin_safe_url(isset($item['url']) ? $item['url'] : '', 200);
         $isFeatured = !empty($item['is_featured']);
 
         if ($kicker === null || $title === null || $url === null) {
@@ -393,14 +482,14 @@ function admin_validate_normativas(array $input)
 function admin_validate_filiales(array $input)
 {
     $limits = array(
-        'page_label' => 100, 'page_title' => 100, 'page_intro' => 400,
-        'section_kicker' => 80, 'section_title' => 120
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'section_kicker' => 35, 'section_title' => 60
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -414,13 +503,13 @@ function admin_validate_filiales(array $input)
         if (!is_array($item)) {
             continue;
         }
-        $name = admin_text(isset($item['name']) ? $item['name'] : '', 100);
-        $address = admin_text(isset($item['address']) ? $item['address'] : '', 180);
-        $phone = admin_text(isset($item['phone']) ? $item['phone'] : '', 100);
-        $secretary = admin_text(isset($item['secretary']) ? $item['secretary'] : '', 100);
+        $name = admin_text(isset($item['name']) ? $item['name'] : '', 35);
+        $address = admin_text(isset($item['address']) ? $item['address'] : '', 50);
+        $phone = admin_text(isset($item['phone']) ? $item['phone'] : '', 35);
+        $secretary = admin_text(isset($item['secretary']) ? $item['secretary'] : '', 35);
 
         if ($name === null || $address === null || $phone === null || $secretary === null) {
-            throw new InvalidArgumentException('Todos los campos de cada filial deben estar completos.');
+            throw new InvalidArgumentException('Todos los campos de cada filial deben estar completos y respetar los límites de caracteres.');
         }
 
         $items[] = array(
@@ -438,14 +527,14 @@ function admin_validate_filiales(array $input)
 function admin_validate_comision(array $input)
 {
     $limits = array(
-        'page_label' => 100, 'page_title' => 100, 'page_intro' => 400,
-        'section_kicker' => 80, 'section_title' => 120
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'section_kicker' => 35, 'section_title' => 60
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -459,12 +548,12 @@ function admin_validate_comision(array $input)
         if (!is_array($member)) {
             continue;
         }
-        $name = admin_text(isset($member['name']) ? $member['name'] : '', 100);
-        $role = admin_text(isset($member['role']) ? $member['role'] : '', 100);
-        $photo = admin_safe_url(isset($member['photo']) && trim((string) $member['photo']) !== '' ? $member['photo'] : 'images/directivos/sin-foto.jpg', 300);
+        $name = admin_text(isset($member['name']) ? $member['name'] : '', 35);
+        $role = admin_text(isset($member['role']) ? $member['role'] : '', 45);
+        $photo = admin_safe_url(isset($member['photo']) && trim((string) $member['photo']) !== '' ? $member['photo'] : 'images/directivos/sin-foto.jpg', 120);
 
         if ($name === null || $role === null || $photo === null) {
-            throw new InvalidArgumentException('Revisá los nombres, cargos y fotos de la comisión.');
+            throw new InvalidArgumentException('Revisá los nombres (máx. 35 car.), cargos (máx. 45 car.) y fotos de la comisión.');
         }
 
         $members[] = array(
@@ -481,15 +570,15 @@ function admin_validate_comision(array $input)
 function admin_validate_novedades(array $input)
 {
     $limits = array(
-        'page_label' => 100, 'page_title' => 100, 'page_intro' => 400,
-        'social_kicker' => 80, 'social_title' => 120, 'social_intro' => 400,
-        'archive_kicker' => 80, 'archive_title' => 120, 'archive_intro' => 400
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'social_kicker' => 35, 'social_title' => 60, 'social_intro' => 200,
+        'archive_kicker' => 35, 'archive_title' => 50, 'archive_intro' => 200
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
         $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
         if ($content[$field] === null) {
-            throw new InvalidArgumentException('Revisá el campo “' . $field . '”.');
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
         }
     }
 
@@ -499,11 +588,11 @@ function admin_validate_novedades(array $input)
         if (!is_array($item)) {
             continue;
         }
-        $title = admin_text(isset($item['title']) ? $item['title'] : '', 150);
-        $tag = admin_text(isset($item['tag']) ? $item['tag'] : 'Archivo', 40);
-        $url = admin_safe_url(isset($item['url']) ? $item['url'] : '', 500);
-        $image = admin_safe_url(isset($item['image']) ? $item['image'] : '', 500);
-        $alt = admin_text(isset($item['alt']) ? $item['alt'] : '', 150);
+        $title = admin_text(isset($item['title']) ? $item['title'] : '', 50);
+        $tag = admin_text(isset($item['tag']) ? $item['tag'] : 'Archivo', 20);
+        $url = admin_safe_url(isset($item['url']) ? $item['url'] : '', 200);
+        $image = admin_safe_url(isset($item['image']) ? $item['image'] : '', 200);
+        $alt = admin_text(isset($item['alt']) ? $item['alt'] : '', 60);
 
         if ($title === null || $tag === null || $url === null || $image === null || $alt === null) {
             throw new InvalidArgumentException('Revisá los campos de los artículos del archivo histórico.');
@@ -519,6 +608,47 @@ function admin_validate_novedades(array $input)
     }
 
     $content['archive_items'] = $archiveItems;
+    return $content;
+}
+
+function admin_validate_instalaciones(array $input)
+{
+    $limits = array(
+        'page_label' => 45, 'page_title' => 40, 'page_intro' => 250,
+        'section_kicker' => 35, 'section_title' => 60
+    );
+    $content = array();
+    foreach ($limits as $field => $maximum) {
+        $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
+        if ($content[$field] === null) {
+            throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
+        }
+    }
+
+    $rawItems = isset($input['items']) && is_array($input['items']) ? $input['items'] : array();
+    if (empty($rawItems)) {
+        throw new InvalidArgumentException('Debe haber al menos una fotografía de las instalaciones.');
+    }
+
+    $items = array();
+    foreach ($rawItems as $item) {
+        if (!is_array($item)) {
+            continue;
+        }
+        $image = admin_safe_url(isset($item['image']) ? $item['image'] : '', 200);
+        $title = admin_text(isset($item['title']) ? $item['title'] : '', 50);
+
+        if ($image === null || $title === null) {
+            throw new InvalidArgumentException('Revisá las imágenes y títulos de las instalaciones.');
+        }
+
+        $items[] = array(
+            'image' => $image,
+            'title' => $title
+        );
+    }
+
+    $content['items'] = $items;
     return $content;
 }
 
@@ -561,6 +691,19 @@ function admin_render_start($title)
 </head>
 <body>
 <?php
+}
+
+function admin_header_html()
+{
+    ?>
+    <header class="admin-header">
+        <a class="admin-mark" href="index.php">Panaderos <span>Administración</span></a>
+        <div class="admin-header-right">
+            <?php echo admin_environment_badge(); ?>
+            <a class="admin-logout" href="logout.php">Cerrar sesión</a>
+        </div>
+    </header>
+    <?php
 }
 
 function admin_render_end()

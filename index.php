@@ -8,7 +8,7 @@ $home_content = site_content('home', site_home_defaults());
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Sindicato de Obreros Panaderos de Lanús: derechos, beneficios, servicios e información para trabajadores del sector.">
-    <meta name="theme-color" content="#15140f">
+    <meta name="theme-color" content="#3e4d5f">
     <title>Panaderos de Lanús | Sindicato de Obreros Panaderos</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -110,7 +110,6 @@ $home_content = site_content('home', site_home_defaults());
                     <p class="eyebrow">Dónde encontrarnos</p>
                     <h2 id="location-title">La sede, <em>cerca.</em></h2>
                     <p><?php echo site_escape($home_content['address']); ?></p>
-                    <a class="button button--quiet" href="<?php echo site_escape($home_content['maps_url']); ?>" target="_blank" rel="noopener noreferrer">Abrir en Google Maps <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
                 </div>
                 <div class="location-map">
                     <iframe title="Ubicación del Sindicato de Obreros y Empleados Panaderos de Lanús" src="<?php echo site_escape($home_content['maps_embed_url']); ?>" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -123,5 +122,6 @@ $home_content = site_content('home', site_home_defaults());
 
     <script src="js/jquery.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

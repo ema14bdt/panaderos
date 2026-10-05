@@ -1,0 +1,34 @@
+{
+    "page_label": "El sindicato",
+    "page_title": "Comisión directiva",
+    "page_intro": "Una comisión comprometida con representar, acompañar y defender a las y los trabajadores panaderos.",
+    "section_kicker": "Representación",
+    "section_title": "Las personas detrás de la organización.",
+    "members": [
+        {
+            "name": "Ruiz Gabriel Antonio",
+            "role": "Secretario General",
+            "photo": "images/directivos/sin-foto.jpg"
+        },
+        {
+            "name": "Ruiz Pablo Ariel",
+            "role": "Secretario de Organización",
+            "photo": "images/directivos/sin-foto.jpg"
+        },
+        {
+            "name": "Ruiz Fabricio",
+            "role": "Secretaría Gremial",
+            "photo": "images/directivos/sin-foto.jpg"
+        },
+        {
+            "name": "Bobero Daniel Abraham",
+            "role": "Fuerza de Choque",
+            "photo": "images/directivos/daniel.jpeg"
+        },
+        {
+            "name": "Romero Emanuel",
+            "role": "Web Developer",
+            "photo": "images/directivos/sin-foto.jpg"
+        }
+    ]
+}
