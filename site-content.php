@@ -267,7 +267,24 @@ function site_content($name, array $defaults)
     $seedPath = __DIR__ . '/private-content/seeds/' . $name . '.json';
 
     if (!is_file($path)) {
-        if (is_file($seedPath) && is_readable($seedPath)) {
+        $backupDir = __DIR__ . '/private-content/backups';
+        $latestBackup = null;
+        if (is_dir($backupDir)) {
+            $backups = glob($backupDir . '/' . $name . '-*.json');
+            if (is_array($backups) && !empty($backups)) {
+                rsort($backups);
+                $latestBackup = $backups[0];
+            }
+        }
+
+        if ($latestBackup !== null && is_readable($latestBackup)) {
+            @copy($latestBackup, $path);
+            if (is_file($path)) {
+                @chmod($path, 0666);
+            } else {
+                $path = $latestBackup;
+            }
+        } elseif (is_file($seedPath) && is_readable($seedPath)) {
             $path = $seedPath;
         } else {
             return $defaults;

@@ -19,6 +19,10 @@ images/novedades/*-*.*
 images/servicios/*-*.*
 images/uploads/
 uploads/
+!images/directivos/sin-foto.jpg
+!images/instalaciones/instalaciones-*.jpg
+!images/instalaciones/thumbs/instalaciones-*.jpg
+!images/novedades/escala-salarial-*.jpg
 
 # OS and Editor files
 .DS_Store
