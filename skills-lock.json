@@ -6,15 +6,51 @@
       "sourceType": "autoskills-registry",
       "computedHash": "bffe3d08cfe92ebad63699f74ce29e35c19850ebfbf474c1463183cfe34d6a09"
     },
+    "dart-best-practices": {
+      "source": "kevmoo/dash_skills",
+      "sourceType": "github",
+      "skillPath": "skills/dart-best-practices/SKILL.md",
+      "computedHash": "bef12dc34bc172ada836350234702768f7d29fa487114556137513cf5b89b93f"
+    },
+    "flutter-animations": {
+      "source": "madteacher/mad-agents-skills",
+      "sourceType": "github",
+      "skillPath": "flutter-animations/SKILL.md",
+      "computedHash": "a0f81c4bbff81b43be42cd11ebf33b6a4e50e2f94134d3071e441785fc4872e8"
+    },
+    "flutter-expert": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/flutter-expert/SKILL.md",
+      "computedHash": "6c4f8b042b46d775208d7761d801f18beb34bec9f890abe60a12430234417245"
+    },
+    "flutter-testing": {
+      "source": "madteacher/mad-agents-skills",
+      "sourceType": "github",
+      "skillPath": "flutter-testing/SKILL.md",
+      "computedHash": "8cd65aa17b3f0934ef4dd7c8e205b38ce80ca2f79010d2b40dc2f153dad817dc"
+    },
     "frontend-design": {
       "source": "anthropics/skills",
       "sourceType": "autoskills-registry",
       "computedHash": "82fb11a63fb1e35ee2469516ed02d54695f783115b1540c0e783197af4240a3a"
     },
+    "php-pro": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "skillPath": "skills/php-pro/SKILL.md",
+      "computedHash": "f80bf87875f012a02983f87d0f16ab136c96721c503ce04e1ecf7582e2e62f9d"
+    },
     "seo": {
       "source": "addyosmani/web-quality-skills",
       "sourceType": "autoskills-registry",
       "computedHash": "c184da724d1c61ad077f27418ea8e7e88fd54bcdf98165e18be7e4681cbd5e20"
+    },
+    "sleek-design-mobile-apps": {
+      "source": "sleekdotdesign/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/design-mobile-apps/SKILL.md",
+      "computedHash": "07537447f921b777b208b4e48506f25ee3ca4ea05dab2b08161ff057df2303c4"
     }
   }
 }
