@@ -60,8 +60,28 @@ echo "\n2. Validando reglas estrictas de entrada:\n";
 try {
     $validHome = admin_validate_home($home);
     assert_test("admin_validate_home acepta datos válidos", is_array($validHome));
+    assert_test("admin_validate_home acepta y mantiene register_url para contadores", isset($validHome['register_url']) && strpos($validHome['register_url'], 'register#sitio-position') !== false);
+    assert_test("admin_validate_home acepta y mantiene login_url para contadores", isset($validHome['login_url']) && strpos($validHome['login_url'], 'login#sitio-position') !== false);
 } catch (Exception $e) {
     assert_test("admin_validate_home falló con datos válidos: " . $e->getMessage(), false);
+}
+
+try {
+    $validHome50 = $home;
+    $validHome50['phone_label'] = '4241-1920 · 4241-2477 (Lun a Vie 8 a 18 hs)'; // 44 chars
+    $result50 = admin_validate_home($validHome50);
+    assert_test("admin_validate_home acepta phone_label de hasta 50 caracteres", $result50['phone_label'] === $validHome50['phone_label']);
+} catch (Exception $e) {
+    assert_test("admin_validate_home falló con phone_label largo: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidHome = $home;
+    $invalidHome['phone_label'] = str_repeat('a', 51);
+    admin_validate_home($invalidHome);
+    assert_test("admin_validate_home rechaza phone_label de más de 50 caracteres", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_home detecta y rechaza phone_label mayor a 50 caracteres", true);
 }
 
 try {
@@ -80,6 +100,33 @@ try {
     assert_test("admin_validate_home rechaza iframe que no sea de google.com", false);
 } catch (InvalidArgumentException $e) {
     assert_test("admin_validate_home protege iframe contra dominios no autorizados", true);
+}
+
+// Featured news validation
+try {
+    $validHomeNews = $home;
+    $validHomeNews['featured_news_enabled'] = true;
+    $validHomeNews['featured_news_badge'] = 'En desarrollo';
+    $validHomeNews['featured_news_title'] = 'Nueva App Panaderos';
+    $validHomeNews['featured_news_description'] = 'Descripción de prueba con beneficios y credencial digital.';
+    $validHomeNews['featured_news_link_url'] = 'servicios.php';
+    $validHomeNews['featured_news_link_label'] = 'Ver servicios';
+    $validHomeNews['featured_news_image_1'] = 'images/novedades/app-panaderos-1.jpg';
+    $validHomeNews['featured_news_image_2'] = '';
+    $validHomeNews['featured_news_image_3'] = '';
+    $resNews = admin_validate_home($validHomeNews);
+    assert_test("admin_validate_home valida noticia destacada con imágenes", $resNews['featured_news_enabled'] === true && $resNews['featured_news_title'] === 'Nueva App Panaderos' && $resNews['featured_news_image_1'] === 'images/novedades/app-panaderos-1.jpg');
+} catch (Exception $e) {
+    assert_test("admin_validate_home falló al validar noticia destacada: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidNews = $home;
+    $invalidNews['featured_news_title'] = '';
+    admin_validate_home($invalidNews);
+    assert_test("admin_validate_home rechaza noticia destacada sin título", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_home exige título obligatorio en noticia destacada", true);
 }
 
 // Servicios validation

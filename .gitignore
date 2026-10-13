@@ -23,6 +23,7 @@ uploads/
 !images/instalaciones/instalaciones-*.jpg
 !images/instalaciones/thumbs/instalaciones-*.jpg
 !images/novedades/escala-salarial-*.jpg
+!images/novedades/app-panaderos-*.jpg
 
 # OS and Editor files
 .DS_Store

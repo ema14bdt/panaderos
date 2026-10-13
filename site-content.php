@@ -11,6 +11,8 @@ function site_home_defaults()
         'hero_quote' => 'La mejor manera de defender a los trabajadores es hacerles conocer sus derechos.',
         'hero_quote_author' => 'Gabriel Ruiz · Secretario General',
         'salary_url' => 'https://panaderoslanus.ar/public/escalas/ultimaEscala.pdf',
+        'register_url' => 'https://panaderoslanus.ar/public/register#sitio-position',
+        'login_url' => 'https://panaderoslanus.ar/public/login#sitio-position',
         'social_intro' => 'En Instagram y Facebook compartimos comunicados, actividad institucional, información gremial y la vida cotidiana de las y los trabajadores panaderos.',
         'instagram_url' => 'https://www.instagram.com/panaderoslanus/',
         'instagram_label' => '@panaderoslanus',
@@ -21,7 +23,16 @@ function site_home_defaults()
         'phone_label' => '4241-1920 · 4241-2477',
         'email' => 'info@panaderoslanus.ar',
         'maps_url' => 'https://www.google.com/maps/search/?api=1&query=Sindicato+de+Obreros+y+Empleados+Panaderos+de+Lan%C3%BAs',
-        'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.066545599629!2d-58.40769198807899!3d-34.70350146266279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccce2a44f788d%3A0xbb95049302afb0fc!2sSindicato%20de%20Obreros%20y%20Empleados%20Panaderos%20de%20Lan%C3%B9s!5e0!3m2!1ses-419!2sar!4v1788191054124!5m2!1ses-419!2sar'
+        'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.066545599629!2d-58.40769198807899!3d-34.70350146266279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccce2a44f788d%3A0xbb95049302afb0fc!2sSindicato%20de%20Obreros%20y%20Empleados%20Panaderos%20de%20Lan%C3%B9s!5e0!3m2!1ses-419!2sar!4v1788191054124!5m2!1ses-419!2sar',
+        'featured_news_enabled' => true,
+        'featured_news_badge' => 'En desarrollo · Próximo lanzamiento',
+        'featured_news_title' => 'Una nueva aplicación móvil al servicio de las y los trabajadores panaderos',
+        'featured_news_description' => "Estamos desarrollando la aplicación oficial del Sindicato de Obreros Panaderos de Lanús para acompañarte en tu día a día.\n\nVas a poder tener a mano tu credencial digital, consultar el listado completo de beneficios y servicios, anotarte a eventos y realizar tus gestiones de forma directa desde tu celular.",
+        'featured_news_link_url' => 'servicios.php',
+        'featured_news_link_label' => 'Conocer beneficios vigentes',
+        'featured_news_image_1' => 'images/novedades/app-panaderos-1.jpg',
+        'featured_news_image_2' => '',
+        'featured_news_image_3' => ''
     );
 }
 

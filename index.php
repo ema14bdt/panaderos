@@ -49,6 +49,52 @@ $home_content = site_content('home', site_home_defaults());
             <div class="home-hero__rule container" aria-hidden="true"><span>LANÚS · BUENOS AIRES</span><span>DESDE EL TRABAJO, PARA EL TRABAJO</span></div>
         </section>
 
+        <?php if (!empty($home_content['featured_news_enabled'])) {
+            $featuredImages = array();
+            for ($i = 1; $i <= 3; $i++) {
+                $k = 'featured_news_image_' . $i;
+                if (!empty($home_content[$k])) {
+                    $featuredImages[] = $home_content[$k];
+                }
+            }
+            $imgCount = count($featuredImages);
+        ?>
+        <section class="home-featured-news" aria-labelledby="featured-news-title">
+            <div class="container">
+                <div class="featured-news-card <?php echo $imgCount === 0 ? 'featured-news-card--no-media' : ''; ?>">
+                    <div class="featured-news-card__content">
+                        <div class="featured-news-card__badge-wrap">
+                            <span class="featured-news-card__badge"><i class="fa fa-bullhorn" aria-hidden="true"></i> <?php echo site_escape($home_content['featured_news_badge']); ?></span>
+                        </div>
+                        <h2 id="featured-news-title" class="featured-news-card__title"><?php echo site_escape($home_content['featured_news_title']); ?></h2>
+                        <div class="featured-news-card__lead">
+                            <?php echo nl2br(site_escape($home_content['featured_news_description'])); ?>
+                        </div>
+                        <?php if (!empty($home_content['featured_news_link_url'])) { 
+                            $isExternal = (strpos($home_content['featured_news_link_url'], 'http://') === 0 || strpos($home_content['featured_news_link_url'], 'https://') === 0);
+                        ?>
+                        <div class="featured-news-card__action">
+                            <a class="button button--primary" href="<?php echo site_escape($home_content['featured_news_link_url']); ?>" <?php echo $isExternal ? 'target="_blank" rel="noopener noreferrer"' : ''; ?>>
+                                <?php echo site_escape(!empty($home_content['featured_news_link_label']) ? $home_content['featured_news_link_label'] : 'Conocer más'); ?> <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        <?php } ?>
+                    </div>
+                    <?php if ($imgCount > 0) { ?>
+                    <div class="featured-news-card__media featured-news-card__media--count-<?php echo $imgCount; ?>">
+                        <?php foreach ($featuredImages as $imgIdx => $imgSrc) { ?>
+                        <a class="featured-news-card__img-link" href="<?php echo site_escape($imgSrc); ?>" data-lightbox="home-featured" data-caption="<?php echo site_escape($home_content['featured_news_title']); ?>">
+                            <img src="<?php echo site_escape($imgSrc); ?>" alt="<?php echo site_escape($home_content['featured_news_title']) . ' (' . ($imgIdx + 1) . ')'; ?>" loading="lazy">
+                            <span class="featured-news-card__zoom-hint" title="Ampliar imagen"><i class="fa fa-search-plus" aria-hidden="true"></i></span>
+                        </a>
+                        <?php } ?>
+                    </div>
+                    <?php } ?>
+                </div>
+            </div>
+        </section>
+        <?php } ?>
+
         <section class="home-intro" aria-labelledby="intro-title">
             <div class="container">
                 <div class="section-heading">
@@ -83,6 +129,14 @@ $home_content = site_content('home', site_home_defaults());
                     <span class="salary-banner__title">Escala salarial vigente</span>
                     <span class="salary-banner__action">Descargar PDF <i class="fa fa-arrow-up" aria-hidden="true"></i></span>
                 </a>
+                <div class="salary-banner salary-banner--portal">
+                    <span class="salary-banner__badge"><i class="fa fa-briefcase" aria-hidden="true"></i> Contadores y empresas</span>
+                    <span class="salary-banner__title">Registro de contadores</span>
+                    <div class="salary-banner__actions">
+                        <a class="salary-banner__btn salary-banner__btn--login" href="<?php echo site_escape(!empty($home_content['login_url']) ? $home_content['login_url'] : 'https://panaderoslanus.ar/public/login#sitio-position'); ?>" target="_blank" rel="noopener noreferrer">Ingresar <i class="fa fa-sign-in" aria-hidden="true"></i></a>
+                        <a class="salary-banner__btn salary-banner__btn--register" href="<?php echo site_escape($home_content['register_url']); ?>" target="_blank" rel="noopener noreferrer">Registrarme <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    </div>
+                </div>
             </div>
         </section>
 

@@ -327,7 +327,7 @@ function admin_validate_home(array $input)
         'hero_eyebrow' => 60, 'hero_title' => 25, 'hero_emphasis' => 20, 'hero_after' => 20,
         'hero_lead' => 200, 'hero_quote' => 140, 'hero_quote_author' => 35, 'social_intro' => 200,
         'instagram_label' => 25, 'facebook_label' => 30, 'address' => 50,
-        'phone' => 25, 'phone_label' => 30, 'email' => 45
+        'phone' => 25, 'phone_label' => 50, 'email' => 45
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
@@ -341,7 +341,7 @@ function admin_validate_home(array $input)
         throw new InvalidArgumentException('Revisá el correo electrónico y el teléfono.');
     }
 
-    foreach (array('salary_url', 'instagram_url', 'facebook_url', 'maps_url', 'maps_embed_url') as $field) {
+    foreach (array('salary_url', 'register_url', 'login_url', 'instagram_url', 'facebook_url', 'maps_url', 'maps_embed_url') as $field) {
         $content[$field] = admin_https_url(isset($input[$field]) ? $input[$field] : '', 500);
         if ($content[$field] === null) {
             throw new InvalidArgumentException('La URL “' . $field . '” debe usar HTTPS y ser válida.');
@@ -351,6 +351,53 @@ function admin_validate_home(array $input)
     $mapHost = parse_url($content['maps_embed_url'], PHP_URL_HOST);
     if ($mapHost !== 'www.google.com') {
         throw new InvalidArgumentException('El mapa embebido debe provenir de www.google.com.');
+    }
+
+    // Noticia destacada en home
+    $content['featured_news_enabled'] = !empty($input['featured_news_enabled']);
+
+    $badge = admin_text(isset($input['featured_news_badge']) ? $input['featured_news_badge'] : '', 50);
+    $content['featured_news_badge'] = $badge !== null ? $badge : 'Novedad destacada';
+
+    $title = admin_text(isset($input['featured_news_title']) ? $input['featured_news_title'] : '', 100);
+    if ($title === null) {
+        throw new InvalidArgumentException('El título de la noticia destacada es obligatorio (máx. 100 caracteres).');
+    }
+    $content['featured_news_title'] = $title;
+
+    $desc = admin_multiline(isset($input['featured_news_description']) ? $input['featured_news_description'] : '', 800);
+    if ($desc === null) {
+        throw new InvalidArgumentException('La descripción de la noticia destacada es obligatoria (máx. 800 caracteres).');
+    }
+    $content['featured_news_description'] = $desc;
+
+    $linkUrl = isset($input['featured_news_link_url']) ? trim((string) $input['featured_news_link_url']) : '';
+    if ($linkUrl === '') {
+        $content['featured_news_link_url'] = '';
+    } else {
+        $validatedLink = admin_safe_url($linkUrl, 500);
+        if ($validatedLink === null) {
+            throw new InvalidArgumentException('La URL del enlace de la noticia destacada no es válida.');
+        }
+        $content['featured_news_link_url'] = $validatedLink;
+    }
+
+    $linkLabel = isset($input['featured_news_link_label']) ? trim((string) $input['featured_news_link_label']) : '';
+    $validatedLabel = admin_text($linkLabel !== '' ? $linkLabel : 'Más información', 40);
+    $content['featured_news_link_label'] = $validatedLabel !== null ? $validatedLabel : 'Más información';
+
+    for ($i = 1; $i <= 3; $i++) {
+        $key = 'featured_news_image_' . $i;
+        $imgVal = isset($input[$key]) ? trim((string) $input[$key]) : '';
+        if ($imgVal === '') {
+            $content[$key] = '';
+        } else {
+            $validatedImg = admin_safe_url($imgVal, 300);
+            if ($validatedImg === null) {
+                throw new InvalidArgumentException('La imagen ' . $i . ' de la noticia destacada no es válida.');
+            }
+            $content[$key] = $validatedImg;
+        }
     }
 
     return $content;
@@ -652,10 +699,11 @@ function admin_validate_instalaciones(array $input)
     return $content;
 }
 
-function admin_field($name, $label, array $content, $type = 'text', $maxlength = null, $hint = '')
+function admin_field($name, $label, array $content, $type = 'text', $maxlength = null, $hint = '', $required = true)
 {
     $value = isset($content[$name]) ? $content[$name] : '';
     $maxAttr = $maxlength !== null ? ' maxlength="' . (int) $maxlength . '"' : '';
+    $reqAttr = $required ? ' required' : '';
     ?>
     <label class="admin-field" for="<?php echo site_escape($name); ?>">
         <div class="admin-field-head">
@@ -665,9 +713,9 @@ function admin_field($name, $label, array $content, $type = 'text', $maxlength =
             <?php } ?>
         </div>
         <?php if ($type === 'textarea') { ?>
-            <textarea id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" rows="3"<?php echo $maxAttr; ?> required><?php echo site_escape($value); ?></textarea>
+            <textarea id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" rows="3"<?php echo $maxAttr . $reqAttr; ?>><?php echo site_escape($value); ?></textarea>
         <?php } else { ?>
-            <input id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" type="<?php echo site_escape($type); ?>" value="<?php echo site_escape($value); ?>"<?php echo $maxAttr; ?> required>
+            <input id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" type="<?php echo site_escape($type); ?>" value="<?php echo site_escape($value); ?>"<?php echo $maxAttr . $reqAttr; ?>>
         <?php } ?>
         <?php if ($hint !== '') { ?><small><?php echo site_escape($hint); ?></small><?php } ?>
     </label>
