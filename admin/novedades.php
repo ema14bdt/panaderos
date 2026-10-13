@@ -101,9 +101,14 @@ admin_render_start('Editar novedades y archivo');
                         <label class="admin-field">
                             <div class="admin-field-head">
                                 <span>Ruta o URL del enlace</span>
+                                <?php
+                                $itemUrl = isset($item['url']) ? trim((string)$item['url']) : '';
+                                $previewUrl = ($itemUrl !== '' && (strpos($itemUrl, 'http://') === 0 || strpos($itemUrl, 'https://') === 0)) ? $itemUrl : ('../' . ltrim($itemUrl, '/'));
+                                ?>
+                                <a href="<?php echo site_escape($previewUrl); ?>" target="_blank" rel="noopener noreferrer" class="admin-field-link archive-url-preview" <?php echo $itemUrl === '' ? 'style="display:none;"' : ''; ?>>Abrir enlace <span>↗</span></a>
                                 <span class="admin-field-limit">máx. 200 car.</span>
                             </div>
-                            <input type="text" name="archive_items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="200" required>
+                            <input type="text" class="archive-url-input" name="archive_items[<?php echo $index; ?>][url]" value="<?php echo site_escape(isset($item['url']) ? $item['url'] : ''); ?>" maxlength="200" required>
                         </label>
                         <label class="admin-field">
                             <div class="admin-field-head">
@@ -175,9 +180,10 @@ admin_render_start('Editar novedades y archivo');
             <label class="admin-field">
                 <div class="admin-field-head">
                     <span>Ruta o URL del enlace</span>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="admin-field-link archive-url-preview" style="display:none;">Abrir enlace <span>↗</span></a>
                     <span class="admin-field-limit">máx. 200 car.</span>
                 </div>
-                <input type="text" name="archive_items[__INDEX__][url]" maxlength="200" required>
+                <input type="text" class="archive-url-input" name="archive_items[__INDEX__][url]" maxlength="200" required>
             </label>
             <label class="admin-field">
                 <div class="admin-field-head">

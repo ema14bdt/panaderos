@@ -30,7 +30,7 @@ require_once('page-header.php');
             <?php foreach ($novedades_content['archive_items'] as $item) {
                 $isDirectImg = preg_match('/\.(jpg|jpeg|png|webp)$/i', $item['url']);
             ?>
-            <a href="<?php echo site_escape($item['url']); ?>" class="archive-card" <?php echo $isDirectImg ? 'data-lightbox="novedades" data-caption="' . site_escape($item['title']) . '"' : ''; ?>>
+            <a href="<?php echo site_escape($item['url']); ?>" class="archive-card" target="_blank" rel="noopener noreferrer" <?php echo $isDirectImg ? 'data-lightbox="novedades" data-caption="' . site_escape($item['title']) . '"' : ''; ?>>
                 <img src="<?php echo site_escape($item['image']); ?>" alt="<?php echo site_escape(isset($item['alt']) ? $item['alt'] : $item['title']); ?>">
                 <span><?php echo site_escape(isset($item['tag']) ? $item['tag'] : 'Archivo'); ?></span>
                 <h3><?php echo site_escape($item['title']); ?></h3>

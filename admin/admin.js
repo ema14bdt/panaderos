@@ -254,6 +254,23 @@
                     }
                 }
             }
+
+            if (e.target && e.target.classList.contains('archive-url-input')) {
+                var field = e.target.closest('.admin-field');
+                if (field) {
+                    var previewLink = field.querySelector('.archive-url-preview');
+                    var val = (e.target.value || '').trim();
+                    if (previewLink) {
+                        if (val) {
+                            var href = (val.indexOf('http://') === 0 || val.indexOf('https://') === 0) ? val : ('../' + val.replace(/^\/+/, ''));
+                            previewLink.href = href;
+                            previewLink.style.display = 'inline-block';
+                        } else {
+                            previewLink.style.display = 'none';
+                        }
+                    }
+                }
+            }
         });
     }
 

@@ -48,6 +48,8 @@ button { min-height:49px; padding:0 18px; border:1px solid var(--ink); border-ra
 .admin-field { display:block; margin:0; width:100%; }
 .admin-field-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; gap:10px; }
 .admin-field-head > span,.admin-field > span { display:block; margin-bottom:0; font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink); }
+.admin-field-link { margin-left:auto; font-size:10px; font-weight:700; color:var(--red); text-transform:uppercase; text-decoration:none; }
+.admin-field-link:hover, .admin-field-link:focus { color:var(--ink); text-decoration:underline; }
 .admin-field-limit { font-size:10px; font-weight:600; color:#8c8b7d; white-space:nowrap; }
 .form-grid .admin-field,.form-grid--3 .admin-field { margin-bottom:0; }
 .admin-field small { display:block; margin-top:6px; color:#69685c; font-size:11px; line-height:1.4; }
