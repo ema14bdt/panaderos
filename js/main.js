@@ -160,24 +160,29 @@
     }
 
     function initGalleries() {
-        // Collect all containers that have gallery items
+        var handledLinks = [];
+
+        // 1. Grid/container-based groups (.facility-grid, [data-gallery-group])
         var grids = document.querySelectorAll('.facility-grid, [data-gallery-group]');
         grids.forEach(function(grid) {
-            var links = grid.querySelectorAll('a.facility-item, a[data-lightbox]');
+            var links = Array.prototype.slice.call(grid.querySelectorAll('a.facility-item, a[data-lightbox]'));
+            if (!links.length) return;
             var galleryData = [];
 
-            links.forEach(function(link, idx) {
+            links.forEach(function(link) {
+                handledLinks.push(link);
                 var imgSrc = link.getAttribute('href');
                 var imgThumb = link.querySelector('img');
                 var caption = link.getAttribute('data-caption') || (imgThumb ? imgThumb.getAttribute('alt') : '') || link.textContent.trim();
-                // Clean up "Ver imagen 01" from caption if present
                 caption = caption.replace(/\s*·?\s*Ver imagen\s*\d+/i, '').replace(/\s*·?\s*Imagen\s*\d+/i, '').trim();
 
                 galleryData.push({
                     src: imgSrc,
                     caption: caption
                 });
+            });
 
+            links.forEach(function(link, idx) {
                 link.removeAttribute('target');
                 link.addEventListener('click', function(e) {
                     e.preventDefault();
@@ -186,8 +191,48 @@
             });
         });
 
-        // Individual lightbox links not inside a grid
-        document.querySelectorAll('a[data-lightbox]:not(.facility-item)').forEach(function(link) {
+        // 2. Named groups by data-lightbox attribute (e.g. data-lightbox="beneficios")
+        var namedGroups = {};
+        var allLightboxLinks = Array.prototype.slice.call(document.querySelectorAll('a[data-lightbox]'));
+        allLightboxLinks.forEach(function(link) {
+            if (handledLinks.indexOf(link) !== -1) return;
+            var group = link.getAttribute('data-lightbox');
+            if (!group) return;
+            if (!namedGroups[group]) {
+                namedGroups[group] = [];
+            }
+            namedGroups[group].push(link);
+            handledLinks.push(link);
+        });
+
+        Object.keys(namedGroups).forEach(function(groupName) {
+            var links = namedGroups[groupName];
+            var galleryData = [];
+
+            links.forEach(function(link) {
+                var imgSrc = link.getAttribute('href');
+                var imgThumb = link.querySelector('img');
+                var caption = link.getAttribute('data-caption') || (imgThumb ? imgThumb.getAttribute('alt') : '') || link.getAttribute('title') || '';
+                caption = caption.replace(/\s*·?\s*Ver imagen\s*\d+/i, '').replace(/\s*·?\s*Imagen\s*\d+/i, '').trim();
+
+                galleryData.push({
+                    src: imgSrc,
+                    caption: caption
+                });
+            });
+
+            links.forEach(function(link, idx) {
+                link.removeAttribute('target');
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    openLightbox(galleryData, idx);
+                });
+            });
+        });
+
+        // 3. Standalone individual lightbox links
+        allLightboxLinks.forEach(function(link) {
+            if (handledLinks.indexOf(link) !== -1) return;
             link.removeAttribute('target');
             link.addEventListener('click', function(e) {
                 e.preventDefault();

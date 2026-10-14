@@ -454,8 +454,69 @@ ul.list-link  {
 .featured-news-card__img-link { position: relative; display: block; overflow: hidden; background: var(--ink); border: 1px solid rgba(62, 77, 95, .18); text-decoration: none; }
 .featured-news-card__img-link img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
 .featured-news-card__img-link:hover img, .featured-news-card__img-link:focus img { transform: scale(1.04); }
-.featured-news-card__zoom-hint { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(62, 77, 95, 0.85); color: #fff; border-radius: 50%; font-size: 13px; opacity: 0; transform: translateY(6px); transition: opacity .25s ease, transform .25s ease; }
-.featured-news-card__img-link:hover .featured-news-card__zoom-hint, .featured-news-card__img-link:focus .featured-news-card__zoom-hint { opacity: 1; transform: translateY(0); }
+/* Zoom Hint Unificado para Todas las Imagenes */
+.image-zoom-hint,
+.featured-news-card__zoom-hint,
+.benefit-card__zoom-hint,
+.facility-item__zoom-hint {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px;
+  height: 34px;
+  background: rgba(22, 22, 15, 0.9) !important;
+  color: #ffffff !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .25s ease, transform .25s ease, background-color .2s ease;
+  z-index: 3;
+  pointer-events: none;
+  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.image-zoom-hint .fa,
+.featured-news-card__zoom-hint .fa,
+.benefit-card__zoom-hint .fa,
+.facility-item__zoom-hint .fa,
+.content-card .image-zoom-hint .fa,
+.content-card .benefit-card__zoom-hint .fa,
+.benefit-card .image-zoom-hint .fa,
+.benefit-card .benefit-card__zoom-hint .fa {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 13px !important;
+  line-height: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 14px !important;
+  height: 14px !important;
+  color: #ffffff !important;
+}
+
+.featured-news-card__img-link:hover .featured-news-card__zoom-hint,
+.featured-news-card__img-link:focus .featured-news-card__zoom-hint,
+.featured-news-card__img-link:hover .image-zoom-hint,
+.featured-news-card__img-link:focus .image-zoom-hint,
+.benefit-card__media:hover .benefit-card__zoom-hint,
+.benefit-card__media:focus .benefit-card__zoom-hint,
+.benefit-card__media:hover .image-zoom-hint,
+.benefit-card__media:focus .image-zoom-hint,
+.facility-item:hover .facility-item__zoom-hint,
+.facility-item:focus .facility-item__zoom-hint,
+.facility-item:hover .image-zoom-hint,
+.facility-item:focus .image-zoom-hint {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
 
 .home-intro { padding: 72px 0 80px; background: var(--paper); }
 .home-intro .container, .social-brief .container, .contact-band .container { max-width: 1180px; }
@@ -625,10 +686,10 @@ body.lightbox-open { overflow: hidden !important; }
 /* Rediseño de Tarjetas de Beneficios - Mismo tamaño y posición de icono consistente */
 .benefit-card { padding: 0; overflow: hidden; position: relative; height: 100%; min-height: 380px; display: flex; flex-direction: column; transition: transform .25s ease, box-shadow .25s ease; }
 .benefit-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(22, 22, 15, 0.09); }
-.benefit-card__media { position: relative; width: 100%; height: 135px; overflow: hidden; background: var(--ink); border-bottom: 1px solid var(--line); flex-shrink: 0; }
+.benefit-card__media { position: relative; display: block; width: 100%; height: 240px; overflow: hidden; background: var(--ink); border-bottom: 1px solid var(--line); flex-shrink: 0; cursor: pointer; text-decoration: none; }
 .benefit-card__media img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; transition: transform .4s ease; }
 .benefit-card:hover .benefit-card__media img { transform: scale(1.04); }
-.benefit-card__icon-badge { position: absolute; top: 16px; left: 20px; width: 42px; height: 42px; background: var(--sun); color: #1a2530; display: flex; align-items: center; justify-content: center; border: 1px solid var(--ink); box-shadow: 0 3px 8px rgba(22, 22, 15, 0.25); font-size: 19px; z-index: 2; }
+.benefit-card__icon-badge { position: absolute; top: 16px; left: 20px; width: 42px; height: 42px; background: var(--sun); color: #1a2530; display: flex; align-items: center; justify-content: center; border: 1px solid var(--ink); box-shadow: 0 3px 8px rgba(22, 22, 15, 0.25); font-size: 19px; z-index: 2; pointer-events: none; }
 .benefit-card__icon-badge .fa { margin: 0; font-size: 19px; }
 .benefit-card__header { padding: 16px 20px 0; flex-shrink: 0; }
 .benefit-card__icon-wrap { display: inline-flex; align-items: center; justify-content: center; width: 42px; height: 42px; background: #ede8dc; border: 1px solid var(--line); font-size: 19px; color: var(--ink); }
@@ -679,7 +740,7 @@ body.lightbox-open { overflow: hidden !important; }
 .facility-item:after { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(22,22,15,.75), transparent 60%); content: ''; }
 .facility-item:hover, .facility-item:focus { color: var(--cream); text-decoration: none; }
 .facility-item:hover img, .facility-item:focus img { opacity: .78; transform: scale(1.06); }
-.facility-item span { position: absolute; z-index: 1; bottom: 15px; left: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+.facility-item > span:not(.image-zoom-hint):not(.facility-item__zoom-hint) { position: absolute; z-index: 1; bottom: 15px; left: 16px; font-family: var(--mono); font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
 .news-now { display: flex; align-items: end; justify-content: space-between; gap: 60px; padding: 53px; background: var(--sun); color: #1a2530; }
 .news-now > div { max-width: 670px; }
 .news-now h2 { margin: 0; font-size: clamp(36px, 4vw, 59px); font-weight: 600; line-height: .96; letter-spacing: -.05em; color: #1a2530; }

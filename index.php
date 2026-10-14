@@ -85,7 +85,7 @@ $home_content = site_content('home', site_home_defaults());
                         <?php foreach ($featuredImages as $imgIdx => $imgSrc) { ?>
                         <a class="featured-news-card__img-link" href="<?php echo site_escape($imgSrc); ?>" data-lightbox="home-featured" data-caption="<?php echo site_escape($home_content['featured_news_title']); ?>">
                             <img src="<?php echo site_escape($imgSrc); ?>" alt="<?php echo site_escape($home_content['featured_news_title']) . ' (' . ($imgIdx + 1) . ')'; ?>" loading="lazy">
-                            <span class="featured-news-card__zoom-hint" title="Ampliar imagen"><i class="fa fa-search-plus" aria-hidden="true"></i></span>
+                            <span class="image-zoom-hint featured-news-card__zoom-hint" title="Ampliar imagen" aria-hidden="true"><i class="fa fa-search-plus"></i></span>
                         </a>
                         <?php } ?>
                     </div>

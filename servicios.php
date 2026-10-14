@@ -22,12 +22,13 @@ require_once('page-header.php');
             ?>
             <article class="<?php echo $cardClass; ?>">
                 <?php if ($hasImage) { ?>
-                <div class="benefit-card__media">
+                <a href="<?php echo site_escape($item['image']); ?>" class="benefit-card__media" data-lightbox="beneficios" data-caption="<?php echo site_escape($item['title']); ?>" title="Ampliar imagen de <?php echo site_escape($item['title']); ?>">
                     <img src="<?php echo site_escape($item['image']); ?>" alt="<?php echo site_escape($item['title']); ?>" loading="lazy">
                     <span class="benefit-card__icon-badge" aria-hidden="true">
                         <i class="fa <?php echo $iconClass; ?>"></i>
                     </span>
-                </div>
+                    <span class="image-zoom-hint benefit-card__zoom-hint" title="Ampliar imagen" aria-hidden="true"><i class="fa fa-search-plus"></i></span>
+                </a>
                 <?php } else { ?>
                 <div class="benefit-card__header">
                     <span class="benefit-card__icon-wrap" aria-hidden="true">

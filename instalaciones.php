@@ -18,6 +18,7 @@ require_once 'page-header.php';
             <a href="<?php echo site_escape($imgPath); ?>" target="_blank" class="facility-item" rel="noopener noreferrer">
                 <img src="<?php echo site_escape($imgPath); ?>" alt="<?php echo site_escape($itemTitle); ?>">
                 <span><?php echo site_escape($itemTitle); ?> · Imagen <?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="image-zoom-hint facility-item__zoom-hint" title="Ampliar imagen" aria-hidden="true"><i class="fa fa-search-plus"></i></span>
             </a>
             <?php } ?>
         </div>
