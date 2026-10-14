@@ -187,7 +187,7 @@ try {
 // 3. Escritura atómica y respaldos
 echo "\n3. Validando escritura atómica, locking y generación de backups:\n";
 $testKey = 'test_time_' . time();
-$home['hero_eyebrow'] = 'Sindicato de Obreros Panaderos de Lanús';
+$home['hero_eyebrow'] = 'Sindicato de Obreros y Empleados Panaderos de Lanús';
 $backupDir = ADMIN_CONTENT_DIR . '/backups';
 $initialBackups = glob($backupDir . '/*.json');
 $countBefore = is_array($initialBackups) ? count($initialBackups) : 0;

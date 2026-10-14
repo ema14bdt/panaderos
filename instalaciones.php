@@ -13,7 +13,7 @@ require_once 'page-header.php';
         <div class="facility-grid">
             <?php foreach ($content['items'] as $index => $item) {
                 $imgPath = isset($item['image']) ? $item['image'] : '';
-                $itemTitle = isset($item['title']) && trim($item['title']) !== '' ? $item['title'] : 'Instalaciones del Sindicato de Obreros Panaderos de Lanús';
+                $itemTitle = isset($item['title']) && trim($item['title']) !== '' ? $item['title'] : 'Instalaciones del Sindicato de Obreros y Empleados Panaderos de Lanús';
             ?>
             <a href="<?php echo site_escape($imgPath); ?>" target="_blank" class="facility-item" rel="noopener noreferrer">
                 <img src="<?php echo site_escape($imgPath); ?>" alt="<?php echo site_escape($itemTitle); ?>">

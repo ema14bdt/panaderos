@@ -1,6 +1,6 @@
 <?php
 $page_title = isset($page_title) ? $page_title : 'Panaderos de Lanús';
-$page_label = isset($page_label) ? $page_label : 'Sindicato de Obreros Panaderos de Lanús';
+$page_label = isset($page_label) ? $page_label : 'Sindicato de Obreros y Empleados Panaderos de Lanús';
 $page_intro = isset($page_intro) ? $page_intro : '';
 $site_base = isset($site_base) ? $site_base : '';
 ?>
@@ -9,7 +9,7 @@ $site_base = isset($site_base) ? $site_base : '';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?> | Sindicato de Obreros Panaderos de Lanús">
+    <meta name="description" content="<?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?> | Sindicato de Obreros y Empleados Panaderos de Lanús">
     <meta name="theme-color" content="#3e4d5f">
     <title><?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?> | Panaderos de Lanús</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">

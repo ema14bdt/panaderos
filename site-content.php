@@ -3,7 +3,7 @@
 function site_home_defaults()
 {
     return array(
-        'hero_eyebrow' => 'Sindicato de Obreros Panaderos de Lanús',
+        'hero_eyebrow' => 'Sindicato de Obreros y Empleados Panaderos de Lanús',
         'hero_title' => 'El trabajo panadero',
         'hero_emphasis' => 'se defiende',
         'hero_after' => 'unido.',
@@ -27,7 +27,7 @@ function site_home_defaults()
         'featured_news_enabled' => true,
         'featured_news_badge' => 'En desarrollo · Próximo lanzamiento',
         'featured_news_title' => 'Una nueva aplicación móvil al servicio de las y los trabajadores panaderos',
-        'featured_news_description' => "Estamos desarrollando la aplicación oficial del Sindicato de Obreros Panaderos de Lanús para acompañarte en tu día a día.\n\nVas a poder tener a mano tu credencial digital, consultar el listado completo de beneficios y servicios, anotarte a eventos y realizar tus gestiones de forma directa desde tu celular.",
+        'featured_news_description' => "Estamos desarrollando la aplicación oficial del Sindicato de Obreros y Empleados Panaderos de Lanús para acompañarte en tu día a día.\n\nVas a poder tener a mano tu credencial digital, consultar el listado completo de beneficios y servicios, anotarte a eventos y realizar tus gestiones de forma directa desde tu celular.",
         'featured_news_link_url' => 'servicios.php',
         'featured_news_link_label' => 'Conocer beneficios vigentes',
         'featured_news_image_1' => 'images/novedades/app-panaderos-1.jpg',
