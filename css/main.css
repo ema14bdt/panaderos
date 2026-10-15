@@ -734,6 +734,26 @@ body.lightbox-open { overflow: hidden !important; }
 .committee-member__portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .committee-member h3 { margin: 0; font-size: 23px; font-weight: 600; line-height: 1.05; letter-spacing: -.04em; overflow-wrap: break-word; word-break: break-word; hyphens: auto; }
 .committee-member p { margin: 8px 0 0; color: var(--red); font-family: var(--mono); font-size: 10px; line-height: 1.45; text-transform: uppercase; overflow-wrap: break-word; }
+/* Instalaciones: Reels section */
+.reels-section { margin-bottom: 50px; }
+.reels-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 35px; }
+.reel-card { position: relative; background: var(--ink); border: 1px solid var(--line); overflow: hidden; display: flex; flex-direction: column; transition: transform .25s ease, box-shadow .25s ease; border-radius: 6px; }
+.reel-card:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,.18); }
+.reel-card__video-wrap { position: relative; width: 100%; aspect-ratio: 9 / 16; background: #000; overflow: hidden; cursor: pointer; }
+.reel-card__video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.reel-card__overlay { position: absolute; inset: 0; pointer-events: none; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; background: linear-gradient(180deg, rgba(0,0,0,.35) 0%, transparent 35%, transparent 60%, rgba(0,0,0,.8) 100%); }
+.reel-card__play-btn, .reel-card__sound-btn { pointer-events: auto; width: 38px; height: 38px; border-radius: 50%; background: rgba(0,0,0,.6); border: 1px solid rgba(255,255,255,.35); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background .2s ease, transform .2s ease, opacity .2s ease; font-size: 13px; }
+.reel-card__play-btn:hover, .reel-card__sound-btn:hover { background: var(--sun); color: var(--ink); border-color: var(--ink); transform: scale(1.08); }
+.reel-card__play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 54px; height: 54px; font-size: 20px; }
+.reel-card__play-btn:hover { transform: translate(-50%, -50%) scale(1.08); }
+.reel-card.is-playing .reel-card__play-btn { opacity: 0; pointer-events: none; }
+.reel-card.is-playing:hover .reel-card__play-btn { opacity: 0.85; pointer-events: auto; }
+.reel-card__sound-btn { position: absolute; top: 12px; right: 12px; }
+.reel-card__footer { padding: 16px; background: var(--ink); color: #fffdf8; }
+.reel-card__kicker { display: inline-flex; align-items: center; gap: 6px; color: var(--sun); font-family: var(--mono); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.reel-card__title { margin: 6px 0 0; font-size: 16px; font-weight: 600; line-height: 1.25; color: #fff; letter-spacing: -.02em; }
+.facilities-separator { margin: 55px 0 50px; border: 0; border-top: 1px solid var(--line); }
+
 .facility-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin-top: 42px; }
 .facility-item { position: relative; display: block; min-height: 260px; overflow: hidden; background: var(--ink); color: var(--cream); text-decoration: none; }
 .facility-item img { width: 100%; height: 100%; min-height: 260px; object-fit: cover; transition: transform .5s ease, opacity .3s ease; }
@@ -802,6 +822,7 @@ body.lightbox-open { overflow: hidden !important; }
   .benefits-grid, .document-grid { grid-template-columns: 1fr 1fr; }
   .committee-grid { grid-template-columns: repeat(3, 1fr); }
   .archive-grid { grid-template-columns: 1fr 1fr; }
+  .reels-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   .featured-news-card { grid-template-columns: 1fr; padding: 36px 30px; gap: 28px; }
   .featured-news-card__media--count-1 .featured-news-card__img-link { height: 300px; }
   .site-page .site-footer__inner { grid-template-columns: 150px 1fr; grid-template-areas: 'brand message' 'contact contact' 'legal legal'; }
@@ -825,6 +846,8 @@ body.lightbox-open { overflow: hidden !important; }
   .page-content { padding: 58px 0 70px; }
   .content-grid { grid-template-columns: 1fr; margin-top: 30px; }
   .benefits-grid, .document-grid, .committee-grid, .facility-grid, .facility-grid--story, .archive-grid { grid-template-columns: 1fr; }
+  .reels-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  @media (max-width: 480px) { .reels-grid { grid-template-columns: 1fr; max-width: 320px; margin-left: auto; margin-right: auto; } }
   .benefits-grid { grid-auto-rows: auto; }
   .benefit-card, .benefits-callout { min-height: auto; }
   .content-card { min-height: 220px; }

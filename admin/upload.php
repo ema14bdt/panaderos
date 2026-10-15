@@ -14,11 +14,12 @@ if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST')
 try {
     admin_verify_csrf();
 
-    if (!isset($_FILES['image']) || !is_array($_FILES['image'])) {
-        throw new InvalidArgumentException('No se recibió ningún archivo de imagen.');
+    $isVideo = isset($_FILES['video']) && is_array($_FILES['video']);
+    if (!$isVideo && (!isset($_FILES['image']) || !is_array($_FILES['image']))) {
+        throw new InvalidArgumentException('No se recibió ningún archivo.');
     }
 
-    $file = $_FILES['image'];
+    $file = $isVideo ? $_FILES['video'] : $_FILES['image'];
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $uploadErrors = array(
             UPLOAD_ERR_INI_SIZE   => 'El archivo excede el tamaño máximo permitido por el servidor.',
@@ -31,6 +32,87 @@ try {
         );
         $msg = isset($uploadErrors[$file['error']]) ? $uploadErrors[$file['error']] : 'Error al subir el archivo.';
         throw new RuntimeException($msg);
+    }
+
+    if ($isVideo) {
+        $maxVideoBytes = 40 * 1024 * 1024;
+        if ($file['size'] > $maxVideoBytes) {
+            throw new InvalidArgumentException('El video supera los 40 MB permitidos.');
+        }
+
+        $originalName = (string) $file['name'];
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $allowedVideoExtensions = array('mp4', 'webm', 'mov');
+        if (!in_array($extension, $allowedVideoExtensions, true)) {
+            throw new InvalidArgumentException('Formato de video no válido. Se aceptan MP4, WebM o MOV.');
+        }
+
+        $probeCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffprobe -v error -show_entries format=duration,size -show_entries stream=width,height,codec_name -of json ' . escapeshellarg($file['tmp_name']) . ' 2>&1';
+        $probeOut = shell_exec($probeCmd);
+        $probeData = json_decode((string) $probeOut, true);
+
+        if (!$probeData || !isset($probeData['format']['duration'])) {
+            admin_audit('upload_reel_probe_failed: ' . substr((string)$probeOut, 0, 200));
+            throw new InvalidArgumentException('El archivo subido no es un video legible o válido.');
+        }
+
+        $duration = (float) $probeData['format']['duration'];
+        if ($duration > 62.0) {
+            throw new InvalidArgumentException('El video dura ' . round($duration) . ' segundos. Los reels deben durar un máximo de 60 segundos.');
+        }
+
+        $targetDir = dirname(__DIR__) . '/videos/instalaciones';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true)) {
+            throw new RuntimeException('No se pudo acceder a la carpeta de videos.');
+        }
+
+        $rawBaseName = pathinfo($originalName, PATHINFO_FILENAME);
+        $cleanSlug = preg_replace('/[^a-zA-Z0-9_\-]/', '-', strtolower($rawBaseName));
+        $cleanSlug = preg_replace('/-+/', '-', trim($cleanSlug, '-'));
+        if ($cleanSlug === '') {
+            $cleanSlug = 'reel';
+        }
+        $cleanSlug = substr($cleanSlug, 0, 30);
+        $token = bin2hex(random_bytes(4));
+        $videoFilename = $cleanSlug . '-' . $token . '.mp4';
+        $posterFilename = $cleanSlug . '-' . $token . '-poster.jpg';
+        $targetPath = $targetDir . '/' . $videoFilename;
+        $posterPath = $targetDir . '/' . $posterFilename;
+
+        $ffmpegCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffmpeg -y -i ' . escapeshellarg($file['tmp_name']) . ' '
+            . '-c:v libx264 -pix_fmt yuv420p -crf 26 -preset fast '
+            . '-vf "scale=\'min(720,iw)\':-2" -r 30 '
+            . '-c:a aac -b:a 128k '
+            . '-movflags +faststart '
+            . escapeshellarg($targetPath) . ' 2>&1';
+        exec($ffmpegCmd, $ffOut, $ffRet);
+
+        if ($ffRet !== 0 || !is_file($targetPath) || filesize($targetPath) === 0) {
+            if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+                throw new RuntimeException('No fue posible procesar el video en el servidor.');
+            }
+        }
+        chmod($targetPath, 0666);
+
+        $posterCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffmpeg -y -ss 00:00:00.500 -i ' . escapeshellarg($targetPath) . ' -frames:v 1 -update 1 -q:v 2 ' . escapeshellarg($posterPath) . ' 2>&1';
+        exec($posterCmd);
+        if (is_file($posterPath)) {
+            chmod($posterPath, 0666);
+        }
+
+        $relativeVideoPath = 'videos/instalaciones/' . $videoFilename;
+        $relativePosterPath = is_file($posterPath) ? 'videos/instalaciones/' . $posterFilename : '';
+
+        admin_audit('upload_reel: ' . $relativeVideoPath);
+
+        echo json_encode(array(
+            'success'  => true,
+            'path'     => $relativeVideoPath,
+            'poster'   => $relativePosterPath,
+            'duration' => round($duration, 1),
+            'size'     => filesize($targetPath)
+        ));
+        exit;
     }
 
     // Tamaño máximo: 2 MB

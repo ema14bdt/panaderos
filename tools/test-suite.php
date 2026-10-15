@@ -184,6 +184,28 @@ try {
     assert_test("admin_validate_instalaciones falló con datos válidos: " . $e->getMessage(), false);
 }
 
+try {
+    $instalacionesWithReels = $instalaciones;
+    $instalacionesWithReels['reels'] = array(
+        array('title' => 'Predio recreativo', 'video' => 'videos/instalaciones/predio.mp4', 'poster' => 'videos/instalaciones/predio-poster.jpg')
+    );
+    $resReels = admin_validate_instalaciones($instalacionesWithReels);
+    assert_test("admin_validate_instalaciones acepta videos reels válidos", count($resReels['reels']) === 1 && $resReels['reels'][0]['title'] === 'Predio recreativo');
+} catch (Exception $e) {
+    assert_test("admin_validate_instalaciones falló con reel válido: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidReel = $instalaciones;
+    $invalidReel['reels'] = array(
+        array('title' => str_repeat('A', 65), 'video' => 'videos/instalaciones/predio.mp4')
+    );
+    admin_validate_instalaciones($invalidReel);
+    assert_test("admin_validate_instalaciones detecta y rechaza título de reel mayor a 60 caracteres", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_instalaciones detecta y rechaza título de reel mayor a 60 caracteres", true);
+}
+
 // 3. Escritura atómica y respaldos
 echo "\n3. Validando escritura atómica, locking y generación de backups:\n";
 $testKey = 'test_time_' . time();
@@ -208,6 +230,7 @@ assert_test("Carpeta images/directivos es accesible y escribible", is_dir($baseD
 assert_test("Carpeta images/novedades es accesible y escribible", is_dir($baseDir . '/images/novedades') && is_writable($baseDir . '/images/novedades'));
 assert_test("Carpeta images/instalaciones es accesible y escribible", is_dir($baseDir . '/images/instalaciones') && is_writable($baseDir . '/images/instalaciones'));
 assert_test("Carpeta images/servicios es accesible y escribible", is_dir($baseDir . '/images/servicios') && is_writable($baseDir . '/images/servicios'));
+assert_test("Carpeta videos/instalaciones es accesible y escribible", is_dir($baseDir . '/videos/instalaciones') && is_writable($baseDir . '/videos/instalaciones'));
 
 // 4. Rate Limiting de login
 echo "\n4. Validando control de intentos de acceso (Rate-Limiting):\n";

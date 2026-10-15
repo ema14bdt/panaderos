@@ -194,6 +194,161 @@
         });
     }
 
+    function initVideoPickers() {
+        document.querySelectorAll('.video-picker-field').forEach(function(field) {
+            if (field.dataset.initialized) return;
+            field.dataset.initialized = 'true';
+
+            var pathInput = field.querySelector('.video-path-input');
+            var posterInput = field.querySelector('.video-poster-input');
+            var fileInput = field.querySelector('.video-file-input');
+            var uploadBtn = field.querySelector('.video-upload-btn');
+            var clearBtn = field.querySelector('.btn-clear-video');
+            var previewVideo = field.querySelector('.video-preview-thumb video');
+            var previewEmpty = field.querySelector('.video-preview-empty');
+            var statusBadge = field.querySelector('.video-status-badge');
+
+            function updatePreview(videoSrc, posterSrc) {
+                if (!previewVideo) return;
+                var cleanVideo = (videoSrc || '').trim();
+                if (!cleanVideo) {
+                    previewVideo.style.display = 'none';
+                    previewVideo.src = '';
+                    if (previewEmpty) previewEmpty.style.display = 'flex';
+                    return;
+                }
+                var resolvedVideo = cleanVideo.indexOf('http') === 0 ? cleanVideo : '../' + cleanVideo.replace(/^\/+/, '');
+                previewVideo.src = resolvedVideo;
+                if (posterSrc) {
+                    var resolvedPoster = posterSrc.indexOf('http') === 0 ? posterSrc : '../' + posterSrc.replace(/^\/+/, '');
+                    previewVideo.poster = resolvedPoster;
+                }
+                previewVideo.style.display = 'block';
+                if (previewEmpty) previewEmpty.style.display = 'none';
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (pathInput) pathInput.value = '';
+                    if (posterInput) posterInput.value = '';
+                    if (fileInput) fileInput.value = '';
+                    updatePreview('', '');
+                    if (statusBadge) {
+                        statusBadge.className = 'video-status-badge';
+                        statusBadge.textContent = 'Video quitado';
+                    }
+                });
+            }
+
+            if (pathInput) {
+                updatePreview(pathInput.value, posterInput ? posterInput.value : '');
+                pathInput.addEventListener('input', function() {
+                    updatePreview(this.value, posterInput ? posterInput.value : '');
+                });
+            }
+
+            if (uploadBtn && fileInput) {
+                uploadBtn.addEventListener('click', function() {
+                    fileInput.click();
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    var file = this.files && this.files[0];
+                    if (!file) return;
+
+                    var maxBytes = 40 * 1024 * 1024;
+                    if (file.size > maxBytes) {
+                        if (statusBadge) {
+                            statusBadge.className = 'video-status-badge error';
+                            statusBadge.textContent = '⚠ El video supera los 40 MB permitidos (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB).';
+                        }
+                        this.value = '';
+                        return;
+                    }
+
+                    var tempVideo = document.createElement('video');
+                    tempVideo.preload = 'metadata';
+                    var objectUrl = URL.createObjectURL(file);
+                    tempVideo.src = objectUrl;
+
+                    if (statusBadge) {
+                        statusBadge.className = 'video-status-badge loading';
+                        statusBadge.textContent = 'Analizando video...';
+                    }
+
+                    tempVideo.onloadedmetadata = function() {
+                        URL.revokeObjectURL(tempVideo.src);
+                        var dur = tempVideo.duration;
+                        if (dur > 62) {
+                            if (statusBadge) {
+                                statusBadge.className = 'video-status-badge error';
+                                statusBadge.textContent = '⚠ El video dura ' + Math.round(dur) + ' seg. El límite máximo para reels es de 60 segundos.';
+                            }
+                            fileInput.value = '';
+                            return;
+                        }
+
+                        if (statusBadge) {
+                            statusBadge.className = 'video-status-badge loading';
+                            statusBadge.textContent = 'Subiendo y optimizando con FFmpeg (720p · faststart)... Puede demorar unos segundos.';
+                        }
+
+                        var csrfToken = document.querySelector('input[name="csrf_token"]');
+                        var formData = new FormData();
+                        formData.append('video', file);
+                        if (csrfToken) {
+                            formData.append('csrf_token', csrfToken.value);
+                        }
+
+                        fetch('upload.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(function(res) {
+                            return res.json().then(function(json) {
+                                return { ok: res.ok, data: json };
+                            });
+                        })
+                        .then(function(result) {
+                            if (result.ok && result.data.success) {
+                                if (pathInput) pathInput.value = result.data.path;
+                                if (posterInput) posterInput.value = result.data.poster || '';
+                                updatePreview(result.data.path, result.data.poster);
+                                if (statusBadge) {
+                                    statusBadge.className = 'video-status-badge';
+                                    var sizeMB = (result.data.size / (1024 * 1024)).toFixed(1);
+                                    statusBadge.textContent = '✓ Reel optimizado (' + result.data.duration + ' seg · ' + sizeMB + ' MB · H.264)';
+                                }
+                            } else {
+                                var err = (result.data && result.data.error) ? result.data.error : 'Error al procesar el video.';
+                                if (statusBadge) {
+                                    statusBadge.className = 'video-status-badge error';
+                                    statusBadge.textContent = '⚠ ' + err;
+                                }
+                            }
+                        })
+                        .catch(function() {
+                            if (statusBadge) {
+                                statusBadge.className = 'video-status-badge error';
+                                statusBadge.textContent = '⚠ Error de red al subir el video.';
+                            }
+                        });
+                    };
+
+                    tempVideo.onerror = function() {
+                        URL.revokeObjectURL(tempVideo.src);
+                        if (statusBadge) {
+                            statusBadge.className = 'video-status-badge error';
+                            statusBadge.textContent = '⚠ No se pudo leer el archivo de video. Verificá que sea MP4 o WebM.';
+                        }
+                    };
+                });
+            }
+        });
+    }
+
     function initRepeaters() {
         document.addEventListener('click', function(e) {
             var target = e.target;
@@ -239,6 +394,7 @@
                         list.insertAdjacentHTML('beforeend', html);
                         reindexContainer(list, arrayName);
                         initImagePickers();
+                        initVideoPickers();
                     }
                 }
             }
@@ -353,6 +509,7 @@
     function init() {
         initRepeaters();
         initImagePickers();
+        initVideoPickers();
         initIconPickers();
     }
 

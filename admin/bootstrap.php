@@ -41,7 +41,7 @@ function admin_headers()
     header('X-Frame-Options: DENY');
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
 }
 
 function admin_configured_hash()
@@ -672,6 +672,9 @@ function admin_validate_instalaciones(array $input)
         }
     }
 
+    $content['reels_kicker'] = admin_text(isset($input['reels_kicker']) && trim((string)$input['reels_kicker']) !== '' ? $input['reels_kicker'] : 'En video', 35);
+    $content['reels_title'] = admin_text(isset($input['reels_title']) && trim((string)$input['reels_title']) !== '' ? $input['reels_title'] : 'Recorré las instalaciones', 60);
+
     $rawItems = isset($input['items']) && is_array($input['items']) ? $input['items'] : array();
     if (empty($rawItems)) {
         throw new InvalidArgumentException('Debe haber al menos una fotografía de las instalaciones.');
@@ -696,6 +699,30 @@ function admin_validate_instalaciones(array $input)
     }
 
     $content['items'] = $items;
+
+    $rawReels = isset($input['reels']) && is_array($input['reels']) ? $input['reels'] : array();
+    $reels = array();
+    foreach ($rawReels as $reel) {
+        if (!is_array($reel)) {
+            continue;
+        }
+        $video = admin_safe_url(isset($reel['video']) ? $reel['video'] : '', 255);
+        if ($video === null || $video === '') {
+            continue;
+        }
+        $poster = admin_safe_url(isset($reel['poster']) ? $reel['poster'] : '', 255);
+        $title = admin_text(isset($reel['title']) ? $reel['title'] : '', 60);
+        if ($title === null) {
+            throw new InvalidArgumentException('Revisá el título del video reel (máx. 60 caracteres).');
+        }
+        $reels[] = array(
+            'video' => $video,
+            'poster' => $poster !== null ? $poster : '',
+            'title' => $title
+        );
+    }
+    $content['reels'] = $reels;
+
     return $content;
 }
 

@@ -256,6 +256,9 @@ function site_instalaciones_defaults()
         'page_intro' => 'Conocé los espacios que forman parte de la vida cotidiana del sindicato y de sus afiliados.',
         'section_kicker' => 'Galería',
         'section_title' => 'Un lugar para estar cerca.',
+        'reels_kicker' => 'En video',
+        'reels_title' => 'Recorré las instalaciones',
+        'reels' => array(),
         'items' => array(
             array('image' => 'images/instalaciones/instalaciones-01.jpg', 'title' => 'Sede central e instalaciones'),
             array('image' => 'images/instalaciones/instalaciones-02.jpg', 'title' => 'Espacios de atención y encuentro'),

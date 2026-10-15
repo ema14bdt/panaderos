@@ -243,9 +243,109 @@
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initGalleries);
-    } else {
+    function initReels() {
+        var reelCards = document.querySelectorAll('.reel-card');
+        if (!reelCards.length) return;
+
+        reelCards.forEach(function(card) {
+            var video = card.querySelector('video');
+            var playBtn = card.querySelector('.reel-card__play-btn');
+            var soundBtn = card.querySelector('.reel-card__sound-btn');
+            var videoWrap = card.querySelector('.reel-card__video-wrap');
+            if (!video) return;
+
+            function updatePlayState() {
+                if (video.paused) {
+                    card.classList.remove('is-playing');
+                    if (playBtn) playBtn.innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+                } else {
+                    card.classList.add('is-playing');
+                    if (playBtn) playBtn.innerHTML = '<i class="fa fa-pause" aria-hidden="true"></i>';
+                }
+            }
+
+            function updateSoundState() {
+                if (video.muted) {
+                    if (soundBtn) soundBtn.innerHTML = '<i class="fa fa-volume-off" aria-hidden="true"></i>';
+                } else {
+                    if (soundBtn) soundBtn.innerHTML = '<i class="fa fa-volume-up" aria-hidden="true"></i>';
+                }
+            }
+
+            video.addEventListener('play', updatePlayState);
+            video.addEventListener('pause', updatePlayState);
+            video.addEventListener('ended', function() {
+                video.currentTime = 0;
+                video.play();
+            });
+
+            if (videoWrap) {
+                videoWrap.addEventListener('click', function(e) {
+                    if (e.target.closest('.reel-card__sound-btn')) return;
+                    if (video.paused) {
+                        video.play().catch(function() {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }
+
+            if (playBtn) {
+                playBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (video.paused) {
+                        video.play().catch(function() {});
+                    } else {
+                        video.pause();
+                    }
+                });
+            }
+
+            if (soundBtn) {
+                soundBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    video.muted = !video.muted;
+                    updateSoundState();
+                    if (!video.muted) {
+                        document.querySelectorAll('.reel-card video').forEach(function(other) {
+                            if (other !== video) {
+                                other.muted = true;
+                                var otherCard = other.closest('.reel-card');
+                                var otherSound = otherCard ? otherCard.querySelector('.reel-card__sound-btn') : null;
+                                if (otherSound) otherSound.innerHTML = '<i class="fa fa-volume-off" aria-hidden="true"></i>';
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        if ('IntersectionObserver' in window) {
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    var card = entry.target;
+                    var video = card.querySelector('video');
+                    if (!video) return;
+                    if (!entry.isIntersecting && !video.paused) {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.25 });
+
+            reelCards.forEach(function(card) {
+                observer.observe(card);
+            });
+        }
+    }
+
+    function initAll() {
         initGalleries();
+        initReels();
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+        initAll();
     }
 })();
