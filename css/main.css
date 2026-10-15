@@ -593,7 +593,7 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .site-footer__inner { display: grid; grid-template-columns: 180px minmax(220px, 1fr) auto; grid-template-areas: 'brand message contact' 'legal legal legal'; align-items: center; gap: 16px 30px; min-width: 0; }
 .site-footer__brand { grid-area: brand; display: inline-flex; align-items: center; color: var(--cream); text-decoration: none; }
 .site-footer__brand:hover, .site-footer__brand:focus { color: var(--cream); text-decoration: none; }
-.site-footer__brand img { width: 45px; height: 45px; object-fit: cover; object-position: left center; }
+.site-footer__brand img { width: 48px; height: 48px; object-fit: contain; object-position: center; }
 .site-footer__brand span { display: flex; margin-left: 8px; flex-direction: column; line-height: 1; text-transform: uppercase; }
 .site-footer__brand strong { color: #fffdf8; font-size: 16px; font-weight: 700; letter-spacing: -.04em; }
 .site-footer__brand small { margin-top: 3px; color: #fffdf8; font-size: 7px; font-weight: 600; letter-spacing: .06em; line-height: 1.35; }
@@ -612,7 +612,7 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .site-header .navbar-header { min-height: 74px; }
 .site-brand { display: inline-flex; height: 74px; align-items: center; color: var(--cream); text-decoration: none; }
 .site-brand:hover, .site-brand:focus { color: var(--cream); text-decoration: none; }
-.site-brand img { width: 55px; height: 55px; object-fit: cover; object-position: left center; }
+.site-brand img { width: 55px; height: 55px; object-fit: contain; object-position: center; }
 .site-brand__copy { display: flex; margin-left: 9px; flex-direction: column; line-height: 1; text-transform: uppercase; }
 .site-brand__copy strong { color: #fffdf8; font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -.06em; }
 .site-brand__copy small { margin-top: 3px; color: #fffdf8; font-family: var(--mono); font-size: 7px; font-weight: 500; letter-spacing: .08em; line-height: 1.35; }
@@ -805,7 +805,7 @@ body.lightbox-open { overflow: hidden !important; }
 .site-page .site-footer { padding: 28px 0; background: var(--ink); color: var(--cream); }
 .site-page .site-footer .box { padding: 0; background: transparent; }
 .site-page .site-footer__inner { display: grid; grid-template-columns: 180px minmax(220px, 1fr) auto; grid-template-areas: 'brand message contact' 'legal legal legal'; align-items: center; gap: 16px 30px; }
-.site-page .site-footer__brand img { display: block; width: 45px; height: 45px; }
+.site-page .site-footer__brand img { display: block; width: 48px; height: 48px; }
 .site-page .site-footer__message { margin: 0; color: #fffdf8; font-size: 13px; line-height: 1.45; }
 .site-page .site-footer__legal { color: rgba(255,253,248,.82); font-family: var(--mono); font-size: 10px; letter-spacing: .01em; white-space: nowrap; }
 #header.site-header { position: fixed; top: 0; right: 0; left: 0; z-index: 99999; width: 100%; height: auto; background: var(--ink); }
@@ -839,7 +839,7 @@ body.lightbox-open { overflow: hidden !important; }
   .site-page .page-content > .container > * { max-width: 100%; min-width: 0; }
   .site-page .page-content img { max-width: 100%; }
   .site-header .navbar-header, .site-header .navbar, .site-brand { min-height: 66px; height: 66px; }
-  .site-brand img { width: 48px; height: 48px; object-fit: cover; object-position: left center; }
+  .site-brand img { width: 50px; height: 50px; object-fit: contain; object-position: center; }
   .site-header .navbar-toggle { margin-top: 16px; }
   .site-header .navbar-collapse, .home-2026 .navbar-collapse { margin: 0 -15px; padding: 0 15px 13px; background: var(--ink); border-top: 1px solid rgba(255,253,248,.18); box-shadow: 0 12px 18px rgba(0,0,0,.16); }
   .site-header .navbar-collapse .navbar-nav { margin: 0; }

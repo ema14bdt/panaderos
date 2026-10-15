@@ -7,7 +7,7 @@ $footer_phone = preg_replace('/[^0-9+]/', '', $site_content['phone']);
     <div class="box">
         <div class="container site-footer__inner">
             <a class="site-footer__brand" href="<?php echo $site_base; ?>index.php">
-                <img src="<?php echo $site_base; ?>images/logoH.png" alt="">
+                <img src="<?php echo $site_base; ?>images/logo.png" alt="">
                 <span><strong>Panaderos</strong><small>Sindicato de Obreros y Empleados<br>Panaderos de Lanús</small></span>
             </a>
             <p class="site-footer__message">Organización, derechos y acompañamiento para las y los trabajadores panaderos.</p>
