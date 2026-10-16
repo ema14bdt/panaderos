@@ -860,10 +860,24 @@ body.lightbox-open { overflow: hidden !important; }
   .archive-heading { margin-top: 65px; }
   .archive-card img { height: 230px; }
   .facility-item, .facility-item img { min-height: 235px; }
-  .branch-table--committee th,
-  .branch-table--committee td { padding: 14px 10px; }
-  .branch-table--committee td:first-child { font-size: 17px; }
-  .branch-table--committee td:last-child { font-size: 14px; }
+  .branch-table { margin-top: 28px; overflow-x: visible; border-top: none; }
+  .branch-table table,
+  .branch-table thead,
+  .branch-table tbody,
+  .branch-table tr,
+  .branch-table td { display: block; width: 100%; min-width: 0; }
+  .branch-table thead { display: none; }
+  .branch-table tr { margin-bottom: 16px; padding: 18px 16px; background: #ffffff; border: 1px solid var(--line); border-left: 4px solid var(--sun); border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04); }
+  .branch-table td { padding: 5px 0; border: none; font-size: 14px; line-height: 1.45; color: #2b2b2b; }
+  .branch-table td:first-child { margin-bottom: 10px; padding: 0 0 10px; border-bottom: 1px solid var(--line); font-family: var(--serif); font-size: 20px; font-weight: 700; color: var(--ink); letter-spacing: -.02em; line-height: 1.2; }
+  .branch-table td:not(:first-child)::before { content: attr(data-label); display: block; margin-bottom: 2px; color: var(--red); font-family: var(--mono); font-size: 9.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .branch-table--committee { border-top: 1px solid var(--ink); }
+  .branch-table--committee tr { margin-bottom: 0; padding: 14px 0; background: transparent; border: none; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+  .branch-table--committee tr:first-child { border-top: none; }
+  .branch-table--committee td { width: 100% !important; padding: 0; border: none; }
+  .branch-table--committee td:first-child { margin-bottom: 4px; padding: 0; border-bottom: none; font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.25; letter-spacing: -.02em; }
+  .branch-table--committee td:last-child { width: 100% !important; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--red); line-height: 1.35; }
+  .branch-table--committee td:not(:first-child)::before { display: none; }
   .info-list li { grid-template-columns: 37px 1fr; gap: 11px; }
   .info-list .text-link { grid-column: 2; }
   .site-page .site-footer__inner { grid-template-columns: 1fr; grid-template-areas: 'brand' 'message' 'contact' 'legal'; gap: 13px; }
