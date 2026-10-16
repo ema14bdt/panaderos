@@ -16,6 +16,7 @@ if (!is_dir($seedsDir)) {
 
 $files = array(
     'home.json',
+    'afiliaciones.json',
     'servicios.json',
     'normativas.json',
     'filiales.json',

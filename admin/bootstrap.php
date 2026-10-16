@@ -168,6 +168,7 @@ function admin_atomic_json($filename, array $data, $backup = true)
 {
     $allowed = array(
         'home.json',
+        'afiliaciones.json',
         'servicios.json',
         'normativas.json',
         'filiales.json',
@@ -477,6 +478,71 @@ function admin_validate_servicios(array $input)
     }
 
     $content['items'] = $items;
+    return $content;
+}
+
+function admin_validate_afiliaciones(array $input)
+{
+    $limits = array(
+        'page_label' => 60,
+        'page_title' => 50,
+        'page_intro' => 250,
+        'section_kicker' => 45,
+        'section_title' => 70,
+        'venue_kicker' => 45,
+        'venue_lead' => 90,
+        'venue_address' => 140,
+        'venue_maps_url' => 350,
+        'requirements_kicker' => 45,
+        'requirements_title' => 70,
+        'highlight_title' => 90,
+        'highlight_text' => 250
+    );
+    $content = array();
+    foreach ($limits as $field => $maximum) {
+        if ($field === 'venue_maps_url') {
+            $content[$field] = admin_safe_url(isset($input[$field]) ? $input[$field] : '', $maximum);
+            if ($content[$field] === null) {
+                throw new InvalidArgumentException('Revisá el enlace al mapa (URL válida requerida, máx. ' . $maximum . ' caracteres).');
+            }
+        } else {
+            $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
+            if ($content[$field] === null) {
+                throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
+            }
+        }
+    }
+
+    $rawRequirements = isset($input['requirements']) && is_array($input['requirements']) ? $input['requirements'] : array();
+    if (empty($rawRequirements)) {
+        throw new InvalidArgumentException('Debe haber al menos un requisito de afiliación.');
+    }
+
+    $requirements = array();
+    foreach ($rawRequirements as $req) {
+        if (!is_array($req)) {
+            continue;
+        }
+        $number = admin_text(isset($req['number']) ? $req['number'] : sprintf('%02d', count($requirements) + 1), 10);
+        $title = admin_text(isset($req['title']) ? $req['title'] : '', 90);
+        $description = admin_text(isset($req['description']) ? $req['description'] : '', 200);
+        $badge = admin_text(isset($req['badge']) ? $req['badge'] : '', 35);
+        $icon = admin_text(isset($req['icon']) ? $req['icon'] : 'fa-check', 40);
+
+        if ($title === null || $description === null || $badge === null || $icon === null) {
+            throw new InvalidArgumentException('Revisá los requisitos de afiliación (título máx. 90, descripción máx. 200, etiqueta máx. 35, ícono máx. 40).');
+        }
+
+        $requirements[] = array(
+            'number' => $number !== null ? $number : sprintf('%02d', count($requirements) + 1),
+            'title' => $title,
+            'description' => $description,
+            'badge' => $badge,
+            'icon' => $icon
+        );
+    }
+
+    $content['requirements'] = $requirements;
     return $content;
 }
 

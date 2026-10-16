@@ -270,9 +270,58 @@ function site_instalaciones_defaults()
     );
 }
 
+function site_afiliaciones_defaults()
+{
+    return array(
+        'page_label' => 'Sindicato de Obreros y Empleados Panaderos de Lanús',
+        'page_title' => 'Afiliaciones',
+        'page_intro' => 'Sumate a nuestra organización gremial. Defendemos tus derechos y acompañamos a tu familia en cada etapa.',
+        'section_kicker' => 'Atención presencial',
+        'section_title' => 'Afiliaciones-SOEPLa',
+        'venue_kicker' => 'Sede Sindical',
+        'venue_lead' => 'Te esperamos en nuestra sede Sindical:',
+        'venue_address' => 'Calle Llavallol Nº902 Esquina Rio de Janeiro, Lanus Oeste.',
+        'venue_maps_url' => 'https://www.google.com/maps/search/?api=1&query=Sindicato+de+Obreros+y+Empleados+Panaderos+de+Lan%C3%BAs',
+        'requirements_kicker' => 'Documentación necesaria',
+        'requirements_title' => 'Requisitos para afiliarte:',
+        'requirements' => array(
+            array(
+                'number' => '01',
+                'title' => 'Presentarse de manera presencial.',
+                'description' => 'Acercate a la sede sindical para completar la ficha de afiliación y presentar los comprobantes.',
+                'badge' => 'Presencial',
+                'icon' => 'fa-users'
+            ),
+            array(
+                'number' => '02',
+                'title' => 'DNI. (original y Copia)',
+                'description' => 'Documento Nacional de Identidad vigente en original y fotocopia legible.',
+                'badge' => 'Original y Copia',
+                'icon' => 'fa-credit-card'
+            ),
+            array(
+                'number' => '03',
+                'title' => 'Alta temprana. (original)',
+                'description' => 'Constancia original de alta emitida por el empleador o AFIP/organismo correspondiente.',
+                'badge' => 'Original',
+                'icon' => 'fa-file-text-o'
+            ),
+            array(
+                'number' => '04',
+                'title' => 'Ultimo Recibo de Sueldo. (original)',
+                'description' => 'Comprobante original de haberes emitido por la panadería o establecimiento laboral.',
+                'badge' => 'Original',
+                'icon' => 'fa-money'
+            )
+        ),
+        'highlight_title' => 'El tramite es rápido y sencillo.',
+        'highlight_text' => 'Una vez presentada la documentación, contás de forma inmediata con el respaldo gremial y todos los beneficios que brinda el sindicato.'
+    );
+}
+
 function site_content($name, array $defaults)
 {
-    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones');
+    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones', 'afiliaciones');
     if (!in_array($name, $allowed, true)) {
         return $defaults;
     }

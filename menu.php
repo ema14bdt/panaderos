@@ -6,6 +6,7 @@ $site_content = site_content('home', site_home_defaults());
 $currentUri = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
 $currentScript = basename($currentUri);
 $isComision = ($currentScript === 'comision-directiva.php');
+$isAfiliaciones = ($currentScript === 'afiliaciones.php');
 $isServicios = ($currentScript === 'servicios.php');
 $isInstalaciones = ($currentScript === 'instalaciones.php');
 $isNormativas = ($currentScript === 'normativas.php');
@@ -30,6 +31,7 @@ $isNovedades = ($currentScript === 'novedades.php' || strpos($currentUri, '/nove
             <div id="site-navigation" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
                     <li class="<?php echo $isComision ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>comision-directiva.php" <?php echo $isComision ? 'aria-current="page"' : ''; ?>>El sindicato</a></li>
+                    <li class="<?php echo $isAfiliaciones ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>afiliaciones.php" <?php echo $isAfiliaciones ? 'aria-current="page"' : ''; ?>>Afiliaciones</a></li>
                     <li class="<?php echo $isServicios ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>servicios.php" <?php echo $isServicios ? 'aria-current="page"' : ''; ?>>Beneficios</a></li>
                     <li class="<?php echo $isInstalaciones ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>instalaciones.php" <?php echo $isInstalaciones ? 'aria-current="page"' : ''; ?>>Instalaciones</a></li>
                     <li class="<?php echo $isNormativas ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>normativas.php" <?php echo $isNormativas ? 'aria-current="page"' : ''; ?>>Normativas</a></li>

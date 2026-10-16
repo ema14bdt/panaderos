@@ -796,6 +796,226 @@ body.lightbox-open { overflow: hidden !important; }
 .utility-panel .button, .login-panel .button { margin-right: 12px; }
 .utility-panel .text-link, .login-panel .text-link { display: inline-block; margin-top: 18px; }
 .info-list { margin: 42px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+
+/* Afiliaciones Section */
+.affiliation-venue {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-top: 32px;
+  padding: 30px 32px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--sun);
+  border-radius: 4px;
+}
+.affiliation-venue__icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--sun);
+  font-size: 24px;
+}
+.affiliation-venue__body {
+  flex: 1;
+  min-width: 0;
+}
+.affiliation-venue__eyebrow {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 4px;
+}
+.affiliation-venue__headline {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.affiliation-venue__address {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2b2b2b;
+  line-height: 1.4;
+}
+.affiliation-venue__pin {
+  font-size: 17px;
+  vertical-align: -1px;
+}
+.affiliation-venue__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.button--secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--ink);
+}
+.button--secondary:hover, .button--secondary:focus {
+  background: var(--paper);
+  color: var(--red);
+  border-color: var(--red);
+}
+
+.affiliation-section {
+  margin-top: 56px;
+}
+.affiliation-section__header {
+  margin-bottom: 28px;
+}
+.affiliation-section__title {
+  margin: 6px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.2vw, 42px);
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -.03em;
+}
+
+.affiliation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+.affiliation-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 24px 22px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.affiliation-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.05);
+  border-color: rgba(26,37,48,.25);
+}
+.affiliation-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.affiliation-card__num {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: .06em;
+}
+.affiliation-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--ink);
+  font-size: 16px;
+}
+.affiliation-card__title {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.25;
+}
+.affiliation-card__desc {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #444;
+  flex: 1;
+}
+.affiliation-card__footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+.affiliation-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px solid rgba(26,37,48,.15);
+  border-radius: 3px;
+}
+
+.affiliation-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  margin-top: 56px;
+  padding: 42px 40px;
+  background: var(--sun);
+  color: #1a2530;
+  border-radius: 4px;
+}
+.affiliation-callout__copy {
+  max-width: 620px;
+}
+.affiliation-callout__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  margin-bottom: 12px;
+  background: var(--ink);
+  color: var(--sun);
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  border-radius: 3px;
+}
+.affiliation-callout__title {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.2vw, 38px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  color: #1a2530;
+}
+.affiliation-callout__desc {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #1a2530;
+}
+.affiliation-callout__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
 .info-list li { display: grid; grid-template-columns: 55px 1fr auto; gap: 20px; align-items: center; min-height: 86px; padding: 16px 0; border-bottom: 1px solid var(--line); }
 .info-list__number { color: var(--red); font-family: var(--mono); font-size: 11px; }
 .info-list h3 { margin: 0; font-size: 23px; font-weight: 600; letter-spacing: -.03em; }
@@ -879,6 +1099,13 @@ body.lightbox-open { overflow: hidden !important; }
   .branch-table--committee td:last-child { width: 100% !important; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--red); line-height: 1.35; }
   .branch-table--committee td:not(:first-child)::before { display: none; }
   .contact-band__details { min-width: 0; width: 100%; }
+  .affiliation-venue { flex-direction: column; align-items: flex-start; padding: 24px 18px; gap: 18px; }
+  .affiliation-venue__actions { width: 100%; flex-direction: column; gap: 10px; }
+  .affiliation-venue__actions .button { width: 100%; justify-content: center; }
+  .affiliation-grid { grid-template-columns: 1fr; gap: 16px; }
+  .affiliation-callout { flex-direction: column; align-items: flex-start; padding: 30px 20px; gap: 24px; }
+  .affiliation-callout__actions { width: 100%; flex-direction: column; gap: 10px; }
+  .affiliation-callout__actions .button { width: 100%; justify-content: center; }
   .info-list li { grid-template-columns: 37px 1fr; gap: 11px; }
   .info-list .text-link { grid-column: 2; }
   .site-page .site-footer__inner { grid-template-columns: 1fr; grid-template-areas: 'brand' 'message' 'contact' 'legal'; gap: 13px; }
