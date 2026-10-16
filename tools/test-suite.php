@@ -50,6 +50,9 @@ assert_test("site_content('novedades') retorna archivo histórico", is_array($no
 $instalaciones = site_content('instalaciones', site_instalaciones_defaults());
 assert_test("site_content('instalaciones') retorna galería de espacios", is_array($instalaciones) && count($instalaciones['items']) >= 4);
 
+$afiliaciones = site_content('afiliaciones', site_afiliaciones_defaults());
+assert_test("site_content('afiliaciones') retorna datos de afiliaciones", is_array($afiliaciones) && count($afiliaciones['requirements']) >= 4);
+
 $disallowed = site_content('hack_attempt', array('safe' => true));
 assert_test("site_content() bloquea nombres de archivo no autorizados", $disallowed === array('safe' => true));
 
@@ -206,6 +209,23 @@ try {
     assert_test("admin_validate_instalaciones detecta y rechaza título de reel mayor a 60 caracteres", true);
 }
 
+// Afiliaciones validation
+try {
+    $validAfiliaciones = admin_validate_afiliaciones($afiliaciones);
+    assert_test("admin_validate_afiliaciones acepta datos válidos", is_array($validAfiliaciones));
+} catch (Exception $e) {
+    assert_test("admin_validate_afiliaciones falló con datos válidos: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidAfiliaciones = $afiliaciones;
+    $invalidAfiliaciones['requirements'] = array();
+    admin_validate_afiliaciones($invalidAfiliaciones);
+    assert_test("admin_validate_afiliaciones rechaza lista vacía de requisitos", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_afiliaciones detecta y rechaza lista vacía de requisitos", true);
+}
+
 // 3. Escritura atómica y respaldos
 echo "\n3. Validando escritura atómica, locking y generación de backups:\n";
 $testKey = 'test_time_' . time();
@@ -215,10 +235,11 @@ $initialBackups = glob($backupDir . '/*.json');
 $countBefore = is_array($initialBackups) ? count($initialBackups) : 0;
 
 admin_atomic_json('home.json', $home, true);
+admin_atomic_json('afiliaciones.json', $afiliaciones, true);
 admin_atomic_json('instalaciones.json', $instalaciones, true);
 $afterBackups = glob($backupDir . '/*.json');
 $countAfter = is_array($afterBackups) ? count($afterBackups) : 0;
-assert_test("admin_atomic_json guarda y genera backups de home.json e instalaciones.json", $countAfter >= $countBefore);
+assert_test("admin_atomic_json guarda y genera backups de home.json, afiliaciones.json e instalaciones.json", $countAfter >= $countBefore);
 
 // Auditoría
 admin_audit('test_suite_run');
@@ -247,10 +268,11 @@ assert_test("admin_clear_failed_login restablece el estado tras login exitoso", 
 echo "\n5. Validando renderizado de páginas públicas sin advertencias:\n";
 $pages = array(
     'index.php',
+    'comision-directiva.php',
+    'afiliaciones.php',
     'servicios.php',
     'normativas.php',
     'filiales.php',
-    'comision-directiva.php',
     'novedades.php',
     'instalaciones.php',
     'novedades-home.php',
