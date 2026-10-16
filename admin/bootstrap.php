@@ -213,21 +213,25 @@ function admin_atomic_json($filename, array $data, $backup = true)
         }
 
         $temporary = $path . '.' . bin2hex(random_bytes(8)) . '.tmp';
-        if (file_put_contents($temporary, $json . PHP_EOL, LOCK_EX) === false) {
-            @unlink($temporary);
-            throw new RuntimeException('No fue posible guardar los cambios.');
-        }
-        @chmod($temporary, 0666);
-
-        if (!@rename($temporary, $path)) {
-            if (@copy($temporary, $path)) {
-                @unlink($temporary);
-                @chmod($path, 0666);
+        $written = @file_put_contents($temporary, $json . PHP_EOL, LOCK_EX);
+        if ($written !== false) {
+            @chmod($temporary, 0666);
+            if (!@rename($temporary, $path)) {
+                if (@copy($temporary, $path)) {
+                    @unlink($temporary);
+                    @chmod($path, 0666);
+                } else {
+                    @unlink($temporary);
+                    throw new RuntimeException('No fue posible actualizar el archivo de contenido.');
+                }
             } else {
-                @unlink($temporary);
-                throw new RuntimeException('No fue posible actualizar el archivo de contenido.');
+                @chmod($path, 0666);
             }
         } else {
+            @unlink($temporary);
+            if (@file_put_contents($path, $json . PHP_EOL, LOCK_EX) === false) {
+                throw new RuntimeException('No fue posible guardar los cambios. Verificá los permisos de escritura en private-content.');
+            }
             @chmod($path, 0666);
         }
     } finally {
@@ -746,6 +750,133 @@ function admin_field($name, $label, array $content, $type = 'text', $maxlength =
         <?php } ?>
         <?php if ($hint !== '') { ?><small><?php echo site_escape($hint); ?></small><?php } ?>
     </label>
+    <?php
+}
+
+function admin_icon_catalog()
+{
+    return array(
+        'Trámites y Documentación' => array(
+            'fa-credit-card'     => 'DNI / Credencial',
+            'fa-file-text-o'     => 'Alta temprana / Constancia',
+            'fa-money'           => 'Recibo de sueldo / Haberes',
+            'fa-users'           => 'Presencial / Afiliados / Familia',
+            'fa-files-o'         => 'Original y copia / Documentos',
+            'fa-file-text'       => 'Comprobante / Formulario',
+            'fa-building-o'      => 'Sede sindical / Presencial',
+            'fa-check'           => 'Tilde / Verificado',
+            'fa-check-square-o'  => 'Requisito cumplido / Aprobado',
+            'fa-pencil-square-o' => 'Firma / Planilla de afiliación',
+            'fa-folder-open-o'   => 'Legajo / Carpeta',
+            'fa-user'            => 'Titular / Afiliado'
+        ),
+        'Salud y Farmacia' => array(
+            'fa-plus-square' => 'Farmacia / Medicamentos',
+            'fa-flask'       => 'Laboratorio / Análisis',
+            'fa-user-md'     => 'Médico / Consulta general',
+            'fa-stethoscope' => 'Atención médica / Chequeos',
+            'fa-hospital-o'  => 'Hospital / Sanatorio',
+            'fa-medkit'      => 'Botiquín / Auxilios',
+            'fa-ambulance'   => 'Emergencias / Ambulancia',
+            'fa-eye'         => 'Óptica / Oftalmología'
+        ),
+        'Familia y Hogar' => array(
+            'fa-heart'   => 'Casamiento / Unión',
+            'fa-users'   => 'Familia / Nacimiento / Afiliados',
+            'fa-smile-o' => 'Niñez / Infancia',
+            'fa-home'    => 'Hogar / Vivienda'
+        ),
+        'Servicios y Traslados' => array(
+            'fa-truck' => 'Mudanzas / Fletes',
+            'fa-car'   => 'Remise / Movilidad',
+            'fa-plane' => 'Viajes / Turismo'
+        ),
+        'Educación y Capacitación' => array(
+            'fa-book'   => 'Kits escolares / Libros',
+            'fa-pencil' => 'Útiles / Capacitación'
+        ),
+        'Gremial y Legal' => array(
+            'fa-legal'       => 'Asesoría legal / Abogado',
+            'fa-briefcase'   => 'Trámites gremiales',
+            'fa-money'       => 'Subsidios / Ayuda económica',
+            'fa-credit-card' => 'Credencial / Tarjeta'
+        ),
+        'Turismo y Recreación' => array(
+            'fa-sun-o'    => 'Verano / Temporada',
+            'fa-umbrella' => 'Vacaciones / Turismo',
+            'fa-leaf'     => 'Camping / Aire libre',
+            'fa-coffee'   => 'Refrigerio / Encuentros'
+        ),
+        'Beneficios Generales' => array(
+            'fa-gift'         => 'Presentes / Cajas',
+            'fa-tag'          => 'Descuentos en comercios',
+            'fa-ticket'       => 'Entradas y eventos',
+            'fa-shield'       => 'Seguro / Cobertura',
+            'fa-check-circle' => 'Beneficio general',
+            'fa-calendar'     => 'Turnos y reservas'
+        )
+    );
+}
+
+function admin_icon_name($iconCode)
+{
+    $catalog = admin_icon_catalog();
+    foreach ($catalog as $cat => $icons) {
+        if (isset($icons[$iconCode])) {
+            return $icons[$iconCode];
+        }
+    }
+    return 'Icono seleccionado';
+}
+
+function admin_render_icon_picker($inputName, $selectedIcon)
+{
+    $catalog = admin_icon_catalog();
+    $iconName = admin_icon_name($selectedIcon);
+    ?>
+    <div class="icon-picker-field">
+        <div class="admin-field-head">
+            <span>Icono representativo</span>
+            <span class="admin-field-limit">Seleccioná visualmente</span>
+        </div>
+        <input type="hidden" name="<?php echo $inputName; ?>" class="icon-picker-input" value="<?php echo site_escape($selectedIcon); ?>" required>
+        
+        <div class="icon-picker-display">
+            <div class="icon-picker-current">
+                <div class="icon-preview-box">
+                    <i class="fa <?php echo site_escape($selectedIcon); ?>" aria-hidden="true"></i>
+                </div>
+                <div class="icon-preview-meta">
+                    <strong class="icon-preview-name"><?php echo site_escape($iconName); ?></strong>
+                </div>
+            </div>
+            <button type="button" class="btn-toggle-icon-palette" title="Cambiar icono visual"><i class="fa fa-th"></i> Elegir icono...</button>
+        </div>
+
+        <div class="icon-picker-palette" style="display:none;">
+            <div class="icon-palette-head">
+                <span>Elegí el icono haciendo clic sobre él:</span>
+                <button type="button" class="btn-close-palette" title="Cerrar">✕</button>
+            </div>
+            <div class="icon-palette-groups">
+                <?php foreach ($catalog as $groupName => $groupIcons) { ?>
+                <div class="icon-palette-group">
+                    <span class="icon-palette-group-title"><?php echo site_escape($groupName); ?></span>
+                    <div class="icon-palette-grid">
+                        <?php foreach ($groupIcons as $faClass => $faLabel) { 
+                            $isSelected = ($faClass === $selectedIcon);
+                        ?>
+                        <button type="button" class="icon-option<?php echo $isSelected ? ' is-selected' : ''; ?>" data-icon="<?php echo site_escape($faClass); ?>" data-name="<?php echo site_escape($faLabel); ?>" title="<?php echo site_escape($faLabel); ?>">
+                            <i class="fa <?php echo site_escape($faClass); ?>" aria-hidden="true"></i>
+                            <span class="icon-option-label"><?php echo site_escape($faLabel); ?></span>
+                        </button>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
     <?php
 }
 

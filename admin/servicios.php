@@ -29,117 +29,14 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
 function admin_servicios_icon_catalog()
 {
-    return array(
-        'Salud y Farmacia' => array(
-            'fa-plus-square' => 'Farmacia / Medicamentos',
-            'fa-flask'       => 'Laboratorio / Análisis',
-            'fa-user-md'     => 'Médico / Consulta general',
-            'fa-stethoscope' => 'Atención médica / Chequeos',
-            'fa-hospital-o'  => 'Hospital / Sanatorio',
-            'fa-medkit'      => 'Botiquín / Auxilios',
-            'fa-ambulance'   => 'Emergencias / Ambulancia',
-            'fa-eye'         => 'Óptica / Oftalmología'
-        ),
-        'Familia y Hogar' => array(
-            'fa-heart'   => 'Casamiento / Unión',
-            'fa-users'   => 'Familia / Nacimiento / Afiliados',
-            'fa-smile-o' => 'Niñez / Infancia',
-            'fa-home'    => 'Hogar / Vivienda'
-        ),
-        'Servicios y Traslados' => array(
-            'fa-truck' => 'Mudanzas / Fletes',
-            'fa-car'   => 'Remise / Movilidad',
-            'fa-plane' => 'Viajes / Turismo'
-        ),
-        'Educación y Capacitación' => array(
-            'fa-book'   => 'Kits escolares / Libros',
-            'fa-pencil' => 'Útiles / Capacitación'
-        ),
-        'Gremial y Legal' => array(
-            'fa-legal'       => 'Asesoría legal / Abogado',
-            'fa-briefcase'   => 'Trámites gremiales',
-            'fa-money'       => 'Subsidios / Ayuda económica',
-            'fa-credit-card' => 'Credencial / Tarjeta'
-        ),
-        'Turismo y Recreación' => array(
-            'fa-sun-o'    => 'Verano / Temporada',
-            'fa-umbrella' => 'Vacaciones / Turismo',
-            'fa-leaf'     => 'Camping / Aire libre',
-            'fa-coffee'   => 'Refrigerio / Encuentros'
-        ),
-        'Beneficios Generales' => array(
-            'fa-gift'         => 'Presentes / Cajas',
-            'fa-tag'          => 'Descuentos en comercios',
-            'fa-ticket'       => 'Entradas y eventos',
-            'fa-shield'       => 'Seguro / Cobertura',
-            'fa-check-circle' => 'Beneficio general',
-            'fa-calendar'     => 'Turnos y reservas'
-        )
-    );
+    return admin_icon_catalog();
 }
 
 function admin_servicios_icon_name($iconCode)
 {
-    $catalog = admin_servicios_icon_catalog();
-    foreach ($catalog as $cat => $icons) {
-        if (isset($icons[$iconCode])) {
-            return $icons[$iconCode];
-        }
-    }
-    return 'Icono seleccionado';
+    return admin_icon_name($iconCode);
 }
 
-function admin_render_icon_picker($inputName, $selectedIcon)
-{
-    $catalog = admin_servicios_icon_catalog();
-    $iconName = admin_servicios_icon_name($selectedIcon);
-    ?>
-    <div class="icon-picker-field">
-        <div class="admin-field-head">
-            <span>Icono representativo</span>
-            <span class="admin-field-limit">Seleccioná visualmente</span>
-        </div>
-        <input type="hidden" name="<?php echo $inputName; ?>" class="icon-picker-input" value="<?php echo site_escape($selectedIcon); ?>" required>
-        
-        <div class="icon-picker-display">
-            <div class="icon-picker-current">
-                <div class="icon-preview-box">
-                    <i class="fa <?php echo site_escape($selectedIcon); ?>" aria-hidden="true"></i>
-                </div>
-                <div class="icon-preview-meta">
-                    <strong class="icon-preview-name"><?php echo site_escape($iconName); ?></strong>
-                    <span class="icon-preview-code"><?php echo site_escape($selectedIcon); ?></span>
-                </div>
-            </div>
-            <button type="button" class="btn-toggle-icon-palette" title="Cambiar icono visual"><i class="fa fa-th"></i> Elegir icono...</button>
-        </div>
-
-        <div class="icon-picker-palette" style="display:none;">
-            <div class="icon-palette-head">
-                <span>Elegí el icono haciendo clic sobre él:</span>
-                <button type="button" class="btn-close-palette" title="Cerrar">✕</button>
-            </div>
-            <div class="icon-palette-groups">
-                <?php foreach ($catalog as $groupName => $groupIcons) { ?>
-                <div class="icon-palette-group">
-                    <span class="icon-palette-group-title"><?php echo site_escape($groupName); ?></span>
-                    <div class="icon-palette-grid">
-                        <?php foreach ($groupIcons as $faClass => $faLabel) { 
-                            $isSelected = ($faClass === $selectedIcon);
-                        ?>
-                        <button type="button" class="icon-option<?php echo $isSelected ? ' is-selected' : ''; ?>" data-icon="<?php echo site_escape($faClass); ?>" data-name="<?php echo site_escape($faLabel); ?>" title="<?php echo site_escape($faLabel); ?>">
-                            <i class="fa <?php echo site_escape($faClass); ?>" aria-hidden="true"></i>
-                            <span class="icon-option-label"><?php echo site_escape($faLabel); ?></span>
-                        </button>
-                        <?php } ?>
-                    </div>
-                </div>
-                <?php } ?>
-            </div>
-        </div>
-    </div>
-    <?php
-}
 
 function admin_render_benefit_image_picker($inputName, $imagePath)
 {
