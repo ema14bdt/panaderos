@@ -14,40 +14,46 @@ admin_render_start('Panel');
             <p>Portada, citas, escala salarial, redes sociales, dirección y mapa.</p>
             <b>Editar <i>→</i></b>
         </a>
-        <a href="servicios.php">
+        <a href="comision.php">
             <span>02</span>
+            <h2>El sindicato</h2>
+            <p>Integrantes de la conducción del sindicato, cargos y nómina institucional.</p>
+            <b>Editar <i>→</i></b>
+        </a>
+        <a href="afiliaciones.php">
+            <span>03</span>
+            <h2>Afiliaciones</h2>
+            <p>Sede sindical, atención presencial, requisitos y documentación requerida.</p>
+            <b>Editar <i>→</i></b>
+        </a>
+        <a href="servicios.php">
+            <span>04</span>
             <h2>Beneficios y servicios</h2>
             <p>Laboratorios, casamiento, nacimiento, farmacia, mudanzas y asesoramiento.</p>
             <b>Editar <i>→</i></b>
         </a>
+        <a href="instalaciones.php">
+            <span>05</span>
+            <h2>Instalaciones y espacios</h2>
+            <p>Galería fotográfica de la sede, áreas de encuentro y predios del sindicato.</p>
+            <b>Editar <i>→</i></b>
+        </a>
         <a href="normativas.php">
-            <span>03</span>
+            <span>06</span>
             <h2>Normativas y marco legal</h2>
             <p>Convenio colectivo CCT 231/94, leyes laborales y código alimentario.</p>
             <b>Editar <i>→</i></b>
         </a>
         <a href="filiales.php">
-            <span>04</span>
+            <span>07</span>
             <h2>Directorio de filiales</h2>
             <p>Sedes de todo el país, direcciones, teléfonos y secretarías generales.</p>
             <b>Editar <i>→</i></b>
         </a>
-        <a href="comision.php">
-            <span>05</span>
-            <h2>Comisión directiva</h2>
-            <p>Integrantes de la conducción del sindicato, cargos y fotografías.</p>
-            <b>Editar <i>→</i></b>
-        </a>
         <a href="novedades.php">
-            <span>06</span>
-            <h2>Novedades y archivo</h2>
+            <span>08</span>
+            <h2>Actualidad y archivo</h2>
             <p>Información de canales oficiales y selección del archivo histórico.</p>
-            <b>Editar <i>→</i></b>
-        </a>
-        <a href="instalaciones.php">
-            <span>07</span>
-            <h2>Instalaciones y espacios</h2>
-            <p>Galería fotográfica de la sede, áreas de encuentro y predios del sindicato.</p>
             <b>Editar <i>→</i></b>
         </a>
     </section>
