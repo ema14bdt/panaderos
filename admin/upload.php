@@ -15,11 +15,12 @@ try {
     admin_verify_csrf();
 
     $isVideo = isset($_FILES['video']) && is_array($_FILES['video']);
-    if (!$isVideo && (!isset($_FILES['image']) || !is_array($_FILES['image']))) {
+    $isAudio = isset($_FILES['audio']) && is_array($_FILES['audio']);
+    if (!$isVideo && !$isAudio && (!isset($_FILES['image']) || !is_array($_FILES['image']))) {
         throw new InvalidArgumentException('No se recibió ningún archivo.');
     }
 
-    $file = $isVideo ? $_FILES['video'] : $_FILES['image'];
+    $file = $isVideo ? $_FILES['video'] : ($isAudio ? $_FILES['audio'] : $_FILES['image']);
     if ($file['error'] !== UPLOAD_ERR_OK) {
         $uploadErrors = array(
             UPLOAD_ERR_INI_SIZE   => 'El archivo excede el tamaño máximo permitido por el servidor.',
@@ -111,6 +112,52 @@ try {
             'poster'   => $relativePosterPath,
             'duration' => round($duration, 1),
             'size'     => filesize($targetPath)
+        ));
+        exit;
+    }
+
+    if ($isAudio) {
+        $maxAudioBytes = 25 * 1024 * 1024;
+        if ($file['size'] > $maxAudioBytes) {
+            throw new InvalidArgumentException('El archivo de audio supera los 25 MB permitidos.');
+        }
+
+        $originalName = (string) $file['name'];
+        $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $allowedAudioExtensions = array('mp3', 'ogg', 'wav', 'm4a');
+        if (!in_array($extension, $allowedAudioExtensions, true)) {
+            throw new InvalidArgumentException('Formato de audio no válido. Se aceptan archivos MP3, OGG, WAV o M4A.');
+        }
+
+        $targetDir = dirname(__DIR__) . '/audio';
+        if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true)) {
+            throw new RuntimeException('No se pudo acceder a la carpeta de audio.');
+        }
+
+        $rawBaseName = pathinfo($originalName, PATHINFO_FILENAME);
+        $cleanSlug = preg_replace('/[^a-zA-Z0-9_\-]/', '-', strtolower($rawBaseName));
+        $cleanSlug = preg_replace('/-+/', '-', trim($cleanSlug, '-'));
+        if ($cleanSlug === '') {
+            $cleanSlug = 'audio';
+        }
+        $cleanSlug = substr($cleanSlug, 0, 35);
+        $token = bin2hex(random_bytes(4));
+        $audioFilename = $cleanSlug . '-' . $token . '.' . $extension;
+        $targetPath = $targetDir . '/' . $audioFilename;
+
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            throw new RuntimeException('No fue posible guardar el archivo de audio en el servidor.');
+        }
+
+        chmod($targetPath, 0666);
+        $relativeAudioPath = 'audio/' . $audioFilename;
+
+        admin_audit('upload_audio: ' . $relativeAudioPath);
+
+        echo json_encode(array(
+            'success' => true,
+            'path'    => $relativeAudioPath,
+            'size'    => filesize($targetPath)
         ));
         exit;
     }

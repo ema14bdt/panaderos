@@ -506,11 +506,125 @@
         });
     }
 
+    function initAudioPickers() {
+        document.querySelectorAll('.audio-picker-field').forEach(function(field) {
+            if (field.dataset.initialized) return;
+            field.dataset.initialized = 'true';
+
+            var pathInput = field.querySelector('.audio-path-input');
+            var fileInput = field.querySelector('.audio-file-input');
+            var uploadBtn = field.querySelector('.audio-upload-btn');
+            var clearBtn = field.querySelector('.btn-clear-audio');
+            var previewPlayer = field.querySelector('.audio-preview-player');
+            var statusBadge = field.querySelector('.audio-status-badge');
+
+            function updatePreview(audioSrc) {
+                if (!previewPlayer) return;
+                var cleanAudio = (audioSrc || '').trim();
+                if (!cleanAudio) {
+                    previewPlayer.style.display = 'none';
+                    previewPlayer.pause();
+                    previewPlayer.src = '';
+                    return;
+                }
+                var resolvedAudio = cleanAudio.indexOf('http') === 0 ? cleanAudio : '../' + cleanAudio.replace(/^\/+/, '');
+                previewPlayer.src = resolvedAudio;
+                previewPlayer.style.display = 'block';
+            }
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function() {
+                    if (pathInput) pathInput.value = '';
+                    if (fileInput) fileInput.value = '';
+                    updatePreview('');
+                    if (statusBadge) {
+                        statusBadge.className = 'audio-status-badge';
+                        statusBadge.textContent = 'Audio quitado';
+                    }
+                });
+            }
+
+            if (pathInput) {
+                pathInput.addEventListener('input', function() {
+                    updatePreview(this.value);
+                });
+            }
+
+            if (uploadBtn && fileInput) {
+                uploadBtn.addEventListener('click', function() {
+                    fileInput.click();
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', function() {
+                    var file = this.files && this.files[0];
+                    if (!file) return;
+
+                    var maxBytes = 25 * 1024 * 1024;
+                    if (file.size > maxBytes) {
+                        if (statusBadge) {
+                            statusBadge.className = 'audio-status-badge error';
+                            statusBadge.textContent = '⚠ El audio supera los 25 MB permitidos.';
+                        }
+                        this.value = '';
+                        return;
+                    }
+
+                    var csrfInput = document.querySelector('input[name="csrf_token"]');
+                    var csrfToken = csrfInput ? csrfInput.value : '';
+
+                    var formData = new FormData();
+                    formData.append('audio', file);
+                    formData.append('csrf_token', csrfToken);
+
+                    if (statusBadge) {
+                        statusBadge.className = 'audio-status-badge loading';
+                        statusBadge.textContent = '⏳ Subiendo audio...';
+                    }
+                    if (uploadBtn) uploadBtn.disabled = true;
+
+                    fetch('upload.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(function(res) { return res.json(); })
+                    .then(function(data) {
+                        if (uploadBtn) uploadBtn.disabled = false;
+                        if (data.success) {
+                            if (pathInput) {
+                                pathInput.value = data.path;
+                                updatePreview(data.path);
+                            }
+                            if (statusBadge) {
+                                statusBadge.className = 'audio-status-badge';
+                                statusBadge.textContent = '✓ Audio subido correctamente (' + (file.size / (1024 * 1024)).toFixed(1) + ' MB)';
+                            }
+                        } else {
+                            if (statusBadge) {
+                                statusBadge.className = 'audio-status-badge error';
+                                statusBadge.textContent = '⚠ ' + (data.error || 'Error al subir el audio.');
+                            }
+                        }
+                    })
+                    .catch(function(err) {
+                        if (uploadBtn) uploadBtn.disabled = false;
+                        if (statusBadge) {
+                            statusBadge.className = 'audio-status-badge error';
+                            statusBadge.textContent = '⚠ Error de red al subir el archivo.';
+                        }
+                    });
+                });
+            }
+        });
+    }
+
     function init() {
         initRepeaters();
         initImagePickers();
         initVideoPickers();
         initIconPickers();
+        initAudioPickers();
     }
 
     if (document.readyState === 'loading') {
