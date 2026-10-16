@@ -555,6 +555,75 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .guide-card__link { margin-top: auto; font-family: var(--mono); font-size: 10px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; }
 .guide-card__link .fa { margin-left: 5px; }
 
+/* Sección 4 de Agosto - Día del Obrero Panadero */
+.dia-panadero-section { padding: 56px 0; background: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.dia-panadero-section .container { max-width: 1180px; }
+.dia-panadero-card { padding: 44px 48px; background: #fff; border: 1px solid var(--line); box-shadow: 0 16px 36px rgba(62, 77, 95, 0.07); }
+.dia-panadero-card__header { margin-bottom: 28px; }
+.dia-panadero-badge { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px; background: var(--ink); color: var(--sun); font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 12px; }
+.dia-panadero-title { margin: 0; font-family: var(--serif); font-size: clamp(26px, 3.2vw, 38px); font-weight: 700; line-height: 1.15; letter-spacing: -.03em; color: var(--ink); }
+.dia-panadero-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr); gap: 40px; align-items: center; }
+.dia-panadero-content { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.dia-panadero-prose { font-size: 15.5px; line-height: 1.7; color: #374151; font-weight: 400; }
+.dia-panadero-player { padding: 18px 20px; background: #faf8f3; border: 1px solid var(--line); border-left: 4px solid var(--sun); display: flex; flex-direction: column; gap: 14px; }
+.dia-panadero-player__meta { display: flex; align-items: center; gap: 12px; }
+.dia-panadero-player__icon { width: 38px; height: 38px; background: var(--ink); color: var(--sun); display: flex; align-items: center; justify-content: center; font-size: 16px; border-radius: 50%; flex-shrink: 0; }
+.dia-panadero-player__text { display: flex; flex-direction: column; line-height: 1.25; }
+.dia-panadero-player__text strong { font-size: 15px; font-weight: 700; color: var(--ink); }
+.dia-panadero-player__text small { font-size: 12px; color: #6b7280; font-weight: 500; margin-top: 2px; }
+.dia-panadero-audio { width: 100%; height: 38px; outline: none; border-radius: 20px; }
+.dia-panadero-lyrics-action { display: flex; align-items: center; }
+.dia-panadero-lyrics-trigger { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; background: #faf8f3; border: 1px solid var(--line); border-left: 4px solid var(--ink); color: var(--ink); font-family: var(--mono); font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; cursor: pointer; transition: all .2s ease; border-radius: 2px; }
+.dia-panadero-lyrics-trigger i.fa-file-text-o { color: var(--sun); font-size: 14px; }
+.dia-panadero-lyrics-trigger i.fa-external-link { font-size: 11px; color: #94a3b8; margin-left: 4px; transition: transform .2s ease, color .2s ease; }
+.dia-panadero-lyrics-trigger:hover, .dia-panadero-lyrics-trigger:focus { background: var(--ink); color: #fff; border-color: var(--ink); border-left-color: var(--sun); }
+.dia-panadero-lyrics-trigger:hover i.fa-file-text-o, .dia-panadero-lyrics-trigger:focus i.fa-file-text-o { color: var(--sun); }
+.dia-panadero-lyrics-trigger:hover i.fa-external-link, .dia-panadero-lyrics-trigger:focus i.fa-external-link { color: var(--sun); transform: translate(2px, -2px); }
+.dia-panadero-media { width: 100%; min-width: 0; display: flex; justify-content: center; }
+.dia-panadero-sheet { position: relative; background: #fff; padding: 10px; border: 1px solid var(--line); box-shadow: 0 10px 25px rgba(0,0,0,0.08); max-width: 440px; width: 100%; }
+.dia-panadero-sheet__link { position: relative; display: block; overflow: hidden; background: #eae4d5; cursor: pointer; text-align: center; }
+.dia-panadero-sheet__link img { display: block; width: 100%; max-height: 520px; height: auto; object-fit: contain; margin: 0 auto; transition: transform .35s ease; }
+.dia-panadero-sheet__link:hover img { transform: scale(1.02); }
+.dia-panadero-sheet__caption { margin: 10px 0 0; font-family: var(--mono); font-size: 10px; font-weight: 600; color: #718096; letter-spacing: .04em; text-align: center; }
+.dia-panadero-sheet__caption .fa { color: var(--sun); margin-right: 4px; }
+.dia-panadero-sheet:hover .image-zoom-hint,
+.dia-panadero-sheet:focus .image-zoom-hint { opacity: 1 !important; transform: translateY(0) !important; }
+
+/* Lyrics Lightbox Modal (matches image lightbox design language) */
+.lyrics-lightbox { position: fixed; inset: 0; z-index: 100000; display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s ease; }
+.lyrics-lightbox.is-open { opacity: 1; visibility: visible; }
+.lyrics-lightbox__backdrop { position: absolute; inset: 0; background: rgba(12, 12, 9, .95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.lyrics-lightbox__container { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; padding: 20px; box-sizing: border-box; }
+.lyrics-lightbox__header { position: absolute; top: 20px; left: 24px; right: 24px; display: flex; align-items: center; justify-content: space-between; z-index: 10; pointer-events: none; }
+.lyrics-lightbox__meta { display: flex; align-items: baseline; gap: 14px; pointer-events: auto; }
+.lyrics-lightbox__caption { color: var(--cream); font-family: var(--serif); font-size: clamp(16px, 2.2vw, 24px); font-weight: 500; letter-spacing: -.02em; max-width: 65vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+.lyrics-lightbox__counter { color: var(--sun); font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
+.lyrics-lightbox__close { pointer-events: auto; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.2); border-radius: 50%; color: var(--cream); font-size: 26px; line-height: 1; cursor: pointer; transition: all .2s ease; padding: 0; margin-left: auto; }
+.lyrics-lightbox__close:hover, .lyrics-lightbox__close:focus { background: var(--sun); border-color: var(--sun); color: #1a2530; transform: rotate(90deg) scale(1.05); }
+.lyrics-lightbox__stage { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; max-height: calc(100vh - 80px); margin-top: 36px; position: relative; box-sizing: border-box; }
+.lyrics-lightbox__dialog { max-width: 620px; width: 100%; max-height: 82vh; display: flex; flex-direction: column; transform: scale(.96); transition: transform .25s cubic-bezier(.2, .9, .3, 1); }
+.lyrics-lightbox.is-open .lyrics-lightbox__dialog { transform: scale(1); }
+.lyrics-lightbox__card { background: #fbf9f4; border: 1px solid rgba(220, 205, 180, 0.45); border-top: 4px solid var(--sun); box-shadow: 0 25px 60px -12px rgba(0,0,0,.85); display: flex; flex-direction: column; max-height: 82vh; border-radius: 2px; overflow: hidden; }
+.lyrics-lightbox__card-header { padding: 24px 28px 16px; background: #fff; border-bottom: 1px solid var(--line); text-align: center; }
+.lyrics-lightbox__badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #718096; margin-bottom: 6px; }
+.lyrics-lightbox__badge .fa { color: var(--sun); }
+.lyrics-lightbox__heading { margin: 0; font-family: var(--serif); font-size: 24px; font-weight: 700; color: var(--ink); letter-spacing: -.02em; }
+.lyrics-lightbox__subheading { margin: 4px 0 0; font-family: var(--mono); font-size: 12px; color: #64748b; letter-spacing: .03em; }
+.lyrics-lightbox__subheading strong { color: var(--ink); }
+.lyrics-lightbox__card-body { padding: 24px 32px; overflow-y: auto; font-family: var(--serif); font-size: 15.5px; line-height: 1.85; color: #24292f; font-style: italic; white-space: pre-line; background: #fbf9f4; text-align: center; }
+.lyrics-lightbox__card-footer { padding: 14px 24px; background: #fff; border-top: 1px solid var(--line); display: flex; justify-content: center; }
+.lyrics-lightbox__btn-close { background: var(--ink); color: #fff; border: none; padding: 9px 24px; font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; border-radius: 2px; transition: background .2s ease; }
+.lyrics-lightbox__btn-close:hover, .lyrics-lightbox__btn-close:focus { background: var(--sun); color: #1a2530; }
+@media (max-width: 768px) {
+  .lyrics-lightbox__header { top: 12px; left: 16px; right: 16px; }
+  .lyrics-lightbox__caption { max-width: 65vw; font-size: 15px; }
+  .lyrics-lightbox__card-header { padding: 18px 20px 12px; }
+  .lyrics-lightbox__heading { font-size: 20px; }
+  .lyrics-lightbox__card-body { padding: 18px 20px; font-size: 14px; }
+  .lyrics-lightbox__dialog { max-height: 86vh; }
+  .lyrics-lightbox__stage { margin-top: 24px; }
+}
+
 .social-brief { padding: 44px 0 48px; background: var(--cream); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .social-brief__layout { display: grid; grid-template-columns: .95fr 1.05fr; grid-template-areas: 'heading body'; gap: 50px; align-items: start; }
 .social-brief__heading { grid-area: heading; }
@@ -1138,6 +1207,8 @@ body.lightbox-open { overflow: hidden !important; }
   .home-hero { min-height: 0; padding-top: 52px; }
   .home-hero__layout { grid-template-columns: 1fr; gap: 48px; }
   .social-brief__layout { grid-template-columns: minmax(0, 1fr); grid-template-areas: 'heading' 'body'; gap: 36px; }
+  .dia-panadero-grid { grid-template-columns: 1fr; gap: 32px; }
+  .dia-panadero-card { padding: 32px 24px; }
   .home-hero__copy, .home-hero__statement { grid-column: 1; grid-row: auto; }
   .home-hero__statement { max-width: 520px; }
   .home-hero__rule { margin-top: 58px; }
@@ -1178,6 +1249,10 @@ body.lightbox-open { overflow: hidden !important; }
   .salary-banner--portal .salary-banner__btn { flex: 1; justify-content: center; padding: 10px 12px; font-size: 11px; }
   .guide-card { min-height: 220px; }
   .guide-card p { min-height: auto; }
+  .dia-panadero-section { padding: 36px 0; }
+  .dia-panadero-card { padding: 22px 16px; }
+  .dia-panadero-title { font-size: 24px; }
+  .dia-panadero-player { padding: 14px 14px; }
   .social-brief { padding: 40px 0 44px; }
   .social-brief__layout { gap: 34px; }
   .social-brief__body > p { font-size: 16px; }

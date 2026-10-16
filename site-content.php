@@ -32,7 +32,16 @@ function site_home_defaults()
         'featured_news_link_label' => 'Conocer beneficios vigentes',
         'featured_news_image_1' => 'images/novedades/app-panaderos-1.jpg',
         'featured_news_image_2' => '',
-        'featured_news_image_3' => ''
+        'featured_news_image_3' => '',
+        'dia_panadero_enabled' => true,
+        'dia_panadero_badge' => '4 de Agosto · Conmemoración',
+        'dia_panadero_title' => '4 DE AGOSTO - DÍA DEL OBRERO PANADERO',
+        'dia_panadero_description' => "En este día conmemoramos el nacimiento del primer sindicato de panaderos que hubo en el país. Fue fundado en Buenos Aires, el 18 de julio de 1887, y se llamó Sociedad Cosmopolita de Resistencia y Colocación de Obreros Panaderos.\n\nEl oficio de panadero es uno de los más antiguos de la humanidad y sigue vigente hoy, con cada pan que llega a la mesa de los argentinos.\n\nArticulo 9; DÍA DEL GREMIO El día del Obrero Panadero y demás personal encuadrado en la presente convención, se celebrará en toda la Provincia de Buenos Aires el día 4 de agosto de cada año. Este día será no laborable ycon goce de sueldo.",
+        'dia_panadero_image' => 'images/dia-panaderos.png',
+        'dia_panadero_audio' => 'audio/marcha-de-los-panaderos.mp3',
+        'dia_panadero_audio_title' => 'Marcha de los panaderos',
+        'dia_panadero_audio_author' => 'Rodriguez Lobos',
+        'dia_panadero_lyrics' => "Ya reviente desde el vientre de la tierra\nLa semilla que arrojara el labrador\nY florece el oro rubio que levanta\nSus espigas tan doradas como el Sol.\nSu destino molinero es el camino,\nConvertido en blanca harina quedará\nY en la cuadra de las noches sin lucero\nEl maestro panadero cantará.\n\nSoy panadero, soy el primero,\nQue se levanta con el anochecer,\nMate cocido, amasadora, sal y harina,\nHorno que espera su momento de encender.\nSoy panadero soy primero…\nEl pueblo sueña mientras yo cantando voy,\nElaborando el Pan  amigo y Compañero\nEl Pan del pueblo  que me enciende el corazón.\nSoy panadero, soy  el primero,\nMi Pan del pueblo es Pan de Vida y Pan de Dios.\n\nLa sonrisa de la bella despachante\nQue les brinda nuestro esfuerzo con amor\nY el orgullo panadero a cada instante\nLuce y brilla sobre el limpio mostrador.\nEs la  Unión del Personal de  panaderos,\nLa que marcha siempre unida con fervor,\nSon los hombres de las noches sin lucero,\nLos que gritan a la Vida su canción.\n\nSoy panadero, soy el primero,\nmi Pan del pueblo es Pan de Vida y Pan de Dios"
     );
 }
 

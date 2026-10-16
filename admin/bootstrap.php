@@ -370,9 +370,9 @@ function admin_validate_home(array $input)
     }
     $content['featured_news_title'] = $title;
 
-    $desc = admin_multiline(isset($input['featured_news_description']) ? $input['featured_news_description'] : '', 800);
+    $desc = admin_multiline(isset($input['featured_news_description']) ? $input['featured_news_description'] : '', 2500);
     if ($desc === null) {
-        throw new InvalidArgumentException('La descripción de la noticia destacada es obligatoria (máx. 800 caracteres).');
+        throw new InvalidArgumentException('La descripción de la noticia destacada es obligatoria (máx. 2500 caracteres).');
     }
     $content['featured_news_description'] = $desc;
 
@@ -404,6 +404,61 @@ function admin_validate_home(array $input)
             $content[$key] = $validatedImg;
         }
     }
+
+    // Audio y letra de la marcha / conmemoración (opcional si se usa en featured_news)
+    $audioUrl = isset($input['featured_news_audio_url']) ? trim((string) $input['featured_news_audio_url']) : '';
+    if ($audioUrl === '') {
+        $content['featured_news_audio_url'] = '';
+    } else {
+        $validatedAudio = admin_safe_url($audioUrl, 400);
+        $content['featured_news_audio_url'] = $validatedAudio !== null ? $validatedAudio : '';
+    }
+
+    $audioTitle = isset($input['featured_news_audio_title']) ? trim((string) $input['featured_news_audio_title']) : '';
+    $content['featured_news_audio_title'] = $audioTitle !== '' ? (admin_text($audioTitle, 100) ?: 'Marcha de los panaderos') : 'Marcha de los panaderos';
+
+    $audioAuthor = isset($input['featured_news_audio_author']) ? trim((string) $input['featured_news_audio_author']) : '';
+    $content['featured_news_audio_author'] = $audioAuthor !== '' ? (admin_text($audioAuthor, 100) ?: 'Rodriguez Lobos') : 'Rodriguez Lobos';
+
+    $lyrics = isset($input['featured_news_lyrics']) ? trim((string) $input['featured_news_lyrics']) : '';
+    $content['featured_news_lyrics'] = $lyrics !== '' ? (admin_multiline($lyrics, 4000) ?: '') : '';
+
+    // Sección 4 de Agosto - Día del Obrero Panadero
+    $content['dia_panadero_enabled'] = !empty($input['dia_panadero_enabled']);
+
+    $dpBadge = admin_text(isset($input['dia_panadero_badge']) ? $input['dia_panadero_badge'] : '', 50);
+    $content['dia_panadero_badge'] = $dpBadge !== null ? $dpBadge : '4 de Agosto · Conmemoración';
+
+    $dpTitle = admin_text(isset($input['dia_panadero_title']) ? $input['dia_panadero_title'] : '', 100);
+    $content['dia_panadero_title'] = $dpTitle !== null ? $dpTitle : '4 DE AGOSTO - DÍA DEL OBRERO PANADERO';
+
+    $dpDesc = admin_multiline(isset($input['dia_panadero_description']) ? $input['dia_panadero_description'] : '', 2500);
+    $content['dia_panadero_description'] = $dpDesc !== null ? $dpDesc : '';
+
+    $dpImg = isset($input['dia_panadero_image']) ? trim((string) $input['dia_panadero_image']) : '';
+    if ($dpImg === '') {
+        $content['dia_panadero_image'] = 'images/dia-panaderos.png';
+    } else {
+        $validatedDpImg = admin_safe_url($dpImg, 300);
+        $content['dia_panadero_image'] = $validatedDpImg !== null ? $validatedDpImg : 'images/dia-panaderos.png';
+    }
+
+    $dpAudio = isset($input['dia_panadero_audio']) ? trim((string) $input['dia_panadero_audio']) : '';
+    if ($dpAudio === '') {
+        $content['dia_panadero_audio'] = '';
+    } else {
+        $validatedDpAudio = admin_safe_url($dpAudio, 400);
+        $content['dia_panadero_audio'] = $validatedDpAudio !== null ? $validatedDpAudio : '';
+    }
+
+    $dpAudioTitle = isset($input['dia_panadero_audio_title']) ? trim((string) $input['dia_panadero_audio_title']) : '';
+    $content['dia_panadero_audio_title'] = $dpAudioTitle !== '' ? (admin_text($dpAudioTitle, 100) ?: 'Marcha de los panaderos') : 'Marcha de los panaderos';
+
+    $dpAudioAuthor = isset($input['dia_panadero_audio_author']) ? trim((string) $input['dia_panadero_audio_author']) : '';
+    $content['dia_panadero_audio_author'] = $dpAudioAuthor !== '' ? (admin_text($dpAudioAuthor, 100) ?: 'Rodriguez Lobos') : 'Rodriguez Lobos';
+
+    $dpLyrics = isset($input['dia_panadero_lyrics']) ? trim((string) $input['dia_panadero_lyrics']) : '';
+    $content['dia_panadero_lyrics'] = $dpLyrics !== '' ? (admin_multiline($dpLyrics, 4000) ?: '') : '';
 
     return $content;
 }

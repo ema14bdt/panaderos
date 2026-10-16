@@ -338,9 +338,63 @@
         }
     }
 
+    function initLyricsModal() {
+        var triggerBtn = document.getElementById('btn-open-lyrics');
+        var modal = document.getElementById('lyrics-lightbox');
+        if (!triggerBtn || !modal) return;
+
+        var closeBtn = document.getElementById('lyrics-lightbox-close');
+        var closeBottomBtn = document.getElementById('lyrics-lightbox-close-bottom');
+        var backdrop = modal.querySelector('.lyrics-lightbox__backdrop');
+        var stage = modal.querySelector('.lyrics-lightbox__stage');
+
+        function openModal() {
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.classList.add('lightbox-open');
+            if (closeBtn) {
+                closeBtn.focus();
+            }
+        }
+
+        function closeModal() {
+            modal.classList.remove('is-open');
+            modal.setAttribute('aria-hidden', 'true');
+            document.body.classList.remove('lightbox-open');
+            if (triggerBtn) {
+                triggerBtn.focus();
+            }
+        }
+
+        triggerBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal();
+        });
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (closeBottomBtn) closeBottomBtn.addEventListener('click', closeModal);
+        if (backdrop) backdrop.addEventListener('click', closeModal);
+
+        if (stage) {
+            stage.addEventListener('click', function(e) {
+                if (e.target === stage || e.target.classList.contains('lyrics-lightbox__dialog')) {
+                    closeModal();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (!modal.classList.contains('is-open')) return;
+            if (e.key === 'Escape' || e.key === 'Esc') {
+                closeModal();
+            }
+        });
+    }
+
     function initAll() {
         initGalleries();
         initReels();
+        initLyricsModal();
     }
 
     if (document.readyState === 'loading') {

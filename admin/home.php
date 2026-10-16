@@ -123,6 +123,85 @@ admin_render_start('Editar home');
             </div>
         </section>
 
+        <section class="editor-section">
+            <h2 class="editor-section-title"><span>05</span> Día del Obrero Panadero (4 de Agosto)</h2>
+            <div style="margin-bottom: 18px;">
+                <label class="checkbox-field" style="display: inline-flex; align-items: center; gap: 10px; cursor: pointer; padding: 12px 16px; background: #fff; border: 1px solid var(--line);">
+                    <input type="checkbox" name="dia_panadero_enabled" value="1" <?php echo !empty($content['dia_panadero_enabled']) ? 'checked' : ''; ?> style="width: 18px; height: 18px; cursor: pointer; margin: 0;">
+                    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--ink);">Mostrar sección del Día del Obrero Panadero en la home</span>
+                </label>
+            </div>
+            <div class="form-grid">
+                <?php admin_field('dia_panadero_badge', 'Etiqueta o antetítulo', $content, 'text', 50, 'Ej: 4 de Agosto · Conmemoración'); ?>
+                <?php admin_field('dia_panadero_title', 'Título de la sección', $content, 'text', 100); ?>
+            </div>
+            <?php admin_field('dia_panadero_description', 'Texto histórico y Artículo 9', $content, 'textarea', 2500); ?>
+
+            <div style="margin-top: 20px;">
+                <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink); margin-bottom: 12px;">Imagen o partitura histórica</p>
+                <?php 
+                    $dpImgVal = isset($content['dia_panadero_image']) ? $content['dia_panadero_image'] : 'images/dia-panaderos.png';
+                ?>
+                <div class="image-picker-field" data-folder="novedades">
+                    <div class="admin-field-head">
+                        <span>Imagen conmemorativa</span>
+                        <span class="admin-field-limit">máx. 300 car.</span>
+                    </div>
+                    <div class="image-picker-wrap">
+                        <div class="image-preview-thumb image-preview-thumb--rect">
+                            <img src="../<?php echo site_escape($dpImgVal !== '' ? $dpImgVal : 'images/dia-panaderos.png'); ?>" alt="Previsualización" style="<?php echo $dpImgVal === '' ? 'display:none;' : ''; ?>">
+                            <div class="image-preview-empty" style="<?php echo $dpImgVal === '' ? 'display:flex;' : 'display:none;'; ?>"><span>Sin imagen</span></div>
+                        </div>
+                        <div class="image-picker-body">
+                            <div class="image-picker-actions">
+                                <button type="button" class="image-upload-btn"><i class="fa fa-image"></i> Subir imagen...</button>
+                                <input type="file" class="image-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                                <input type="text" class="image-path-input" name="dia_panadero_image" value="<?php echo site_escape($dpImgVal); ?>" maxlength="300" placeholder="images/dia-panaderos.png">
+                                <button type="button" class="btn-clear-image" style="background:transparent;border:1px solid #ccc;padding:4px 8px;font-size:11px;cursor:pointer;">Quitar</button>
+                            </div>
+                            <span class="image-status-badge"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <p style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--ink); margin-bottom: 12px;">Reproductor de Audio (Marcha de los panaderos)</p>
+                <div class="form-grid">
+                    <?php admin_field('dia_panadero_audio_title', 'Título de la marcha / audio', $content, 'text', 100); ?>
+                    <?php admin_field('dia_panadero_audio_author', 'Autor de la marcha', $content, 'text', 100); ?>
+                </div>
+
+                <?php 
+                    $dpAudioVal = isset($content['dia_panadero_audio']) ? $content['dia_panadero_audio'] : 'audio/marcha-de-los-panaderos.mp3';
+                ?>
+                <div class="audio-picker-field mt-14">
+                    <div class="admin-field-head">
+                        <span>Archivo de audio MP3</span>
+                        <span class="admin-field-limit">Subir archivo o especificar ruta (MP3, OGG, WAV)</span>
+                    </div>
+                    <div class="audio-picker-wrap">
+                        <div class="audio-picker-actions">
+                            <button type="button" class="audio-upload-btn"><i class="fa fa-music"></i> Subir audio...</button>
+                            <input type="file" class="audio-file-input" accept="audio/mpeg,audio/mp3,audio/ogg,audio/wav,audio/mp4" style="display:none;">
+                            <input type="text" class="audio-path-input" name="dia_panadero_audio" value="<?php echo site_escape($dpAudioVal); ?>" maxlength="400" placeholder="audio/marcha-de-los-panaderos.mp3">
+                            <button type="button" class="btn-clear-audio">Quitar audio</button>
+                        </div>
+                        <span class="audio-status-badge"></span>
+                        <div class="audio-preview-wrap">
+                            <audio controls preload="metadata" class="audio-preview-player" src="<?php echo $dpAudioVal !== '' ? '../' . site_escape($dpAudioVal) : ''; ?>" style="<?php echo $dpAudioVal !== '' ? '' : 'display:none;'; ?>">
+                                Tu navegador no soporta el reproductor de audio.
+                            </audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 24px;">
+                <?php admin_field('dia_panadero_lyrics', 'Letra completa de la marcha', $content, 'textarea', 4000); ?>
+            </div>
+        </section>
+
         <div class="editor-actions">
             <p>Al guardar se valida el contenido, se crea una copia de respaldo y se publica el archivo de forma atómica.</p>
             <button type="submit">Guardar cambios <span>→</span></button>
