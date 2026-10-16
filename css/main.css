@@ -878,6 +878,7 @@ body.lightbox-open { overflow: hidden !important; }
   .branch-table--committee td:first-child { margin-bottom: 4px; padding: 0; border-bottom: none; font-family: var(--serif); font-size: 18px; font-weight: 700; color: var(--ink); line-height: 1.25; letter-spacing: -.02em; }
   .branch-table--committee td:last-child { width: 100% !important; font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--red); line-height: 1.35; }
   .branch-table--committee td:not(:first-child)::before { display: none; }
+  .contact-band__details { min-width: 0; width: 100%; }
   .info-list li { grid-template-columns: 37px 1fr; gap: 11px; }
   .info-list .text-link { grid-column: 2; }
   .site-page .site-footer__inner { grid-template-columns: 1fr; grid-template-areas: 'brand' 'message' 'contact' 'legal'; gap: 13px; }
