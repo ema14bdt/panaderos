@@ -594,9 +594,9 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .site-footer__brand { grid-area: brand; display: inline-flex; align-items: center; color: var(--cream); text-decoration: none; }
 .site-footer__brand:hover, .site-footer__brand:focus { color: var(--cream); text-decoration: none; }
 .site-footer__brand img { width: 48px; height: 48px; object-fit: contain; object-position: center; }
-.site-footer__brand span { display: flex; margin-left: 8px; flex-direction: column; line-height: 1; text-transform: uppercase; }
+.site-footer__brand span { display: flex; margin-left: 8px; flex-direction: column; line-height: 1; }
 .site-footer__brand strong { color: #fffdf8; font-size: 16px; font-weight: 700; letter-spacing: -.04em; }
-.site-footer__brand small { margin-top: 3px; color: #fffdf8; font-size: 7px; font-weight: 600; letter-spacing: .06em; line-height: 1.35; }
+.site-footer__brand small { margin-top: 3px; color: #fffdf8; font-size: 9px; font-weight: 600; letter-spacing: .06em; line-height: 1.35; }
 .site-footer__message { grid-area: message; min-width: 0; margin: 0; color: #fffdf8; font-size: 13px; line-height: 1.45; }
 .site-footer__contact { grid-area: contact; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .site-footer__contact a { color: #fffdf8; font-size: 11px; line-height: 1.3; white-space: normal; }
@@ -613,9 +613,9 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .site-brand { display: inline-flex; height: 74px; align-items: center; color: var(--cream); text-decoration: none; }
 .site-brand:hover, .site-brand:focus { color: var(--cream); text-decoration: none; }
 .site-brand img { width: 55px; height: 55px; object-fit: contain; object-position: center; }
-.site-brand__copy { display: flex; margin-left: 9px; flex-direction: column; line-height: 1; text-transform: uppercase; }
+.site-brand__copy { display: flex; margin-left: 9px; flex-direction: column; line-height: 1; }
 .site-brand__copy strong { color: #fffdf8; font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -.06em; }
-.site-brand__copy small { margin-top: 3px; color: #fffdf8; font-family: var(--mono); font-size: 7px; font-weight: 500; letter-spacing: .08em; line-height: 1.35; }
+.site-brand__copy small { margin-top: 3px; color: #fffdf8; font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .08em; line-height: 1.35; }
 .site-header .navbar-inverse .navbar-nav > li > a { padding: 28px 13px 25px; color: #f6f2e8; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; transition: color .2s ease; }
 .site-header .navbar-inverse .navbar-nav > li > a:hover, .site-header .navbar-inverse .navbar-nav > li > a:focus { color: var(--sun); background: transparent; }
 .site-header .navbar-inverse .navbar-nav > li.active > a,

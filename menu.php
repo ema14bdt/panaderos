@@ -25,7 +25,7 @@ $isNovedades = ($currentScript === 'novedades.php' || strpos($currentUri, '/nove
                 </button>
                 <a class="site-brand" href="<?php echo $site_base; ?>index.php" aria-label="Panaderos de Lanús, inicio">
                     <img src="<?php echo $site_base; ?>images/logo.png" alt="">
-                    <span class="site-brand__copy"><strong>Panaderos</strong><small>Sindicato de Obreros y Empleados<br>Panaderos de Lanús</small></span>
+                    <span class="site-brand__copy"><strong>S.O.E.P.La</strong><small>Sindicato de Obreros y Empleados<br>Panaderos de Lanús</small></span>
                 </a>
             </div>
             <div id="site-navigation" class="collapse navbar-collapse">

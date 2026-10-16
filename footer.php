@@ -8,7 +8,7 @@ $footer_phone = preg_replace('/[^0-9+]/', '', $site_content['phone']);
         <div class="container site-footer__inner">
             <a class="site-footer__brand" href="<?php echo $site_base; ?>index.php">
                 <img src="<?php echo $site_base; ?>images/logo.png" alt="">
-                <span><strong>Panaderos</strong><small>Sindicato de Obreros y Empleados<br>Panaderos de Lanús</small></span>
+                <span><strong>S.O.E.P.La</strong><small>Sindicato de Obreros y Empleados<br>Panaderos de Lanús</small></span>
             </a>
             <p class="site-footer__message">Organización, derechos y acompañamiento para las y los trabajadores panaderos.</p>
             <div class="site-footer__contact"><a href="<?php echo site_escape($site_content['register_url']); ?>" target="_blank" rel="noopener noreferrer"><i class="fa fa-briefcase" aria-hidden="true"></i> Contadores (SP-Online)</a><a href="tel:<?php echo site_escape($footer_phone); ?>"><i class="fa fa-phone" aria-hidden="true"></i> <?php echo site_escape($site_content['phone_label']); ?></a><a href="mailto:<?php echo site_escape($site_content['email']); ?>"><i class="fa fa-envelope" aria-hidden="true"></i> <?php echo site_escape($site_content['email']); ?></a></div>
