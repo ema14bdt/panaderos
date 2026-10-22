@@ -27,7 +27,7 @@ foreach ($reels as $r) {
                     $reelTitle = isset($reel['title']) && trim((string)$reel['title']) !== '' ? $reel['title'] : 'Instalaciones';
                 ?>
                 <article class="reel-card" data-reel-id="<?php echo $idx; ?>">
-                    <div class="reel-card__video-wrap">
+                    <div class="reel-card__video-wrap" data-video-src="<?php echo site_escape($videoSrc); ?>" data-video-poster="<?php echo site_escape($posterSrc); ?>" data-video-title="<?php echo site_escape($reelTitle); ?>" role="button" tabindex="0" aria-label="Ver video a pantalla completa: <?php echo site_escape($reelTitle); ?>">
                         <video class="reel-card__video" 
                                src="<?php echo site_escape($videoSrc); ?>" 
                                <?php if ($posterSrc !== '') { ?>poster="<?php echo site_escape($posterSrc); ?>"<?php } ?>
@@ -37,13 +37,22 @@ foreach ($reels as $r) {
                                loop>
                         </video>
                         <div class="reel-card__overlay">
-                            <button type="button" class="reel-card__play-btn" aria-label="Reproducir video"><i class="fa fa-play" aria-hidden="true"></i></button>
-                            <button type="button" class="reel-card__sound-btn" aria-label="Activar o desactivar sonido"><i class="fa fa-volume-off" aria-hidden="true"></i></button>
+                            <div class="reel-card__top">
+                                <span class="reel-card__badge" title="<?php echo site_escape($reelTitle); ?>"><i class="fa fa-video-camera" aria-hidden="true"></i> <?php echo site_escape($reelTitle); ?></span>
+                                <div class="reel-card__actions">
+                                    <button type="button" class="reel-card__sound-btn" aria-label="Activar o desactivar sonido"><i class="fa fa-volume-off" aria-hidden="true"></i></button>
+                                    <button type="button" class="reel-card__expand-btn" aria-label="Ver video a pantalla completa" title="Ampliar a pantalla completa"><i class="fa fa-arrows-alt" aria-hidden="true"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" class="reel-card__play-btn" aria-label="Reproducir a pantalla completa"><i class="fa fa-play" aria-hidden="true"></i></button>
+                            <span class="image-zoom-hint reel-card__zoom-hint" title="Ampliar a pantalla completa" aria-hidden="true"><i class="fa fa-search-plus"></i></span>
                         </div>
                     </div>
                     <div class="reel-card__footer">
-                        <span class="reel-card__kicker"><i class="fa fa-video-camera" aria-hidden="true"></i> Reel</span>
-                        <h3 class="reel-card__title"><?php echo site_escape($reelTitle); ?></h3>
+                        <h3 class="reel-card__title">
+                            <i class="fa fa-video-camera" aria-hidden="true"></i>
+                            <span><?php echo site_escape($reelTitle); ?></span>
+                        </h3>
                     </div>
                 </article>
                 <?php } ?>
