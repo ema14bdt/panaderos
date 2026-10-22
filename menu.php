@@ -5,6 +5,7 @@ $site_content = site_content('home', site_home_defaults());
 
 $currentUri = isset($_SERVER['PHP_SELF']) ? $_SERVER['PHP_SELF'] : '';
 $currentScript = basename($currentUri);
+$isHome = ($currentScript === 'index.php' || empty($currentScript));
 $isComision = ($currentScript === 'comision-directiva.php');
 $isAfiliaciones = ($currentScript === 'afiliaciones.php');
 $isServicios = ($currentScript === 'servicios.php');
@@ -30,6 +31,7 @@ $isNovedades = ($currentScript === 'novedades.php' || strpos($currentUri, '/nove
             </div>
             <div id="site-navigation" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
+                    <li class="nav-home <?php echo $isHome ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>index.php" <?php echo $isHome ? 'aria-current="page"' : ''; ?> title="Inicio" aria-label="Inicio"><i class="fa fa-home" aria-hidden="true"></i></a></li>
                     <li class="<?php echo $isComision ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>comision-directiva.php" <?php echo $isComision ? 'aria-current="page"' : ''; ?>>El sindicato</a></li>
                     <li class="<?php echo $isAfiliaciones ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>afiliaciones.php" <?php echo $isAfiliaciones ? 'aria-current="page"' : ''; ?>>Afiliaciones</a></li>
                     <li class="<?php echo $isServicios ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>servicios.php" <?php echo $isServicios ? 'aria-current="page"' : ''; ?>>Beneficios</a></li>
@@ -37,8 +39,8 @@ $isNovedades = ($currentScript === 'novedades.php' || strpos($currentUri, '/nove
                     <li class="<?php echo $isNormativas ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>normativas.php" <?php echo $isNormativas ? 'aria-current="page"' : ''; ?>>Normativas</a></li>
                     <li class="<?php echo $isFiliales ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>filiales.php" <?php echo $isFiliales ? 'aria-current="page"' : ''; ?>>Filiales</a></li>
                     <li class="<?php echo $isNovedades ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>novedades.php" <?php echo $isNovedades ? 'aria-current="page"' : ''; ?>>Actualidad</a></li>
-                    <li class="nav-instagram"><a href="<?php echo site_escape($site_content['instagram_url']); ?>" target="_blank" rel="noopener noreferrer"><i class="fa fa-instagram" aria-hidden="true"></i> Instagram</a></li>
-                    <li class="nav-facebook"><a href="<?php echo site_escape($site_content['facebook_url']); ?>" target="_blank" rel="noopener noreferrer"><i class="fa fa-facebook" aria-hidden="true"></i> Facebook</a></li>
+                    <li class="nav-instagram"><a href="<?php echo site_escape($site_content['instagram_url']); ?>" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                    <li class="nav-facebook"><a href="<?php echo site_escape($site_content['facebook_url']); ?>" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
                 </ul>
             </div>
         </nav>

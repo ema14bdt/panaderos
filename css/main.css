@@ -404,7 +404,7 @@ ul.list-link  {
 .home-2026 .navbar-header { min-height: 74px; }
 .home-2026 .navbar-inverse .navbar-nav > li > a { padding: 28px 13px 25px; color: #f6f2e8; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
 .home-2026 .navbar-inverse .navbar-nav > li > a:hover, .home-2026 .navbar-inverse .navbar-nav > li > a:focus { color: var(--sun); background: transparent; }
-.home-2026 .nav-instagram .fa, .home-2026 .nav-facebook .fa { margin-right: 5px; font-size: 14px; color: var(--sun); }
+.home-2026 .nav-home .fa, .home-2026 .nav-instagram .fa, .home-2026 .nav-facebook .fa { margin-right: 0; font-size: 15px; color: var(--sun); }
 .home-2026 .navbar-toggle { margin-top: 20px; border-color: rgba(246,242,232,.42); }
 .home-2026 .navbar-toggle:hover, .home-2026 .navbar-toggle:focus { background: transparent; }
 
@@ -685,13 +685,17 @@ div.salary-banner--portal:hover, div.salary-banner--portal:focus { box-shadow: n
 .site-brand__copy { display: flex; margin-left: 9px; flex-direction: column; line-height: 1; }
 .site-brand__copy strong { color: #fffdf8; font-family: var(--serif); font-size: 20px; font-weight: 600; letter-spacing: -.06em; }
 .site-brand__copy small { margin-top: 3px; color: #fffdf8; font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: .08em; line-height: 1.35; }
-.site-header .navbar-inverse .navbar-nav > li > a { padding: 28px 13px 25px; color: #f6f2e8; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; transition: color .2s ease; }
+.site-header .navbar-inverse .navbar-nav > li > a { padding: 28px 12px 25px; color: #f6f2e8; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; transition: color .2s ease; }
 .site-header .navbar-inverse .navbar-nav > li > a:hover, .site-header .navbar-inverse .navbar-nav > li > a:focus { color: var(--sun); background: transparent; }
 .site-header .navbar-inverse .navbar-nav > li.active > a,
 .site-header .navbar-inverse .navbar-nav > li.active > a:hover,
-.site-header .navbar-inverse .navbar-nav > li.active > a:focus { color: var(--sun); background: transparent; font-weight: 700; }
+.site-header .navbar-inverse .navbar-nav > li.active > a:focus { color: var(--sun); background: transparent; }
+.site-header .navbar-inverse .navbar-nav > li.nav-home > a,
+.site-header .navbar-inverse .navbar-nav > li.nav-instagram > a,
+.site-header .navbar-inverse .navbar-nav > li.nav-facebook > a { padding-left: 9px; padding-right: 9px; }
+.site-header .nav-home .fa,
 .site-header .nav-instagram .fa,
-.site-header .nav-facebook .fa { margin-right: 5px; font-size: 14px; line-height: 1; vertical-align: -1px; color: var(--sun); }
+.site-header .nav-facebook .fa { margin-right: 0; font-size: 15px; line-height: 1; vertical-align: -1px; color: var(--sun); }
 .site-header .navbar-toggle { margin-top: 20px; border-color: rgba(246,242,232,.42); }
 .site-header .navbar-toggle:hover, .site-header .navbar-toggle:focus { background: transparent; }
 
@@ -1108,11 +1112,18 @@ body.lightbox-open { overflow: hidden !important; }
 #footer.site-footer .box { padding: 0; background: transparent; color: inherit; }
 
 @media (min-width: 992px) and (max-width: 1199px) {
-  .site-header .navbar-inverse .navbar-nav > li > a { padding: 28px 8px 25px; font-size: 10px; }
+  .site-header .navbar-inverse .navbar-nav > li > a { padding: 28px 7px 25px; font-size: 10px; }
+  .site-header .navbar-inverse .navbar-nav > li.nav-home > a,
+  .site-header .navbar-inverse .navbar-nav > li.nav-instagram > a,
+  .site-header .navbar-inverse .navbar-nav > li.nav-facebook > a { padding-left: 6px; padding-right: 6px; }
 }
 
 @media (max-width: 991px) {
   .site-header .navbar-inverse .navbar-nav > li > a { padding: 17px 0; }
+  .site-header .navbar-inverse .navbar-nav > li.nav-instagram,
+  .site-header .navbar-inverse .navbar-nav > li.nav-facebook { display: inline-block; }
+  .site-header .navbar-inverse .navbar-nav > li.nav-instagram > a,
+  .site-header .navbar-inverse .navbar-nav > li.nav-facebook > a { display: inline-block; padding: 14px 18px 14px 0; }
   .site-header .navbar-collapse { border-color: rgba(246,242,232,.15); }
   .content-grid { grid-template-columns: 1fr 1fr; }
   .benefits-grid, .document-grid { grid-template-columns: 1fr 1fr; }
