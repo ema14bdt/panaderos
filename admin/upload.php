@@ -5,6 +5,67 @@ admin_require_login();
 
 header('Content-Type: application/json; charset=utf-8');
 
+function admin_detect_binary($name) {
+    $candidates = array(
+        '/usr/bin/' . $name,
+        '/usr/local/bin/' . $name,
+        '/bin/' . $name
+    );
+    foreach ($candidates as $cand) {
+        if (@is_file($cand) && @is_executable($cand)) {
+            return $cand;
+        }
+    }
+    if (function_exists('shell_exec')) {
+        $which = @shell_exec('which ' . escapeshellarg($name) . ' 2>/dev/null');
+        $which = trim((string) $which);
+        if ($which !== '' && @is_file($which) && @is_executable($which)) {
+            return $which;
+        }
+    }
+    return null;
+}
+
+function admin_read_mp4_duration($filepath) {
+    $fp = @fopen($filepath, 'rb');
+    if (!$fp) return null;
+    $header = fread($fp, 262144);
+    if (strlen($header) < 16 || strpos(substr($header, 0, 32), 'ftyp') === false) {
+        fclose($fp);
+        return null;
+    }
+    $pos = strpos($header, 'mvhd');
+    if ($pos === false) {
+        $filesize = @filesize($filepath);
+        if ($filesize > 262144) {
+            fseek($fp, max(0, $filesize - 524288));
+            $tail = fread($fp, 524288);
+            $pos = strpos($tail, 'mvhd');
+            if ($pos !== false) {
+                $header = $tail;
+            }
+        }
+    }
+    fclose($fp);
+    if ($pos === false) return null;
+    $version = ord($header[$pos + 4]);
+    if ($version === 0 && strlen($header) >= $pos + 24) {
+        $unpacked = unpack('Ntimescale/Nduration', substr($header, $pos + 16, 8));
+        if (!empty($unpacked['timescale'])) {
+            return (float) ($unpacked['duration'] / $unpacked['timescale']);
+        }
+    } elseif ($version === 1 && strlen($header) >= $pos + 36) {
+        $tsData = unpack('N', substr($header, $pos + 24, 4));
+        $timescale = $tsData ? $tsData[1] : 0;
+        $durData = unpack('Nhigh/Nlow', substr($header, $pos + 28, 8));
+        if ($durData && $timescale > 0) {
+            $duration = ($durData['high'] * 4294967296.0) + $durData['low'];
+            return (float) ($duration / $timescale);
+        }
+    }
+    return null;
+}
+
 if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(array('success' => false, 'error' => 'Método no permitido.'));
@@ -48,16 +109,37 @@ try {
             throw new InvalidArgumentException('Formato de video no válido. Se aceptan MP4, WebM o MOV.');
         }
 
-        $probeCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffprobe -v error -show_entries format=duration,size -show_entries stream=width,height,codec_name -of json ' . escapeshellarg($file['tmp_name']) . ' 2>&1';
-        $probeOut = shell_exec($probeCmd);
-        $probeData = json_decode((string) $probeOut, true);
+        $ffprobeBin = admin_detect_binary('ffprobe');
+        $ffmpegBin = admin_detect_binary('ffmpeg');
 
-        if (!$probeData || !isset($probeData['format']['duration'])) {
-            admin_audit('upload_reel_probe_failed: ' . substr((string)$probeOut, 0, 200));
+        $duration = null;
+
+        if ($ffprobeBin && function_exists('shell_exec')) {
+            $probeCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD ' . escapeshellarg($ffprobeBin) . ' -v error -show_entries format=duration,size -show_entries stream=width,height,codec_name -of json ' . escapeshellarg($file['tmp_name']) . ' 2>&1';
+            $probeOut = @shell_exec($probeCmd);
+            $probeData = json_decode((string) $probeOut, true);
+            if ($probeData && isset($probeData['format']['duration'])) {
+                $duration = (float) $probeData['format']['duration'];
+            } else {
+                admin_audit('upload_reel_probe_failed: ' . substr((string)$probeOut, 0, 200));
+            }
+        }
+
+        // Fallback: Si no hay ffprobe o falló la sonda por restricciones del sistema, leer duración MP4 directamente por cabeceras
+        if ($duration === null) {
+            $parsedDuration = admin_read_mp4_duration($file['tmp_name']);
+            if ($parsedDuration !== null && $parsedDuration > 0) {
+                $duration = $parsedDuration;
+            }
+        }
+
+        if ($duration === null) {
+            if (!$ffprobeBin) {
+                throw new InvalidArgumentException('El servidor no cuenta con ffprobe/ffmpeg instalado y no fue posible analizar el video.');
+            }
             throw new InvalidArgumentException('El archivo subido no es un video legible o válido.');
         }
 
-        $duration = (float) $probeData['format']['duration'];
         if ($duration > 62.0) {
             throw new InvalidArgumentException('El video dura ' . round($duration) . ' segundos. Los reels deben durar un máximo de 60 segundos.');
         }
@@ -80,25 +162,33 @@ try {
         $targetPath = $targetDir . '/' . $videoFilename;
         $posterPath = $targetDir . '/' . $posterFilename;
 
-        $ffmpegCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffmpeg -y -i ' . escapeshellarg($file['tmp_name']) . ' '
-            . '-c:v libx264 -pix_fmt yuv420p -crf 26 -preset fast '
-            . '-vf "scale=\'min(720,iw)\':-2" -r 30 '
-            . '-c:a aac -b:a 128k '
-            . '-movflags +faststart '
-            . escapeshellarg($targetPath) . ' 2>&1';
-        exec($ffmpegCmd, $ffOut, $ffRet);
+        $processedByFfmpeg = false;
+        if ($ffmpegBin && function_exists('exec')) {
+            $ffmpegCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD ' . escapeshellarg($ffmpegBin) . ' -y -i ' . escapeshellarg($file['tmp_name']) . ' '
+                . '-c:v libx264 -pix_fmt yuv420p -crf 26 -preset fast '
+                . '-vf "scale=\'min(720,iw)\':-2" -r 30 '
+                . '-c:a aac -b:a 128k '
+                . '-movflags +faststart '
+                . escapeshellarg($targetPath) . ' 2>&1';
+            exec($ffmpegCmd, $ffOut, $ffRet);
+            if ($ffRet === 0 && is_file($targetPath) && filesize($targetPath) > 0) {
+                $processedByFfmpeg = true;
+            }
+        }
 
-        if ($ffRet !== 0 || !is_file($targetPath) || filesize($targetPath) === 0) {
+        if (!$processedByFfmpeg) {
             if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
                 throw new RuntimeException('No fue posible procesar el video en el servidor.');
             }
         }
         chmod($targetPath, 0666);
 
-        $posterCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD /usr/bin/ffmpeg -y -ss 00:00:00.500 -i ' . escapeshellarg($targetPath) . ' -frames:v 1 -update 1 -q:v 2 ' . escapeshellarg($posterPath) . ' 2>&1';
-        exec($posterCmd);
-        if (is_file($posterPath)) {
-            chmod($posterPath, 0666);
+        if ($ffmpegBin && function_exists('exec')) {
+            $posterCmd = 'env -u LD_LIBRARY_PATH -u LD_PRELOAD ' . escapeshellarg($ffmpegBin) . ' -y -ss 00:00:00.500 -i ' . escapeshellarg($targetPath) . ' -frames:v 1 -update 1 -q:v 2 ' . escapeshellarg($posterPath) . ' 2>&1';
+            exec($posterCmd);
+            if (is_file($posterPath)) {
+                chmod($posterPath, 0666);
+            }
         }
 
         $relativeVideoPath = 'videos/instalaciones/' . $videoFilename;
