@@ -1035,7 +1035,11 @@ function admin_header_html()
 
 function admin_render_end()
 {
-    ?><script src="admin.js"></script></body>
+    ?>
+    <button type="button" id="admin-back-to-top" class="admin-back-to-top" aria-label="Volver arriba" title="Volver arriba">
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </button>
+    <script src="admin.js"></script></body>
 </html><?php
 }
 

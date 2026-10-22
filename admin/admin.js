@@ -1,6 +1,14 @@
 (function() {
     'use strict';
 
+    function triggerChange(el) {
+        if (!el) return;
+        try {
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        } catch(e) {}
+    }
+
     function reindexContainer(container, arrayName) {
         var items = container.querySelectorAll('.repeater-item');
         items.forEach(function(item, idx) {
@@ -78,6 +86,7 @@
                     if (pathInput) {
                         pathInput.value = '';
                         updatePreview('');
+                        triggerChange(pathInput);
                     }
                     if (fileInput) {
                         fileInput.value = '';
@@ -169,6 +178,7 @@
                                 if (pathInput) {
                                     pathInput.value = result.data.path;
                                     updatePreview(result.data.path);
+                                    triggerChange(pathInput);
                                 }
                                 if (statusBadge) {
                                     statusBadge.className = 'image-status-badge';
@@ -233,6 +243,7 @@
                     if (posterInput) posterInput.value = '';
                     if (fileInput) fileInput.value = '';
                     updatePreview('', '');
+                    triggerChange(pathInput);
                     if (statusBadge) {
                         statusBadge.className = 'video-status-badge';
                         statusBadge.textContent = 'Video quitado';
@@ -316,6 +327,7 @@
                                 if (pathInput) pathInput.value = result.data.path;
                                 if (posterInput) posterInput.value = result.data.poster || '';
                                 updatePreview(result.data.path, result.data.poster);
+                                triggerChange(pathInput);
                                 if (statusBadge) {
                                     statusBadge.className = 'video-status-badge';
                                     var sizeMB = (result.data.size / (1024 * 1024)).toFixed(1);
@@ -371,6 +383,7 @@
                     var arrayName = container.getAttribute('data-array-name') || 'items';
                     item.remove();
                     reindexContainer(container, arrayName);
+                    triggerChange(container);
                 }
             }
 
@@ -395,6 +408,7 @@
                         reindexContainer(list, arrayName);
                         initImagePickers();
                         initVideoPickers();
+                        triggerChange(list);
                     }
                 }
             }
@@ -475,6 +489,7 @@
 
                 if (input) {
                     input.value = iconClass;
+                    triggerChange(input);
                 }
                 if (previewIcon) {
                     previewIcon.className = 'fa ' + iconClass;
@@ -534,9 +549,12 @@
 
             if (clearBtn) {
                 clearBtn.addEventListener('click', function() {
-                    if (pathInput) pathInput.value = '';
+                    if (pathInput) {
+                        pathInput.value = '';
+                        updatePreview('');
+                        triggerChange(pathInput);
+                    }
                     if (fileInput) fileInput.value = '';
-                    updatePreview('');
                     if (statusBadge) {
                         statusBadge.className = 'audio-status-badge';
                         statusBadge.textContent = 'Audio quitado';
@@ -595,6 +613,7 @@
                             if (pathInput) {
                                 pathInput.value = data.path;
                                 updatePreview(data.path);
+                                triggerChange(pathInput);
                             }
                             if (statusBadge) {
                                 statusBadge.className = 'audio-status-badge';
@@ -619,12 +638,160 @@
         });
     }
 
+    function initFormDirtyTracker() {
+        var form = document.querySelector('.editor-form');
+        if (!form) return;
+
+        var actions = form.querySelector('.editor-actions');
+        if (!actions) return;
+
+        document.body.classList.add('has-editor-actions');
+
+        var submitBtn = actions.querySelector('button[type="submit"]');
+        if (!submitBtn) return;
+
+        submitBtn.classList.add('btn-save');
+
+        // Set up the status badge container
+        var infoWrap = actions.querySelector('.editor-actions__info');
+        if (!infoWrap) {
+            infoWrap = document.createElement('div');
+            infoWrap.className = 'editor-actions__info';
+            var existingP = actions.querySelector('p');
+            if (existingP) {
+                actions.insertBefore(infoWrap, existingP);
+                infoWrap.appendChild(existingP);
+            } else {
+                actions.insertBefore(infoWrap, submitBtn);
+            }
+        }
+
+        var statusBadge = infoWrap.querySelector('.save-status-badge');
+        var statusIcon = null;
+        var statusText = null;
+
+        if (!statusBadge) {
+            statusBadge = document.createElement('span');
+            statusBadge.className = 'save-status-badge save-status-badge--clean';
+            statusIcon = document.createElement('i');
+            statusIcon.className = 'fa fa-check-circle';
+            statusIcon.setAttribute('aria-hidden', 'true');
+            statusText = document.createElement('span');
+            statusText.textContent = 'Sin cambios pendientes';
+            statusBadge.appendChild(statusIcon);
+            statusBadge.appendChild(statusText);
+            infoWrap.insertBefore(statusBadge, infoWrap.firstChild);
+        } else {
+            statusIcon = statusBadge.querySelector('i');
+            statusText = statusBadge.querySelector('span');
+        }
+
+        function serializeFormState() {
+            var formData = new FormData(form);
+            var parts = [];
+            formData.forEach(function(val, key) {
+                if (key === 'csrf_token') return;
+                if (val instanceof File) return;
+                parts.push(key + '===' + val);
+            });
+            // Include repeater counts
+            form.querySelectorAll('.repeater-list').forEach(function(list, idx) {
+                parts.push('__rep_' + (list.id || idx) + '_len===' + list.querySelectorAll('.repeater-item').length);
+            });
+            return parts.join('|||');
+        }
+
+        var initialState = serializeFormState();
+        var isDirty = null; // null initially so updateUI(false) always sets initial clean state
+        var isSubmitting = false;
+        var checkTimer = null;
+
+        function updateUI(dirty) {
+            if (isDirty === dirty) return; // Prevent unnecessary DOM work
+            isDirty = dirty;
+            submitBtn.disabled = !dirty;
+            if (dirty) {
+                submitBtn.classList.remove('is-disabled');
+                submitBtn.classList.add('is-active');
+                actions.classList.add('is-dirty');
+                statusBadge.className = 'save-status-badge save-status-badge--dirty';
+                if (statusIcon) statusIcon.className = 'fa fa-dot-circle-o';
+                if (statusText) statusText.textContent = 'Tenés cambios sin guardar';
+            } else {
+                submitBtn.classList.add('is-disabled');
+                submitBtn.classList.remove('is-active');
+                actions.classList.remove('is-dirty');
+                statusBadge.className = 'save-status-badge save-status-badge--clean';
+                if (statusIcon) statusIcon.className = 'fa fa-check-circle';
+                if (statusText) statusText.textContent = 'Sin cambios pendientes';
+            }
+        }
+
+        function checkChanges() {
+            if (isSubmitting) return;
+            var current = serializeFormState();
+            updateUI(current !== initialState);
+        }
+
+        function scheduleCheck() {
+            if (isSubmitting) return;
+            if (checkTimer) clearTimeout(checkTimer);
+            checkTimer = setTimeout(checkChanges, 40);
+        }
+
+        // Initialize state (clean by default)
+        updateUI(false);
+
+        form.addEventListener('input', scheduleCheck);
+        form.addEventListener('change', scheduleCheck);
+
+        form.addEventListener('submit', function() {
+            isSubmitting = true;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Guardando... <i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+        });
+
+        window.addEventListener('beforeunload', function(e) {
+            if (isDirty && !isSubmitting) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    }
+
+    function initBackToTop() {
+        var btn = document.getElementById('admin-back-to-top');
+        if (!btn) return;
+
+        function updateVisibility() {
+            var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            if (scrollY > 160) {
+                btn.classList.add('is-visible');
+            } else {
+                btn.classList.remove('is-visible');
+            }
+        }
+
+        window.addEventListener('scroll', updateVisibility, { passive: true });
+        updateVisibility();
+
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+
     function init() {
         initRepeaters();
         initImagePickers();
         initVideoPickers();
         initIconPickers();
         initAudioPickers();
+        initFormDirtyTracker();
+        initBackToTop();
     }
 
     if (document.readyState === 'loading') {
