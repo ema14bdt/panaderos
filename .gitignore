@@ -19,6 +19,7 @@ images/novedades/*-*.*
 images/servicios/*-*.*
 images/uploads/
 uploads/
+videos/
 !images/directivos/sin-foto.jpg
 !images/instalaciones/instalaciones-*.jpg
 !images/instalaciones/thumbs/instalaciones-*.jpg
