@@ -26,6 +26,9 @@ videos/
 !images/novedades/escala-salarial-*.jpg
 !images/novedades/app-panaderos-*.jpg
 
+# Generated agent tooling output
+graphify-out/
+
 # OS and Editor files
 .DS_Store
 Thumbs.db
