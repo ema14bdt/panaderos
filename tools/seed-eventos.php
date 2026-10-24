@@ -60,8 +60,14 @@ $stmtFilial = $pdo->prepare("INSERT INTO `filiales_retiro` (`nombre`, `direccion
                              VALUES (:nombre, :direccion, :localidad, :telefono, :horario, 1, NOW())");
 
 $filialesCount = 0;
+$stmtCheckFilial = $pdo->prepare("SELECT `id` FROM `filiales_retiro` WHERE `nombre` = :nombre LIMIT 1");
 foreach ($filiales as $f) {
     try {
+        $stmtCheckFilial->execute(array(':nombre' => $f['nombre']));
+        if ($stmtCheckFilial->fetch()) {
+            continue;
+        }
+
         $stmtFilial->execute(array(
             ':nombre'    => $f['nombre'],
             ':direccion' => $f['direccion'],
@@ -117,8 +123,14 @@ $stmtEvento = $pdo->prepare("INSERT INTO `eventos` (
 )");
 
 $eventosCount = 0;
+$stmtCheckEvento = $pdo->prepare("SELECT `id` FROM `eventos` WHERE `titulo` = :titulo LIMIT 1");
 foreach ($eventos as $ev) {
     try {
+        $stmtCheckEvento->execute(array(':titulo' => $ev['titulo']));
+        if ($stmtCheckEvento->fetch()) {
+            continue;
+        }
+
         $stmtEvento->execute(array(
             ':titulo'      => $ev['titulo'],
             ':descripcion' => $ev['descripcion'],
@@ -138,7 +150,7 @@ foreach ($eventos as $ev) {
         // Ignorar si ya existe
     }
 }
-echo "Eventos insertados: " . $eventosCount . "\n";
+echo "Eventos procesados: " . $eventosCount . "\n";
 
 // 3. Familiares de ejemplo para afiliado de prueba (Juan Carlos Perez, id 1)
 $afiliado1 = $pdo->query("SELECT id FROM `afiliados` WHERE `dni` = '28456123' LIMIT 1")->fetch();
