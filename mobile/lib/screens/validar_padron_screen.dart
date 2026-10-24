@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../services/api_service.dart';
+import '../widgets/panaderos_app_bar.dart';
 import 'register_screen.dart';
 
 class ValidarPadronScreen extends StatefulWidget {
@@ -64,8 +65,9 @@ class _ValidarPadronScreenState extends State<ValidarPadronScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registro de Afiliado'),
+      appBar: const PanaderosAppBar(
+        subtitle: 'REGISTRO · PASO 1',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),

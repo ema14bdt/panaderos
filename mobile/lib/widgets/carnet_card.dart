@@ -47,16 +47,30 @@ class CarnetCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Encabezado institucional
+                // Encabezado institucional con logo oficial
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 34,
+                        width: 34,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'S.O.E.P.L.',
+                            'S.O.E.P.La',
                             style: TextStyle(
                               color: AppColors.accent,
                               fontSize: 14,
@@ -66,10 +80,10 @@ class CarnetCard extends StatelessWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            carnet.institucion['nombre'] ?? 'Sindicato de Obreros Panaderos de Lanús',
+                            carnet.institucion['nombre'] ?? 'Sindicato de Obreros y Empleados Panaderos de Lanús',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: FontWeight.w500,
                               height: 1.2,
                             ),

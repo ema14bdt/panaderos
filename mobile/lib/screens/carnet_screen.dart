@@ -3,10 +3,9 @@ import '../core/constants.dart';
 import '../models/carnet.dart';
 import '../models/familiar.dart';
 import '../services/api_service.dart';
-import '../services/storage_service.dart';
 import '../widgets/carnet_card.dart';
+import '../widgets/panaderos_app_bar.dart';
 import '../widgets/qr_dialog.dart';
-import 'login_screen.dart';
 
 class CarnetScreen extends StatefulWidget {
   const CarnetScreen({super.key});
@@ -49,51 +48,16 @@ class _CarnetScreenState extends State<CarnetScreen> {
     }
   }
 
-  Future<void> _cerrarSesion() async {
-    final confirmar = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Cerrar Sesión'),
-        content: const Text('¿Estás seguro de que deseás cerrar tu sesión en este dispositivo?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.error),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Cerrar Sesión'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmar == true) {
-      await StorageService.clearSession();
-      if (!mounted) return;
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (ctx) => const LoginScreen()),
-        (route) => false,
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mi Carnet Digital'),
+      appBar: PanaderosAppBar(
+        subtitle: 'MI CARNET DIGITAL',
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             tooltip: 'Actualizar',
             onPressed: _cargarCarnet,
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            tooltip: 'Cerrar Sesión',
-            onPressed: _cerrarSesion,
           ),
         ],
       ),
@@ -275,7 +239,7 @@ class _CarnetScreenState extends State<CarnetScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${familiar.parentesco.toUpperCase()} · Nacimiento: ${familiar.fechaNacimiento}',
+                  '${familiar.parentesco.toUpperCase()} · Nacimiento: ${formatFecha(familiar.fechaNacimiento)}',
                   style: const TextStyle(fontSize: 12, color: AppColors.textMuted),
                 ),
                 if (familiar.escolaridad != 'ninguna')

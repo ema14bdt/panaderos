@@ -4,6 +4,7 @@ import '../models/evento.dart';
 import '../models/familiar.dart';
 import '../services/api_service.dart';
 import '../widgets/comprobante_dialog.dart';
+import '../widgets/panaderos_app_bar.dart';
 import 'inscribirse_evento_screen.dart';
 
 class EventosScreen extends StatefulWidget {
@@ -64,11 +65,8 @@ class _EventosScreenState extends State<EventosScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Eventos y Entregas'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
+      appBar: PanaderosAppBar(
+        subtitle: 'EVENTOS Y ENTREGAS',
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

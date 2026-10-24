@@ -2,17 +2,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const Color primary = Color(0xFF10223D);       // Azul institucional profundo
-  static const Color primaryLight = Color(0xFF1E3A63);  // Azul medio
-  static const Color accent = Color(0xFFE5A838);        // Dorado gremial
-  static const Color accentLight = Color(0xFFF7C822);   // Amarillo trigo
-  static const Color background = Color(0xFFF4F6F9);    // Gris claro fondo
+  // Paleta institucional unificada con la web oficial (--ink, --sun, --cream, --red)
+  static const Color primary = Color(0xFF3E4D5F);       // --ink: Azul/gris pizarra institucional
+  static const Color primaryDark = Color(0xFF2B3744);   // Versión profunda para AppBars y headers
+  static const Color primaryLight = Color(0xFF5A6B7E);  // Azul pizarra medio
+  static const Color accent = Color(0xFF49B8E7);        // --sun: Celeste institucional
+  static const Color accentLight = Color(0xFF67D0F8);   // Celeste claro para contrastes
+  static const Color accentDark = Color(0xFF0369A1);    // --red: Azul cerúleo para enlaces y destacados
+  static const Color cream = Color(0xFFF6F2E8);         // --cream: Crema suave
+  static const Color background = Color(0xFFF8FAFC);    // Fondo limpio moderno
   static const Color surface = Colors.white;
-  static const Color textMain = Color(0xFF1C2430);      // Texto principal
-  static const Color textMuted = Color(0xFF6B7280);     // Texto secundario
+  static const Color textMain = Color(0xFF1E293B);      // Texto principal
+  static const Color textMuted = Color(0xFF64748B);     // Texto secundario
   static const Color success = Color(0xFF1E8E3E);       // Verde activo
   static const Color error = Color(0xFFD93025);         // Rojo alerta
-  static const Color border = Color(0xFFE5E7EB);
+  static const Color border = Color(0xFFE2E8F0);
 }
 
 class ApiConfig {

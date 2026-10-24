@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../services/api_service.dart';
+import '../widgets/panaderos_app_bar.dart';
 import 'main_navigation_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -77,8 +78,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final empresa = widget.datosPadron['empresa_panaderia'] ?? '';
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Contraseña'),
+      appBar: const PanaderosAppBar(
+        subtitle: 'REGISTRO · PASO 2',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),

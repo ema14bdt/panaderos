@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'constants.dart';
 
 class AppTheme {
   static ThemeData get lightTheme {
+    final baseTextTheme = ThemeData.light().textTheme;
+    final manropeTextTheme = GoogleFonts.manropeTextTheme(baseTextTheme);
+
     return ThemeData(
       useMaterial3: true,
+      textTheme: manropeTextTheme,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         primary: AppColors.primary,
@@ -16,11 +21,11 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
-        centerTitle: true,
+        centerTitle: false,
         titleTextStyle: TextStyle(
           color: Colors.white,
           fontSize: 18,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           letterSpacing: 0.2,
         ),
       ),

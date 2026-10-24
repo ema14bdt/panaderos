@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../core/constants.dart';
 import '../models/beneficio.dart';
 import '../services/api_service.dart';
+import '../widgets/panaderos_app_bar.dart';
 
 class BeneficiosScreen extends StatefulWidget {
   const BeneficiosScreen({super.key});
@@ -121,9 +122,7 @@ class _BeneficiosScreenState extends State<BeneficiosScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Beneficios y Convenios'),
-      ),
+      appBar: const PanaderosAppBar(subtitle: 'CONVENIOS Y BENEFICIOS'),
       body: Column(
         children: [
           // Barra de Búsqueda
