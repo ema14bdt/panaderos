@@ -3,6 +3,7 @@ import '../core/constants.dart';
 import 'beneficios_screen.dart';
 import 'carnet_screen.dart';
 import 'eventos_screen.dart';
+import 'home_screen.dart';
 import 'perfil_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -18,6 +19,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   late int _currentIndex;
 
   final List<Widget> _screens = const [
+    const HomeScreen(),
     CarnetScreen(),
     BeneficiosScreen(),
     EventosScreen(),
@@ -46,8 +48,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
         },
         backgroundColor: Colors.white,
         elevation: 8,
-        indicatorColor: AppColors.accent.withValues(alpha: 0.2),
+        indicatorColor: AppColors.accent.withValues(alpha: 0.25),
         destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.home_outlined),
+            selectedIcon: Icon(Icons.home, color: AppColors.primary),
+            label: 'Inicio',
+          ),
           NavigationDestination(
             icon: Icon(Icons.badge_outlined),
             selectedIcon: Icon(Icons.badge, color: AppColors.primary),

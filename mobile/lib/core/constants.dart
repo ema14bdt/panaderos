@@ -26,6 +26,7 @@ class ApiConfig {
   static String get baseUrl =>
       kIsWeb ? 'http://localhost/panaderos/api' : 'http://10.0.2.2/panaderos/api';
 
+  static String get home => '$baseUrl/home/index.php';
   static String get validarPadron => '$baseUrl/auth/validar-padron.php';
   static String get register => '$baseUrl/auth/register.php';
   static String get login => '$baseUrl/auth/login.php';

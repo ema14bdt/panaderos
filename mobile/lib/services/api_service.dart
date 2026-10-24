@@ -6,6 +6,7 @@ import '../models/beneficio.dart';
 import '../models/carnet.dart';
 import '../models/evento.dart';
 import '../models/familiar.dart';
+import '../models/home_data.dart';
 import 'storage_service.dart';
 
 class ApiException implements Exception {
@@ -340,4 +341,30 @@ class ApiService {
       throw ApiException('Error al procesar la eliminación de la cuenta.');
     }
   }
+
+  /// Obtener datos informativos de la Home (motto, escala salarial, día del panadero, redes)
+  Future<HomeData> getHomeData() async {
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConfig.home),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return HomeData.fromJson(data['data']);
+      } else {
+        throw ApiException(
+          data['error'] ?? 'No se pudo cargar la información de inicio.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
 }
