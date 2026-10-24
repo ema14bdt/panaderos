@@ -31,7 +31,7 @@ $isNovedades = ($currentScript === 'novedades.php' || strpos($currentUri, '/nove
             </div>
             <div id="site-navigation" class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-home <?php echo $isHome ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>index.php" <?php echo $isHome ? 'aria-current="page"' : ''; ?> title="Inicio" aria-label="Inicio"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                    <li class="nav-home <?php echo $isHome ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>index.php" <?php echo $isHome ? 'aria-current="page"' : ''; ?> title="Inicio" aria-label="Inicio"><i class="fa fa-home" aria-hidden="true"></i><span class="nav-home__label"> Inicio</span></a></li>
                     <li class="<?php echo $isComision ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>comision-directiva.php" <?php echo $isComision ? 'aria-current="page"' : ''; ?>>El sindicato</a></li>
                     <li class="<?php echo $isAfiliaciones ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>afiliaciones.php" <?php echo $isAfiliaciones ? 'aria-current="page"' : ''; ?>>Afiliaciones</a></li>
                     <li class="<?php echo $isServicios ? 'active' : ''; ?>"><a href="<?php echo $site_base; ?>servicios.php" <?php echo $isServicios ? 'aria-current="page"' : ''; ?>>Beneficios</a></li>
