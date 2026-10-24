@@ -211,7 +211,7 @@ class ComprobanteModalBottomSheet extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Fecha estimada: ${evento.fechaEntrega}',
+                          'Fecha estimada: ${formatFecha(evento.fechaEntrega)}',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,

@@ -546,7 +546,7 @@ class _EventosScreenState extends State<EventosScreen> {
                 if (evento.fechaEntrega != null)
                   _buildInfoPill(
                     Icons.calendar_month,
-                    'Entrega: ${evento.fechaEntrega}',
+                    'Entrega: ${formatFecha(evento.fechaEntrega)}',
                   ),
               ],
             ),

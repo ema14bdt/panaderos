@@ -32,3 +32,35 @@ class ApiConfig {
   static String get logout => '$baseUrl/auth/logout.php';
   static String get deleteAccount => '$baseUrl/auth/delete-account.php';
 }
+
+/// Helper para formatear fechas a formato estándar argentino: dd/mm/aaaa
+String formatFecha(String? dateStr) {
+  if (dateStr == null || dateStr.trim().isEmpty) return '';
+  final cleaned = dateStr.trim();
+  if (RegExp(r'^\d{2}/\d{2}/\d{4}$').hasMatch(cleaned)) return cleaned;
+  try {
+    final parsed = DateTime.parse(cleaned);
+    final day = parsed.day.toString().padLeft(2, '0');
+    final month = parsed.month.toString().padLeft(2, '0');
+    final year = parsed.year.toString();
+    return '$day/$month/$year';
+  } catch (_) {
+    return cleaned;
+  }
+}
+
+/// Helper para convertir formato argentino dd/mm/aaaa a formato ISO aaaa-mm-dd
+String parseFechaToIso(String? dateStr) {
+  if (dateStr == null || dateStr.trim().isEmpty) return '';
+  final cleaned = dateStr.trim();
+  final match = RegExp(r'^(\d{1,2})/(\d{1,2})/(\d{4})$').firstMatch(cleaned);
+  if (match != null) {
+    final day = match.group(1)!.padLeft(2, '0');
+    final month = match.group(2)!.padLeft(2, '0');
+    final year = match.group(3)!;
+    return '$year-$month-$day';
+  }
+  return cleaned;
+}
+
+
