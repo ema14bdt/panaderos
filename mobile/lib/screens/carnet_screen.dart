@@ -9,7 +9,7 @@ import '../widgets/qr_dialog.dart';
 import 'login_screen.dart';
 
 class CarnetScreen extends StatefulWidget {
-  const CarnetScreen({Key? key}) : super(key: key);
+  const CarnetScreen({super.key});
 
   @override
   State<CarnetScreen> createState() => _CarnetScreenState();
@@ -164,7 +164,7 @@ class _CarnetScreenState extends State<CarnetScreen> {
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withOpacity(0.08),
+                                color: AppColors.primary.withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Text(
@@ -220,8 +220,8 @@ class _CarnetScreenState extends State<CarnetScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Row(
-                                children: const [
+                              const Row(
+                                children: [
                                   Icon(Icons.location_on_outlined, color: AppColors.accent, size: 20),
                                   SizedBox(width: 8),
                                   Text(
@@ -259,7 +259,7 @@ class _CarnetScreenState extends State<CarnetScreen> {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.08),
+              color: AppColors.primary.withValues(alpha: 0.08),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.child_care, color: AppColors.primary, size: 24),

@@ -6,7 +6,7 @@ import '../models/carnet.dart';
 class QrModalBottomSheet extends StatelessWidget {
   final CarnetData carnet;
 
-  const QrModalBottomSheet({Key? key, required this.carnet}) : super(key: key);
+  const QrModalBottomSheet({super.key, required this.carnet});
 
   static void show(BuildContext context, CarnetData carnet) {
     showModalBottomSheet(
@@ -68,7 +68,7 @@ class QrModalBottomSheet extends StatelessWidget {
               border: Border.all(color: AppColors.border, width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),

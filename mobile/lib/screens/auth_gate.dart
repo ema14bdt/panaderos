@@ -5,7 +5,7 @@ import 'login_screen.dart';
 import 'main_navigation_screen.dart';
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({Key? key}) : super(key: key);
+  const AuthGate({super.key});
 
   @override
   State<AuthGate> createState() => _AuthGateState();

@@ -18,7 +18,7 @@ void main() {
 }
 
 class PanaderosApp extends StatelessWidget {
-  const PanaderosApp({Key? key}) : super(key: key);
+  const PanaderosApp({super.key});
 
   @override
   Widget build(BuildContext context) {

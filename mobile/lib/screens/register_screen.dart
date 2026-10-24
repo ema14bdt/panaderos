@@ -6,7 +6,7 @@ import 'main_navigation_screen.dart';
 class RegisterScreen extends StatefulWidget {
   final Map<String, dynamic> datosPadron;
 
-  const RegisterScreen({Key? key, required this.datosPadron}) : super(key: key);
+  const RegisterScreen({super.key, required this.datosPadron});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -115,9 +115,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.06),
+                  color: AppColors.primary.withValues(alpha: 0.06),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: AppColors.primary.withOpacity(0.15)),
+                  border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,9 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   margin: const EdgeInsets.only(bottom: 20),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withOpacity(0.08),
+                    color: AppColors.error.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [

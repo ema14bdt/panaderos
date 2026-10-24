@@ -4,7 +4,7 @@ import '../services/api_service.dart';
 import 'register_screen.dart';
 
 class ValidarPadronScreen extends StatefulWidget {
-  const ValidarPadronScreen({Key? key}) : super(key: key);
+  const ValidarPadronScreen({super.key});
 
   @override
   State<ValidarPadronScreen> createState() => _ValidarPadronScreenState();
@@ -117,9 +117,9 @@ class _ValidarPadronScreenState extends State<ValidarPadronScreen> {
                   margin: const EdgeInsets.only(bottom: 20),
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: AppColors.error.withOpacity(0.08),
+                    color: AppColors.error.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.error.withOpacity(0.3)),
+                    border: Border.all(color: AppColors.error.withValues(alpha: 0.3)),
                   ),
                   child: Row(
                     children: [

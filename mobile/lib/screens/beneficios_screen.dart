@@ -215,10 +215,10 @@ class _BeneficiosScreenState extends State<BeneficiosScreen> {
                         ),
                       )
                     : _beneficios.isEmpty
-                        ? Center(
+                        ? const Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: const Column(
+                              padding: EdgeInsets.all(32.0),
+                              child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.search_off, size: 54, color: AppColors.textMuted),

@@ -7,10 +7,10 @@ class CarnetCard extends StatelessWidget {
   final VoidCallback onShowQr;
 
   const CarnetCard({
-    Key? key,
+    super.key,
     required this.carnet,
     required this.onShowQr,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class CarnetCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.35),
+            color: AppColors.primary.withValues(alpha: 0.35),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -84,7 +84,7 @@ class CarnetCard extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: afiliado.isActivo ? AppColors.success.withOpacity(0.2) : AppColors.error.withOpacity(0.2),
+                        color: afiliado.isActivo ? AppColors.success.withValues(alpha: 0.2) : AppColors.error.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: afiliado.isActivo ? AppColors.success : AppColors.error,
@@ -130,7 +130,7 @@ class CarnetCard extends StatelessWidget {
                       height: 70,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.12),
+                        color: Colors.white.withValues(alpha: 0.12),
                         border: Border.all(color: AppColors.accent, width: 2),
                       ),
                       child: afiliado.fotoUrl != null && afiliado.fotoUrl!.isNotEmpty
@@ -233,13 +233,13 @@ class CarnetCard extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
+                    color: Colors.white.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.white12),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(Icons.qr_code, color: AppColors.accentLight, size: 18),
                       SizedBox(width: 8),
                       Text(
