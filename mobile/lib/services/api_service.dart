@@ -285,4 +285,59 @@ class ApiService {
       throw ApiException('Error al conectar con el servidor.');
     }
   }
+
+  /// Cerrar sesión y revocar token
+  Future<void> logout() async {
+    final token = await StorageService.getToken();
+    if (token != null) {
+      try {
+        await _client.post(
+          Uri.parse(ApiConfig.logout),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token',
+          },
+        );
+      } catch (_) {
+        // Ignorar error de red al cerrar sesión
+      }
+    }
+    await StorageService.clearAuth();
+  }
+
+  /// Eliminar cuenta de usuario en la App (Apple App Store Guideline 5.1.1v)
+  Future<void> deleteAccount({String? password}) async {
+    final token = await StorageService.getToken();
+    if (token == null) {
+      throw ApiException('No hay sesión iniciada.', 401);
+    }
+
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConfig.deleteAccount),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          if (password != null && password.isNotEmpty) 'password': password,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        await StorageService.clearAuth();
+      } else {
+        throw ApiException(
+          data['error'] ?? 'No se pudo eliminar la cuenta.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al procesar la eliminación de la cuenta.');
+    }
+  }
 }

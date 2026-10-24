@@ -3,6 +3,7 @@ import '../core/constants.dart';
 import 'beneficios_screen.dart';
 import 'carnet_screen.dart';
 import 'eventos_screen.dart';
+import 'perfil_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final int initialIndex;
@@ -20,6 +21,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     CarnetScreen(),
     BeneficiosScreen(),
     EventosScreen(),
+    PerfilScreen(),
   ];
 
   @override
@@ -60,6 +62,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             icon: Icon(Icons.event_available_outlined),
             selectedIcon: Icon(Icons.event_available, color: AppColors.primary),
             label: 'Eventos',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline),
+            selectedIcon: Icon(Icons.person, color: AppColors.primary),
+            label: 'Mi Perfil',
           ),
         ],
       ),

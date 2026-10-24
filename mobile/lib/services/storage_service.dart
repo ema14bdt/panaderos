@@ -51,4 +51,7 @@ class StorageService {
     await prefs.remove(_tokenKey);
     await prefs.remove(_carnetCacheKey);
   }
+
+  /// Limpiar credenciales y caché de autenticación
+  static Future<void> clearAuth() => clearSession();
 }

@@ -9,6 +9,7 @@ class Afiliado {
   final String? empresaPanaderia;
   final String? categoriaLaboral;
   final String estado;
+  final String? fechaAfiliacion;
   final String? fechaVencimiento;
   final String? fotoUrl;
 
@@ -23,6 +24,7 @@ class Afiliado {
     this.empresaPanaderia,
     this.categoriaLaboral,
     required this.estado,
+    this.fechaAfiliacion,
     this.fechaVencimiento,
     this.fotoUrl,
   });
@@ -42,6 +44,7 @@ class Afiliado {
       empresaPanaderia: json['empresa_panaderia']?.toString(),
       categoriaLaboral: json['categoria_laboral']?.toString(),
       estado: json['estado']?.toString() ?? 'activo',
+      fechaAfiliacion: json['fecha_afiliacion']?.toString(),
       fechaVencimiento: json['fecha_vencimiento']?.toString(),
       fotoUrl: json['foto_url']?.toString(),
     );
@@ -59,6 +62,7 @@ class Afiliado {
       'empresa_panaderia': empresaPanaderia,
       'categoria_laboral': categoriaLaboral,
       'estado': estado,
+      'fecha_afiliacion': fechaAfiliacion,
       'fecha_vencimiento': fechaVencimiento,
       'foto_url': fotoUrl,
     };

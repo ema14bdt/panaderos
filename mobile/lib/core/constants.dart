@@ -29,4 +29,6 @@ class ApiConfig {
   static String get beneficios => '$baseUrl/beneficios/index.php';
   static String get eventos => '$baseUrl/eventos/index.php';
   static String get inscribirseEvento => '$baseUrl/eventos/inscribirse.php';
+  static String get logout => '$baseUrl/auth/logout.php';
+  static String get deleteAccount => '$baseUrl/auth/delete-account.php';
 }
