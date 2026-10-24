@@ -19,6 +19,21 @@ class Familiar {
 
   String get nombreCompleto => '$apellido, $nombre';
 
+  int get edad {
+    try {
+      final birthDate = DateTime.parse(fechaNacimiento);
+      final now = DateTime.now();
+      int age = now.year - birthDate.year;
+      if (now.month < birthDate.month ||
+          (now.month == birthDate.month && now.day < birthDate.day)) {
+        age--;
+      }
+      return age >= 0 ? age : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
   factory Familiar.fromJson(Map<String, dynamic> json) {
     return Familiar(
       id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,

@@ -4,6 +4,8 @@ import '../core/constants.dart';
 import '../models/afiliado.dart';
 import '../models/beneficio.dart';
 import '../models/carnet.dart';
+import '../models/evento.dart';
+import '../models/familiar.dart';
 import 'storage_service.dart';
 
 class ApiException implements Exception {
@@ -186,6 +188,101 @@ class ApiService {
     } catch (e) {
       throw ApiException(
           'Error al conectar con el servidor para consultar beneficios.');
+    }
+  }
+
+  /// Obtener eventos activos, filiales de retiro y grupo familiar del afiliado
+  Future<Map<String, dynamic>> getEventosData() async {
+    final token = await StorageService.getToken();
+    if (token == null) {
+      throw ApiException('No hay sesión iniciada.', 401);
+    }
+
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConfig.eventos),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        final eventos = (data['data']['eventos'] as List<dynamic>?)
+                ?.map((e) => Evento.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [];
+
+        final filiales = (data['data']['filiales'] as List<dynamic>?)
+                ?.map((f) => FilialRetiro.fromJson(f as Map<String, dynamic>))
+                .toList() ??
+            [];
+
+        final familiares = (data['data']['familiares'] as List<dynamic>?)
+                ?.map((fam) => Familiar.fromJson(fam as Map<String, dynamic>))
+                .toList() ??
+            [];
+
+        return {
+          'eventos': eventos,
+          'filiales': filiales,
+          'familiares': familiares,
+        };
+      } else {
+        throw ApiException(
+            data['error'] ?? 'No se pudieron cargar los eventos.',
+            response.statusCode);
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
+  /// Inscribir afiliado y familiares a un evento
+  Future<Map<String, dynamic>> inscribirseEvento({
+    required int eventoId,
+    required int filialRetiroId,
+    String? observaciones,
+    required List<Map<String, dynamic>> beneficiarios,
+  }) async {
+    final token = await StorageService.getToken();
+    if (token == null) {
+      throw ApiException('No hay sesión iniciada.', 401);
+    }
+
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConfig.inscribirseEvento),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'evento_id': eventoId,
+          'filial_retiro_id': filialRetiroId,
+          'observaciones': observaciones,
+          'beneficiarios': beneficiarios,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          data['success'] == true) {
+        return Map<String, dynamic>.from(data['data']);
+      } else {
+        throw ApiException(
+            data['error'] ?? 'Error al procesar la inscripción.',
+            response.statusCode);
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al conectar con el servidor.');
     }
   }
 }

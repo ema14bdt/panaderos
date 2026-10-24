@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import 'beneficios_screen.dart';
 import 'carnet_screen.dart';
+import 'eventos_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final int initialIndex;
@@ -18,6 +19,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   final List<Widget> _screens = const [
     CarnetScreen(),
     BeneficiosScreen(),
+    EventosScreen(),
   ];
 
   @override
@@ -54,8 +56,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             selectedIcon: Icon(Icons.card_giftcard, color: AppColors.primary),
             label: 'Beneficios',
           ),
+          NavigationDestination(
+            icon: Icon(Icons.event_available_outlined),
+            selectedIcon: Icon(Icons.event_available, color: AppColors.primary),
+            label: 'Eventos',
+          ),
         ],
       ),
     );
   }
 }
+
