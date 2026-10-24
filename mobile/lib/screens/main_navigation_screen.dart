@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
+import 'admin_screen.dart';
 import 'beneficios_screen.dart';
 import 'carnet_screen.dart';
 import 'eventos_screen.dart';
@@ -17,14 +18,7 @@ class MainNavigationScreen extends StatefulWidget {
 
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   late int _currentIndex;
-
-  final List<Widget> _screens = const [
-    const HomeScreen(),
-    CarnetScreen(),
-    BeneficiosScreen(),
-    EventosScreen(),
-    PerfilScreen(),
-  ];
+  bool _isAdminView = false;
 
   @override
   void initState() {
@@ -34,10 +28,34 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isAdminView) {
+      return AdminScreen(
+        onSwitchToAfiliado: () {
+          setState(() {
+            _isAdminView = false;
+          });
+        },
+      );
+    }
+
+    final screens = [
+      const HomeScreen(),
+      const CarnetScreen(),
+      const BeneficiosScreen(),
+      const EventosScreen(),
+      PerfilScreen(
+        onSwitchToAdmin: () {
+          setState(() {
+            _isAdminView = true;
+          });
+        },
+      ),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: screens,
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _currentIndex,
@@ -80,4 +98,3 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     );
   }
 }
-

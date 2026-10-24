@@ -36,6 +36,12 @@ class ApiConfig {
   static String get inscribirseEvento => '$baseUrl/eventos/inscribirse.php';
   static String get logout => '$baseUrl/auth/logout.php';
   static String get deleteAccount => '$baseUrl/auth/delete-account.php';
+  static String get adminMetricas => '$baseUrl/admin/metricas.php';
+  static String get adminValidarComprobante => '$baseUrl/admin/validar-comprobante.php';
+  static String get adminAfiliados => '$baseUrl/admin/afiliados.php';
+  static String get adminInscripciones => '$baseUrl/admin/inscripciones.php';
+  static String get adminEventos => '$baseUrl/admin/eventos.php';
+  static String get adminGuardarEvento => '$baseUrl/admin/guardar-evento.php';
 }
 
 /// Helper para formatear fechas a formato estándar argentino: dd/mm/aaaa

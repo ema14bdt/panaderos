@@ -367,4 +367,225 @@ class ApiService {
     }
   }
 
+  /// Obtener métricas para el panel administrador sindical
+  Future<Map<String, dynamic>> getAdminMetricas() async {
+    final token = await StorageService.getToken();
+    if (token == null) {
+      throw ApiException('No hay sesión iniciada.', 401);
+    }
+
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConfig.adminMetricas),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return Map<String, dynamic>.from(data['data']);
+      } else {
+        throw ApiException(
+          data['error'] ?? 'No se pudieron obtener las métricas de administración.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
+  /// Validar y confirmar entrega de comprobante QR (rol admin)
+  Future<Map<String, dynamic>> adminValidarComprobante(
+    String codigoComprobante, {
+    bool confirmarEntrega = false,
+  }) async {
+    final token = await StorageService.getToken();
+    if (token == null) {
+      throw ApiException('No hay sesión iniciada.', 401);
+    }
+
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConfig.adminValidarComprobante),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'codigo_comprobante': codigoComprobante.trim(),
+          'confirmar_entrega': confirmarEntrega,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return Map<String, dynamic>.from(data['data']);
+      } else {
+        throw ApiException(
+          data['error'] ?? 'No se pudo validar el comprobante.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Error al procesar la validación del comprobante.');
+    }
+  }
+
+  /// Listado de afiliados (padrón y app) para administradores
+  Future<List<Map<String, dynamic>>> getAdminAfiliados({
+    String search = '',
+    String filtro = 'todos',
+  }) async {
+    final token = await StorageService.getToken();
+    if (token == null) throw ApiException('No hay sesión iniciada.', 401);
+
+    try {
+      final uri = Uri.parse(ApiConfig.adminAfiliados).replace(queryParameters: {
+        if (search.isNotEmpty) 'search': search,
+        if (filtro != 'todos') 'filtro': filtro,
+      });
+
+      final response = await _client.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        return (data['data']['afiliados'] as List<dynamic>?)
+                ?.map((item) => Map<String, dynamic>.from(item as Map))
+                .toList() ??
+            [];
+      } else {
+        throw ApiException(
+          data['error'] ?? 'Error al obtener la lista de afiliados.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
+  /// Listado de inscriptos a eventos para administradores
+  Future<List<Map<String, dynamic>>> getAdminInscripciones({
+    int? eventoId,
+    String estado = 'todos',
+    String search = '',
+  }) async {
+    final token = await StorageService.getToken();
+    if (token == null) throw ApiException('No hay sesión iniciada.', 401);
+
+    try {
+      final queryParams = <String, String>{};
+      if (eventoId != null && eventoId > 0) queryParams['evento_id'] = eventoId.toString();
+      if (estado != 'todos') queryParams['estado'] = estado;
+      if (search.isNotEmpty) queryParams['search'] = search;
+
+      final uri = Uri.parse(ApiConfig.adminInscripciones).replace(queryParameters: queryParams);
+
+      final response = await _client.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        return (data['data']['inscripciones'] as List<dynamic>?)
+                ?.map((item) => Map<String, dynamic>.from(item as Map))
+                .toList() ??
+            [];
+      } else {
+        throw ApiException(
+          data['error'] ?? 'Error al obtener inscripciones.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
+  /// Listado completo de eventos para gestión sindical
+  Future<List<Map<String, dynamic>>> getAdminEventos() async {
+    final token = await StorageService.getToken();
+    if (token == null) throw ApiException('No hay sesión iniciada.', 401);
+
+    try {
+      final response = await _client.get(
+        Uri.parse(ApiConfig.adminEventos),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        return (data['data']['eventos'] as List<dynamic>?)
+                ?.map((item) => Map<String, dynamic>.from(item as Map))
+                .toList() ??
+            [];
+      } else {
+        throw ApiException(
+          data['error'] ?? 'Error al obtener eventos.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
+
+  /// Crear o editar un evento (rol admin)
+  Future<Map<String, dynamic>> guardarAdminEvento(Map<String, dynamic> eventoData) async {
+    final token = await StorageService.getToken();
+    if (token == null) throw ApiException('No hay sesión iniciada.', 401);
+
+    try {
+      final response = await _client.post(
+        Uri.parse(ApiConfig.adminGuardarEvento),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(eventoData),
+      );
+
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200 && data['success'] == true) {
+        return Map<String, dynamic>.from(data['data']);
+      } else {
+        throw ApiException(
+          data['error'] ?? 'Error al guardar el evento.',
+          response.statusCode,
+        );
+      }
+    } on ApiException {
+      rethrow;
+    } catch (_) {
+      throw ApiException('Error al conectar con el servidor.');
+    }
+  }
 }

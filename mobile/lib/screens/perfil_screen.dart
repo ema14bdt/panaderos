@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../models/carnet.dart';
 import '../services/api_service.dart';
+import '../widgets/panaderos_app_bar.dart';
 import 'login_screen.dart';
 
 class PerfilScreen extends StatefulWidget {
-  const PerfilScreen({super.key});
+  final VoidCallback? onSwitchToAdmin;
+
+  const PerfilScreen({super.key, this.onSwitchToAdmin});
 
   @override
   State<PerfilScreen> createState() => _PerfilScreenState();
@@ -192,11 +195,8 @@ class _PerfilScreenState extends State<PerfilScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Mi Perfil Sindical'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
+      appBar: PanaderosAppBar(
+        subtitle: 'MI PERFIL SINDICAL',
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -351,7 +351,7 @@ class _PerfilScreenState extends State<PerfilScreen> {
               _buildDataRow('Empresa / Panadería:', afiliado.empresaPanaderia ?? 'No especificada'),
               _buildDataRow('Categoría Laboral:', afiliado.categoriaLaboral ?? 'Panadero'),
               if (afiliado.fechaAfiliacion != null)
-                _buildDataRow('Fecha de Afiliación:', afiliado.fechaAfiliacion!),
+                _buildDataRow('Fecha de Afiliación:', formatFecha(afiliado.fechaAfiliacion)),
               if (afiliado.email != null && afiliado.email!.isNotEmpty)
                 _buildDataRow('Email Registrado:', afiliado.email!),
               if (afiliado.telefono != null && afiliado.telefono!.isNotEmpty)
@@ -417,6 +417,33 @@ class _PerfilScreenState extends State<PerfilScreen> {
           const SizedBox(height: 24),
 
           // 4. Acciones de Cuenta
+          if (afiliado.isAdmin) ...[
+            Container(
+              margin: const EdgeInsets.only(bottom: 14),
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: widget.onSwitchToAdmin,
+                icon: const Icon(Icons.admin_panel_settings, size: 20),
+                label: const Text(
+                  'Cambiar a Vista Administrador',
+                  style: TextStyle(
+                    fontFamily: 'Manrope',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.primary,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ),
+          ],
+
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
