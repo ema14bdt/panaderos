@@ -275,6 +275,54 @@ assert_api("Listado de eventos refleja la inscripción y comprobante del afiliad
 // Limpiar nuevamente la inscripción de prueba para dejar el estado limpio
 $pdo->exec("DELETE FROM evento_inscripciones WHERE afiliado_id = 1");
 
+// 8. Prueba de Cierre de Sesión y Eliminación de Cuenta (Apple App Store Guideline 5.1.1v)
+echo "\n8. Probando /api/auth/logout.php y /api/auth/delete-account.php:\n";
+
+$resLogout = call_api('api/auth/logout.php', 'POST', array(), array(
+    'Authorization' => 'Bearer ' . $token
+));
+assert_api("Cierra sesión y revoca el token activo", 
+    isset($resLogout['success']) && $resLogout['success'] === true
+);
+
+$resCarnetPostLogout = call_api('api/carnet/digital.php', 'GET', array(), array(
+    'Authorization' => 'Bearer ' . $token
+));
+assert_api("Token revocado no permite acceder más al carnet", 
+    isset($resCarnetPostLogout['success']) && $resCarnetPostLogout['success'] === false
+);
+
+// Volver a iniciar sesión para probar delete-account
+$resReLogin = call_api('api/auth/login.php', 'POST', array(
+    'usuario' => '28456123',
+    'password' => 'Secreto12345'
+));
+$newToken = $resReLogin['data']['auth_token'];
+
+$resDeleteBadPass = call_api('api/auth/delete-account.php', 'POST', array(
+    'password' => 'incorrecta123'
+), array('Authorization' => 'Bearer ' . $newToken));
+assert_api("Rechaza eliminación de cuenta con contraseña errónea", 
+    isset($resDeleteBadPass['success']) && $resDeleteBadPass['success'] === false
+);
+
+$resDelete = call_api('api/auth/delete-account.php', 'POST', array(
+    'password' => 'Secreto12345'
+), array('Authorization' => 'Bearer ' . $newToken));
+assert_api("Elimina credenciales móviles del afiliado preservando su padrón", 
+    isset($resDelete['success']) && $resDelete['success'] === true
+);
+
+// Comprobar en base de datos que se limpiaron las credenciales y el padrón persiste
+$afiliadoDb = $pdo->query("SELECT * FROM afiliados WHERE dni = '28456123' LIMIT 1")->fetch();
+assert_api("El padrón físico permanece intacto mientras que password y email se eliminaron", 
+    $afiliadoDb !== false
+    && $afiliadoDb['nombre'] === 'Juan Carlos'
+    && empty($afiliadoDb['password_hash'])
+    && empty($afiliadoDb['email'])
+    && empty($afiliadoDb['auth_token'])
+);
+
 echo "\n=======================================================\n";
 echo "RESULTADO: " . $testsPassed . " de " . $totalTests . " pruebas superadas.\n";
 echo "=======================================================\n";
