@@ -38,3 +38,21 @@ The repository has no commit history yet, so no established message convention c
 ## Security & Configuration
 
 Do not commit credentials or environment-specific configuration. Check that relative links and PHP includes still resolve under the site's deployed `/web/` path before publishing.
+
+## Mobile Application & System Rules
+
+1. **Design & Navigation Consistency**:
+   - Always maintain visual, structural, and behavioral consistency across the entire app.
+   - Reuse existing design tokens (`AppColors`), typography (`Manrope`), card styles, border radiuses, and navigation conventions. Do not create isolated or mismatched UI patterns.
+   - The Administrator view navigation must follow the same pattern as the main app: a bottom `NavigationBar` with consistent icons and active indicators. Do not place primary navigation tabs/icons in the top header.
+   - Header is reserved for the institutional brand (`S.O.E.P.La` + `Sindicato de Obreros y Empleados Panaderos de Lanús`) and action controls (such as "Vista Afiliado"). Do not duplicate action buttons at the bottom.
+
+2. **Date Format Standard**:
+   - All dates in the mobile application (displays, cards, forms, dialogs, inputs) MUST strictly use the Argentine format: `dd/mm/aaaa` (`DD/MM/YYYY`).
+   - Any input accepting or displaying dates must display `dd/mm/aaaa` and parse/convert to ISO `YYYY-MM-DD` for backend persistence. Provide date pickers formatting to `dd/mm/aaaa`.
+
+3. **Event Management & Pickup Branches**:
+   - The sole physical branch for benefits and event pickup is Lanús (`Sede Central Lanús · Llavallol 902`).
+   - Administrators must have full visibility into the detailed list of affiliates and child beneficiaries enrolled in every event, including school levels, garment sizes, and pickup fulfillment status.
+   - Voucher validation must support both manual code entry and camera QR code scanning.
+
