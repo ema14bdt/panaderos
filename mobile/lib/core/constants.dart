@@ -26,4 +26,5 @@ class ApiConfig {
   static String get register => '$baseUrl/auth/register.php';
   static String get login => '$baseUrl/auth/login.php';
   static String get carnetDigital => '$baseUrl/carnet/digital.php';
+  static String get beneficios => '$baseUrl/beneficios/index.php';
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../services/api_service.dart';
-import 'carnet_screen.dart';
+import 'main_navigation_screen.dart';
 import 'validar_padron_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => const CarnetScreen()),
+        MaterialPageRoute(builder: (ctx) => const MainNavigationScreen()),
       );
     } catch (e) {
       setState(() {

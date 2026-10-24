@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../services/storage_service.dart';
-import 'carnet_screen.dart';
 import 'login_screen.dart';
+import 'main_navigation_screen.dart';
 
 class AuthGate extends StatefulWidget {
   const AuthGate({Key? key}) : super(key: key);
@@ -42,7 +42,7 @@ class _AuthGateState extends State<AuthGate> {
     }
 
     if (_isAuthenticated) {
-      return const CarnetScreen();
+      return const MainNavigationScreen();
     } else {
       return const LoginScreen();
     }

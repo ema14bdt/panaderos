@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/constants.dart';
 import '../services/api_service.dart';
-import 'carnet_screen.dart';
+import 'main_navigation_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   final Map<String, dynamic> datosPadron;
@@ -45,7 +45,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       // Navegar al Carnet Digital y limpiar la pila de navegación previa
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (ctx) => const CarnetScreen()),
+        MaterialPageRoute(builder: (ctx) => const MainNavigationScreen()),
         (route) => false,
       );
     } catch (e) {

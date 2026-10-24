@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../core/constants.dart';
 import '../models/afiliado.dart';
+import '../models/beneficio.dart';
 import '../models/carnet.dart';
 import 'storage_service.dart';
 
@@ -144,6 +145,47 @@ class ApiService {
         return cached;
       }
       throw ApiException('No se pudo conectar y no hay carnet guardado offline.');
+    }
+  }
+
+  /// Obtener listado de Beneficios y Convenios
+  Future<List<Beneficio>> getBeneficios({String? rubro, String? query}) async {
+    try {
+      final queryParams = <String, String>{};
+      if (rubro != null && rubro.isNotEmpty && rubro != 'todos') {
+        queryParams['rubro'] = rubro;
+      }
+      if (query != null && query.trim().isNotEmpty) {
+        queryParams['q'] = query.trim();
+      }
+
+      final uri = Uri.parse(ApiConfig.beneficios).replace(
+        queryParameters: queryParams.isNotEmpty ? queryParams : null,
+      );
+
+      final response = await _client.get(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        final list = (data['data']['beneficios'] as List<dynamic>?)
+                ?.map((item) => Beneficio.fromJson(item as Map<String, dynamic>))
+                .toList() ??
+            [];
+        return list;
+      } else {
+        throw ApiException(
+            data['error'] ?? 'No se pudieron cargar los beneficios.',
+            response.statusCode);
+      }
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException(
+          'Error al conectar con el servidor para consultar beneficios.');
     }
   }
 }
