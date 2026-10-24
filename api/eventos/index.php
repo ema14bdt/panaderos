@@ -31,11 +31,12 @@ try {
                                 ORDER BY `fecha_inicio_inscripcion` DESC");
     $eventosDb = $stmtEventos->fetchAll();
 
-    // 2. Obtener filiales de retiro activas
+    // 2. Obtener filial de retiro oficial para eventos (Sede Central Lanús)
     $stmtFiliales = $pdo->query("SELECT `id`, `nombre`, `direccion`, `localidad`, `telefono`, `horario_atencion` 
                                  FROM `filiales_retiro` 
-                                 WHERE `activo` = 1 
-                                 ORDER BY `nombre` ASC");
+                                 WHERE `activo` = 1 AND (`localidad` LIKE '%Lanús%' OR `id` = 1)
+                                 ORDER BY `id` ASC
+                                 LIMIT 1");
     $filialesDb = $stmtFiliales->fetchAll();
 
     // 3. Obtener grupo familiar del afiliado
@@ -127,22 +128,6 @@ if (!$consultadoEnDb) {
             'localidad' => 'Lanús Oeste',
             'telefono' => '4241-1920',
             'horario_atencion' => 'Lunes a Viernes de 8:00 a 17:00 hs'
-        ),
-        array(
-            'id' => 2,
-            'nombre' => 'Filial Avellaneda',
-            'direccion' => 'Belgrano 1218',
-            'localidad' => 'Avellaneda',
-            'telefono' => '4203-6770',
-            'horario_atencion' => 'Lunes a Viernes de 9:00 a 16:00 hs'
-        ),
-        array(
-            'id' => 3,
-            'nombre' => 'Filial Adrogué · Alte. Brown',
-            'direccion' => 'Muratore 995',
-            'localidad' => 'Adrogué',
-            'telefono' => '4214-1980',
-            'horario_atencion' => 'Lunes a Viernes de 9:00 a 16:00 hs'
         )
     );
 }

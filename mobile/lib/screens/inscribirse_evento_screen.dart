@@ -4,6 +4,7 @@ import '../models/evento.dart';
 import '../models/familiar.dart';
 import '../services/api_service.dart';
 import '../widgets/comprobante_dialog.dart';
+import '../widgets/panaderos_app_bar.dart';
 
 class InscribirseEventoScreen extends StatefulWidget {
   final Evento evento;
@@ -219,11 +220,9 @@ class _InscribirseEventoScreenState extends State<InscribirseEventoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Inscripción al Evento'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
-        elevation: 0,
+      appBar: const PanaderosAppBar(
+        subtitle: 'INSCRIPCIÓN · BENEFICIO',
+        showBackButton: true,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -280,7 +279,7 @@ class _InscribirseEventoScreenState extends State<InscribirseEventoScreen> {
                       if (widget.evento.fechaEntrega != null)
                         _buildBadge(
                           Icons.calendar_today,
-                          'Entrega: ${widget.evento.fechaEntrega}',
+                          'Entrega: ${formatFecha(widget.evento.fechaEntrega)}',
                         ),
                     ],
                   ),
@@ -290,9 +289,9 @@ class _InscribirseEventoScreenState extends State<InscribirseEventoScreen> {
 
             const SizedBox(height: 20),
 
-            // Selección de Filial de Retiro
+            // Sede de Retiro (Siempre es Sede Central Lanús)
             const Text(
-              '1. Sede o Filial de Retiro',
+              '1. Sede de Retiro',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
@@ -301,51 +300,66 @@ class _InscribirseEventoScreenState extends State<InscribirseEventoScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Elegí dónde vas a retirar el kit o beneficio:',
+              'La entrega de útiles y beneficios se realiza exclusivamente en la sede central:',
               style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
             ),
             const SizedBox(height: 8),
 
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+              width: double.infinity,
+              padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
               ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<FilialRetiro>(
-                  isExpanded: true,
-                  value: _filialSeleccionada,
-                  icon: const Icon(Icons.arrow_drop_down, color: AppColors.primary),
-                  items: widget.filiales.map((f) {
-                    return DropdownMenuItem<FilialRetiro>(
-                      value: f,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            f.nombre,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.store_mall_directory, color: AppColors.primary, size: 22),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _filialSeleccionada?.nombre ?? 'Sede Central Lanús',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: AppColors.textMain,
                           ),
-                          Text(
-                            '${f.direccion} (${f.localidad})',
-                            style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
-                          ),
-                        ],
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          _filialSeleccionada?.direccion ?? 'Llavallol 902 esq. Rio de Janeiro (Lanús Oeste)',
+                          style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: AppColors.accent.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: const Text(
+                      'Sede Única',
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
                       ),
-                    );
-                  }).toList(),
-                  onChanged: (val) {
-                    setState(() {
-                      _filialSeleccionada = val;
-                    });
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
