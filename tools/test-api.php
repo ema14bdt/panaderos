@@ -36,7 +36,10 @@ function assert_api($description, $condition) {
  */
 function call_api($scriptPath, $method = 'GET', $body = array(), $headers = array()) {
     $baseDir = dirname(__DIR__);
-    $fullPath = $baseDir . '/' . ltrim($scriptPath, '/');
+    $parts = explode('?', $scriptPath, 2);
+    $scriptFile = $parts[0];
+    $queryString = isset($parts[1]) ? $parts[1] : '';
+    $fullPath = $baseDir . '/' . ltrim($scriptFile, '/');
 
     // Preparar variables de servidor simuladas
     $_SERVER['REQUEST_METHOD'] = strtoupper($method);
@@ -57,6 +60,8 @@ function call_api($scriptPath, $method = 'GET', $body = array(), $headers = arra
         escapeshellarg('
             $_SERVER["REQUEST_METHOD"] = "' . $method . '";
             $_SERVER["CONTENT_TYPE"] = "application/json";
+            $_SERVER["QUERY_STRING"] = ' . var_export($queryString, true) . ';
+            parse_str($_SERVER["QUERY_STRING"], $_GET);
             ' . (isset($headers['Authorization']) ? '$_SERVER["HTTP_AUTHORIZATION"] = "' . addslashes($headers['Authorization']) . '";' : '') . '
             
             // Simular php://input
@@ -182,6 +187,93 @@ assert_api("Entrega datos completos del carnet digital con Bearer token",
     && isset($resCarnet['data']['carnet']['qr_payload'])
     && $resCarnet['data']['carnet']['dni'] === '28456123'
 );
+
+// 5. Prueba de Beneficios y Convenios
+echo "\n5. Probando /api/beneficios/index.php:\n";
+
+$resBeneficios = call_api('api/beneficios/index.php', 'GET');
+assert_api("Entrega listado de beneficios y rubros", 
+    isset($resBeneficios['success']) && $resBeneficios['success'] === true 
+    && !empty($resBeneficios['data']['beneficios'])
+    && !empty($resBeneficios['data']['rubros'])
+);
+
+$resFarmacias = call_api('api/beneficios/index.php?rubro=farmacia', 'GET');
+assert_api("Filtra correctamente por rubro farmacia", 
+    isset($resFarmacias['success']) && $resFarmacias['success'] === true 
+    && !empty($resFarmacias['data']['beneficios'])
+    && $resFarmacias['data']['beneficios'][0]['rubro'] === 'farmacia'
+);
+
+// 6. Prueba de Eventos
+echo "\n6. Probando /api/eventos/index.php:\n";
+
+$resEventosNoAuth = call_api('api/eventos/index.php', 'GET');
+assert_api("Bloquea acceso a eventos sin token de sesión", isset($resEventosNoAuth['success']) && $resEventosNoAuth['success'] === false);
+
+$resEventos = call_api('api/eventos/index.php', 'GET', array(), array(
+    'Authorization' => 'Bearer ' . $token
+));
+assert_api("Entrega eventos activos y filiales con sesión", 
+    isset($resEventos['success']) && $resEventos['success'] === true 
+    && !empty($resEventos['data']['eventos'])
+    && !empty($resEventos['data']['filiales'])
+);
+
+// 7. Prueba de Inscripción a Evento
+echo "\n7. Probando /api/eventos/inscribirse.php:\n";
+
+// Limpiar inscripciones previas de la prueba
+$pdo->exec("DELETE FROM evento_inscripciones WHERE afiliado_id = 1");
+
+$resInscripcionFail = call_api('api/eventos/inscribirse.php', 'POST', array(
+    'evento_id' => 1,
+    'filial_retiro_id' => 1,
+    'beneficiarios' => array()
+), array('Authorization' => 'Bearer ' . $token));
+assert_api("Rechaza inscripción sin beneficiarios seleccionados", 
+    isset($resInscripcionFail['success']) && $resInscripcionFail['success'] === false
+);
+
+$resInscripcion = call_api('api/eventos/inscribirse.php', 'POST', array(
+    'evento_id' => 1,
+    'filial_retiro_id' => 1,
+    'observaciones' => 'Turno mañana',
+    'beneficiarios' => array(
+        array(
+            'familiar_id' => 1,
+            'talle' => '10',
+            'nivel_escolar' => 'primaria'
+        )
+    )
+), array('Authorization' => 'Bearer ' . $token));
+
+assert_api("Registra inscripción y emite comprobante único", 
+    isset($resInscripcion['success']) && $resInscripcion['success'] === true 
+    && !empty($resInscripcion['data']['codigo_comprobante'])
+    && strpos($resInscripcion['data']['codigo_comprobante'], 'UTILES-') === 0
+);
+
+// Re-consultar eventos para verificar que refleja la inscripción
+$resEventosActualizados = call_api('api/eventos/index.php', 'GET', array(), array(
+    'Authorization' => 'Bearer ' . $token
+));
+$eventoInscripto = null;
+foreach ($resEventosActualizados['data']['eventos'] as $ev) {
+    if ($ev['id'] == 1) {
+        $eventoInscripto = $ev;
+        break;
+    }
+}
+
+assert_api("Listado de eventos refleja la inscripción y comprobante del afiliado", 
+    $eventoInscripto !== null 
+    && !empty($eventoInscripto['inscripcion_afiliado'])
+    && $eventoInscripto['inscripcion_afiliado']['codigo_comprobante'] === $resInscripcion['data']['codigo_comprobante']
+);
+
+// Limpiar nuevamente la inscripción de prueba para dejar el estado limpio
+$pdo->exec("DELETE FROM evento_inscripciones WHERE afiliado_id = 1");
 
 echo "\n=======================================================\n";
 echo "RESULTADO: " . $testsPassed . " de " . $totalTests . " pruebas superadas.\n";
