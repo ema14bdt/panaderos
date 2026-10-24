@@ -50,6 +50,9 @@ assert_test("site_content('novedades') retorna archivo histórico", is_array($no
 $instalaciones = site_content('instalaciones', site_instalaciones_defaults());
 assert_test("site_content('instalaciones') retorna galería de espacios", is_array($instalaciones) && count($instalaciones['items']) >= 4);
 
+$afiliaciones = site_content('afiliaciones', site_afiliaciones_defaults());
+assert_test("site_content('afiliaciones') retorna datos de afiliaciones", is_array($afiliaciones) && count($afiliaciones['requirements']) >= 4);
+
 $disallowed = site_content('hack_attempt', array('safe' => true));
 assert_test("site_content() bloquea nombres de archivo no autorizados", $disallowed === array('safe' => true));
 
@@ -60,8 +63,28 @@ echo "\n2. Validando reglas estrictas de entrada:\n";
 try {
     $validHome = admin_validate_home($home);
     assert_test("admin_validate_home acepta datos válidos", is_array($validHome));
+    assert_test("admin_validate_home acepta y mantiene register_url para contadores", isset($validHome['register_url']) && strpos($validHome['register_url'], 'register#sitio-position') !== false);
+    assert_test("admin_validate_home acepta y mantiene login_url para contadores", isset($validHome['login_url']) && strpos($validHome['login_url'], 'login#sitio-position') !== false);
 } catch (Exception $e) {
     assert_test("admin_validate_home falló con datos válidos: " . $e->getMessage(), false);
+}
+
+try {
+    $validHome50 = $home;
+    $validHome50['phone_label'] = '4241-1920 · 4241-2477 (Lun a Vie 8 a 18 hs)'; // 44 chars
+    $result50 = admin_validate_home($validHome50);
+    assert_test("admin_validate_home acepta phone_label de hasta 50 caracteres", $result50['phone_label'] === $validHome50['phone_label']);
+} catch (Exception $e) {
+    assert_test("admin_validate_home falló con phone_label largo: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidHome = $home;
+    $invalidHome['phone_label'] = str_repeat('a', 51);
+    admin_validate_home($invalidHome);
+    assert_test("admin_validate_home rechaza phone_label de más de 50 caracteres", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_home detecta y rechaza phone_label mayor a 50 caracteres", true);
 }
 
 try {
@@ -80,6 +103,33 @@ try {
     assert_test("admin_validate_home rechaza iframe que no sea de google.com", false);
 } catch (InvalidArgumentException $e) {
     assert_test("admin_validate_home protege iframe contra dominios no autorizados", true);
+}
+
+// Featured news validation
+try {
+    $validHomeNews = $home;
+    $validHomeNews['featured_news_enabled'] = true;
+    $validHomeNews['featured_news_badge'] = 'En desarrollo';
+    $validHomeNews['featured_news_title'] = 'Nueva App Panaderos';
+    $validHomeNews['featured_news_description'] = 'Descripción de prueba con beneficios y credencial digital.';
+    $validHomeNews['featured_news_link_url'] = 'servicios.php';
+    $validHomeNews['featured_news_link_label'] = 'Ver servicios';
+    $validHomeNews['featured_news_image_1'] = 'images/novedades/app-panaderos-1.jpg';
+    $validHomeNews['featured_news_image_2'] = '';
+    $validHomeNews['featured_news_image_3'] = '';
+    $resNews = admin_validate_home($validHomeNews);
+    assert_test("admin_validate_home valida noticia destacada con imágenes", $resNews['featured_news_enabled'] === true && $resNews['featured_news_title'] === 'Nueva App Panaderos' && $resNews['featured_news_image_1'] === 'images/novedades/app-panaderos-1.jpg');
+} catch (Exception $e) {
+    assert_test("admin_validate_home falló al validar noticia destacada: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidNews = $home;
+    $invalidNews['featured_news_title'] = '';
+    admin_validate_home($invalidNews);
+    assert_test("admin_validate_home rechaza noticia destacada sin título", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_home exige título obligatorio en noticia destacada", true);
 }
 
 // Servicios validation
@@ -137,19 +187,59 @@ try {
     assert_test("admin_validate_instalaciones falló con datos válidos: " . $e->getMessage(), false);
 }
 
+try {
+    $instalacionesWithReels = $instalaciones;
+    $instalacionesWithReels['reels'] = array(
+        array('title' => 'Predio recreativo', 'video' => 'videos/instalaciones/predio.mp4', 'poster' => 'videos/instalaciones/predio-poster.jpg')
+    );
+    $resReels = admin_validate_instalaciones($instalacionesWithReels);
+    assert_test("admin_validate_instalaciones acepta videos reels válidos", count($resReels['reels']) === 1 && $resReels['reels'][0]['title'] === 'Predio recreativo');
+} catch (Exception $e) {
+    assert_test("admin_validate_instalaciones falló con reel válido: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidReel = $instalaciones;
+    $invalidReel['reels'] = array(
+        array('title' => str_repeat('A', 65), 'video' => 'videos/instalaciones/predio.mp4')
+    );
+    admin_validate_instalaciones($invalidReel);
+    assert_test("admin_validate_instalaciones detecta y rechaza título de reel mayor a 60 caracteres", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_instalaciones detecta y rechaza título de reel mayor a 60 caracteres", true);
+}
+
+// Afiliaciones validation
+try {
+    $validAfiliaciones = admin_validate_afiliaciones($afiliaciones);
+    assert_test("admin_validate_afiliaciones acepta datos válidos", is_array($validAfiliaciones));
+} catch (Exception $e) {
+    assert_test("admin_validate_afiliaciones falló con datos válidos: " . $e->getMessage(), false);
+}
+
+try {
+    $invalidAfiliaciones = $afiliaciones;
+    $invalidAfiliaciones['requirements'] = array();
+    admin_validate_afiliaciones($invalidAfiliaciones);
+    assert_test("admin_validate_afiliaciones rechaza lista vacía de requisitos", false);
+} catch (InvalidArgumentException $e) {
+    assert_test("admin_validate_afiliaciones detecta y rechaza lista vacía de requisitos", true);
+}
+
 // 3. Escritura atómica y respaldos
 echo "\n3. Validando escritura atómica, locking y generación de backups:\n";
 $testKey = 'test_time_' . time();
-$home['hero_eyebrow'] = 'Sindicato de Obreros Panaderos de Lanús';
+$home['hero_eyebrow'] = 'Sindicato de Obreros y Empleados Panaderos de Lanús';
 $backupDir = ADMIN_CONTENT_DIR . '/backups';
 $initialBackups = glob($backupDir . '/*.json');
 $countBefore = is_array($initialBackups) ? count($initialBackups) : 0;
 
 admin_atomic_json('home.json', $home, true);
+admin_atomic_json('afiliaciones.json', $afiliaciones, true);
 admin_atomic_json('instalaciones.json', $instalaciones, true);
 $afterBackups = glob($backupDir . '/*.json');
 $countAfter = is_array($afterBackups) ? count($afterBackups) : 0;
-assert_test("admin_atomic_json guarda y genera backups de home.json e instalaciones.json", $countAfter >= $countBefore);
+assert_test("admin_atomic_json guarda y genera backups de home.json, afiliaciones.json e instalaciones.json", $countAfter >= $countBefore);
 
 // Auditoría
 admin_audit('test_suite_run');
@@ -161,6 +251,7 @@ assert_test("Carpeta images/directivos es accesible y escribible", is_dir($baseD
 assert_test("Carpeta images/novedades es accesible y escribible", is_dir($baseDir . '/images/novedades') && is_writable($baseDir . '/images/novedades'));
 assert_test("Carpeta images/instalaciones es accesible y escribible", is_dir($baseDir . '/images/instalaciones') && is_writable($baseDir . '/images/instalaciones'));
 assert_test("Carpeta images/servicios es accesible y escribible", is_dir($baseDir . '/images/servicios') && is_writable($baseDir . '/images/servicios'));
+assert_test("Carpeta videos/instalaciones es accesible y escribible", is_dir($baseDir . '/videos/instalaciones') && is_writable($baseDir . '/videos/instalaciones'));
 
 // 4. Rate Limiting de login
 echo "\n4. Validando control de intentos de acceso (Rate-Limiting):\n";
@@ -177,10 +268,11 @@ assert_test("admin_clear_failed_login restablece el estado tras login exitoso", 
 echo "\n5. Validando renderizado de páginas públicas sin advertencias:\n";
 $pages = array(
     'index.php',
+    'comision-directiva.php',
+    'afiliaciones.php',
     'servicios.php',
     'normativas.php',
     'filiales.php',
-    'comision-directiva.php',
     'novedades.php',
     'instalaciones.php',
     'novedades-home.php',

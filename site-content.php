@@ -3,7 +3,7 @@
 function site_home_defaults()
 {
     return array(
-        'hero_eyebrow' => 'Sindicato de Obreros Panaderos de Lanús',
+        'hero_eyebrow' => 'Sindicato de Obreros y Empleados Panaderos de Lanús',
         'hero_title' => 'El trabajo panadero',
         'hero_emphasis' => 'se defiende',
         'hero_after' => 'unido.',
@@ -11,6 +11,8 @@ function site_home_defaults()
         'hero_quote' => 'La mejor manera de defender a los trabajadores es hacerles conocer sus derechos.',
         'hero_quote_author' => 'Gabriel Ruiz · Secretario General',
         'salary_url' => 'https://panaderoslanus.ar/public/escalas/ultimaEscala.pdf',
+        'register_url' => 'https://panaderoslanus.ar/public/register#sitio-position',
+        'login_url' => 'https://panaderoslanus.ar/public/login#sitio-position',
         'social_intro' => 'En Instagram y Facebook compartimos comunicados, actividad institucional, información gremial y la vida cotidiana de las y los trabajadores panaderos.',
         'instagram_url' => 'https://www.instagram.com/panaderoslanus/',
         'instagram_label' => '@panaderoslanus',
@@ -21,7 +23,25 @@ function site_home_defaults()
         'phone_label' => '4241-1920 · 4241-2477',
         'email' => 'info@panaderoslanus.ar',
         'maps_url' => 'https://www.google.com/maps/search/?api=1&query=Sindicato+de+Obreros+y+Empleados+Panaderos+de+Lan%C3%BAs',
-        'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.066545599629!2d-58.40769198807899!3d-34.70350146266279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccce2a44f788d%3A0xbb95049302afb0fc!2sSindicato%20de%20Obreros%20y%20Empleados%20Panaderos%20de%20Lan%C3%B9s!5e0!3m2!1ses-419!2sar!4v1788191054124!5m2!1ses-419!2sar'
+        'maps_embed_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3280.066545599629!2d-58.40769198807899!3d-34.70350146266279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x95bccce2a44f788d%3A0xbb95049302afb0fc!2sSindicato%20de%20Obreros%20y%20Empleados%20Panaderos%20de%20Lan%C3%B9s!5e0!3m2!1ses-419!2sar!4v1788191054124!5m2!1ses-419!2sar',
+        'featured_news_enabled' => true,
+        'featured_news_badge' => 'En desarrollo · Próximo lanzamiento',
+        'featured_news_title' => 'Una nueva aplicación móvil al servicio de las y los trabajadores panaderos',
+        'featured_news_description' => "Estamos desarrollando la aplicación oficial del Sindicato de Obreros y Empleados Panaderos de Lanús para acompañarte en tu día a día.\n\nVas a poder tener a mano tu credencial digital, consultar el listado completo de beneficios y servicios, anotarte a eventos y realizar tus gestiones de forma directa desde tu celular.",
+        'featured_news_link_url' => 'servicios.php',
+        'featured_news_link_label' => 'Conocer beneficios vigentes',
+        'featured_news_image_1' => 'images/novedades/app-panaderos-1.jpg',
+        'featured_news_image_2' => '',
+        'featured_news_image_3' => '',
+        'dia_panadero_enabled' => true,
+        'dia_panadero_badge' => '4 de Agosto · Conmemoración',
+        'dia_panadero_title' => '4 DE AGOSTO - DÍA DEL OBRERO PANADERO',
+        'dia_panadero_description' => "En este día conmemoramos el nacimiento del primer sindicato de panaderos que hubo en el país. Fue fundado en Buenos Aires, el 18 de julio de 1887, y se llamó Sociedad Cosmopolita de Resistencia y Colocación de Obreros Panaderos.\n\nEl oficio de panadero es uno de los más antiguos de la humanidad y sigue vigente hoy, con cada pan que llega a la mesa de los argentinos.\n\nArticulo 9; DÍA DEL GREMIO El día del Obrero Panadero y demás personal encuadrado en la presente convención, se celebrará en toda la Provincia de Buenos Aires el día 4 de agosto de cada año. Este día será no laborable ycon goce de sueldo.",
+        'dia_panadero_image' => 'images/dia-panaderos.png',
+        'dia_panadero_audio' => 'audio/marcha-de-los-panaderos.mp3',
+        'dia_panadero_audio_title' => 'Marcha de los panaderos',
+        'dia_panadero_audio_author' => 'Rodriguez Lobos',
+        'dia_panadero_lyrics' => "Ya reviente desde el vientre de la tierra\nLa semilla que arrojara el labrador\nY florece el oro rubio que levanta\nSus espigas tan doradas como el Sol.\nSu destino molinero es el camino,\nConvertido en blanca harina quedará\nY en la cuadra de las noches sin lucero\nEl maestro panadero cantará.\n\nSoy panadero, soy el primero,\nQue se levanta con el anochecer,\nMate cocido, amasadora, sal y harina,\nHorno que espera su momento de encender.\nSoy panadero soy primero…\nEl pueblo sueña mientras yo cantando voy,\nElaborando el Pan  amigo y Compañero\nEl Pan del pueblo  que me enciende el corazón.\nSoy panadero, soy  el primero,\nMi Pan del pueblo es Pan de Vida y Pan de Dios.\n\nLa sonrisa de la bella despachante\nQue les brinda nuestro esfuerzo con amor\nY el orgullo panadero a cada instante\nLuce y brilla sobre el limpio mostrador.\nEs la  Unión del Personal de  panaderos,\nLa que marcha siempre unida con fervor,\nSon los hombres de las noches sin lucero,\nLos que gritan a la Vida su canción.\n\nSoy panadero, soy el primero,\nmi Pan del pueblo es Pan de Vida y Pan de Dios"
     );
 }
 
@@ -245,6 +265,9 @@ function site_instalaciones_defaults()
         'page_intro' => 'Conocé los espacios que forman parte de la vida cotidiana del sindicato y de sus afiliados.',
         'section_kicker' => 'Galería',
         'section_title' => 'Un lugar para estar cerca.',
+        'reels_kicker' => 'En video',
+        'reels_title' => 'Recorré las instalaciones',
+        'reels' => array(),
         'items' => array(
             array('image' => 'images/instalaciones/instalaciones-01.jpg', 'title' => 'Sede central e instalaciones'),
             array('image' => 'images/instalaciones/instalaciones-02.jpg', 'title' => 'Espacios de atención y encuentro'),
@@ -256,9 +279,58 @@ function site_instalaciones_defaults()
     );
 }
 
+function site_afiliaciones_defaults()
+{
+    return array(
+        'page_label' => 'Sindicato de Obreros y Empleados Panaderos de Lanús',
+        'page_title' => 'Afiliaciones',
+        'page_intro' => 'Sumate a nuestra organización gremial. Defendemos tus derechos y acompañamos a tu familia en cada etapa.',
+        'section_kicker' => 'Atención presencial',
+        'section_title' => 'Afiliaciones-SOEPLa',
+        'venue_kicker' => 'Sede Sindical',
+        'venue_lead' => 'Te esperamos en nuestra sede Sindical:',
+        'venue_address' => 'Calle Llavallol Nº902 Esquina Rio de Janeiro, Lanus Oeste.',
+        'venue_maps_url' => 'https://www.google.com/maps/search/?api=1&query=Sindicato+de+Obreros+y+Empleados+Panaderos+de+Lan%C3%BAs',
+        'requirements_kicker' => 'Documentación necesaria',
+        'requirements_title' => 'Requisitos para afiliarte:',
+        'requirements' => array(
+            array(
+                'number' => '01',
+                'title' => 'Presentarse de manera presencial.',
+                'description' => 'Acercate a la sede sindical para completar la ficha de afiliación y presentar los comprobantes.',
+                'badge' => 'Presencial',
+                'icon' => 'fa-users'
+            ),
+            array(
+                'number' => '02',
+                'title' => 'DNI. (original y Copia)',
+                'description' => 'Documento Nacional de Identidad vigente en original y fotocopia legible.',
+                'badge' => 'Original y Copia',
+                'icon' => 'fa-credit-card'
+            ),
+            array(
+                'number' => '03',
+                'title' => 'Alta temprana. (original)',
+                'description' => 'Constancia original de alta emitida por el empleador o AFIP/organismo correspondiente.',
+                'badge' => 'Original',
+                'icon' => 'fa-file-text-o'
+            ),
+            array(
+                'number' => '04',
+                'title' => 'Ultimo Recibo de Sueldo. (original)',
+                'description' => 'Comprobante original de haberes emitido por la panadería o establecimiento laboral.',
+                'badge' => 'Original',
+                'icon' => 'fa-money'
+            )
+        ),
+        'highlight_title' => 'El tramite es rápido y sencillo.',
+        'highlight_text' => 'Una vez presentada la documentación, contás de forma inmediata con el respaldo gremial y todos los beneficios que brinda el sindicato.'
+    );
+}
+
 function site_content($name, array $defaults)
 {
-    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones');
+    $allowed = array('home', 'servicios', 'normativas', 'filiales', 'comision', 'novedades', 'instalaciones', 'afiliaciones');
     if (!in_array($name, $allowed, true)) {
         return $defaults;
     }

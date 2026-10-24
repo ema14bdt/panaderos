@@ -41,7 +41,7 @@ function admin_headers()
     header('X-Frame-Options: DENY');
     header('X-Content-Type-Options: nosniff');
     header('Referrer-Policy: same-origin');
-    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+    header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' blob:; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
 }
 
 function admin_configured_hash()
@@ -168,6 +168,7 @@ function admin_atomic_json($filename, array $data, $backup = true)
 {
     $allowed = array(
         'home.json',
+        'afiliaciones.json',
         'servicios.json',
         'normativas.json',
         'filiales.json',
@@ -213,21 +214,25 @@ function admin_atomic_json($filename, array $data, $backup = true)
         }
 
         $temporary = $path . '.' . bin2hex(random_bytes(8)) . '.tmp';
-        if (file_put_contents($temporary, $json . PHP_EOL, LOCK_EX) === false) {
-            @unlink($temporary);
-            throw new RuntimeException('No fue posible guardar los cambios.');
-        }
-        @chmod($temporary, 0666);
-
-        if (!@rename($temporary, $path)) {
-            if (@copy($temporary, $path)) {
-                @unlink($temporary);
-                @chmod($path, 0666);
+        $written = @file_put_contents($temporary, $json . PHP_EOL, LOCK_EX);
+        if ($written !== false) {
+            @chmod($temporary, 0666);
+            if (!@rename($temporary, $path)) {
+                if (@copy($temporary, $path)) {
+                    @unlink($temporary);
+                    @chmod($path, 0666);
+                } else {
+                    @unlink($temporary);
+                    throw new RuntimeException('No fue posible actualizar el archivo de contenido.');
+                }
             } else {
-                @unlink($temporary);
-                throw new RuntimeException('No fue posible actualizar el archivo de contenido.');
+                @chmod($path, 0666);
             }
         } else {
+            @unlink($temporary);
+            if (@file_put_contents($path, $json . PHP_EOL, LOCK_EX) === false) {
+                throw new RuntimeException('No fue posible guardar los cambios. Verificá los permisos de escritura en private-content.');
+            }
             @chmod($path, 0666);
         }
     } finally {
@@ -327,7 +332,7 @@ function admin_validate_home(array $input)
         'hero_eyebrow' => 60, 'hero_title' => 25, 'hero_emphasis' => 20, 'hero_after' => 20,
         'hero_lead' => 200, 'hero_quote' => 140, 'hero_quote_author' => 35, 'social_intro' => 200,
         'instagram_label' => 25, 'facebook_label' => 30, 'address' => 50,
-        'phone' => 25, 'phone_label' => 30, 'email' => 45
+        'phone' => 25, 'phone_label' => 50, 'email' => 45
     );
     $content = array();
     foreach ($limits as $field => $maximum) {
@@ -341,7 +346,7 @@ function admin_validate_home(array $input)
         throw new InvalidArgumentException('Revisá el correo electrónico y el teléfono.');
     }
 
-    foreach (array('salary_url', 'instagram_url', 'facebook_url', 'maps_url', 'maps_embed_url') as $field) {
+    foreach (array('salary_url', 'register_url', 'login_url', 'instagram_url', 'facebook_url', 'maps_url', 'maps_embed_url') as $field) {
         $content[$field] = admin_https_url(isset($input[$field]) ? $input[$field] : '', 500);
         if ($content[$field] === null) {
             throw new InvalidArgumentException('La URL “' . $field . '” debe usar HTTPS y ser válida.');
@@ -352,6 +357,108 @@ function admin_validate_home(array $input)
     if ($mapHost !== 'www.google.com') {
         throw new InvalidArgumentException('El mapa embebido debe provenir de www.google.com.');
     }
+
+    // Noticia destacada en home
+    $content['featured_news_enabled'] = !empty($input['featured_news_enabled']);
+
+    $badge = admin_text(isset($input['featured_news_badge']) ? $input['featured_news_badge'] : '', 50);
+    $content['featured_news_badge'] = $badge !== null ? $badge : 'Novedad destacada';
+
+    $title = admin_text(isset($input['featured_news_title']) ? $input['featured_news_title'] : '', 100);
+    if ($title === null) {
+        throw new InvalidArgumentException('El título de la noticia destacada es obligatorio (máx. 100 caracteres).');
+    }
+    $content['featured_news_title'] = $title;
+
+    $desc = admin_multiline(isset($input['featured_news_description']) ? $input['featured_news_description'] : '', 2500);
+    if ($desc === null) {
+        throw new InvalidArgumentException('La descripción de la noticia destacada es obligatoria (máx. 2500 caracteres).');
+    }
+    $content['featured_news_description'] = $desc;
+
+    $linkUrl = isset($input['featured_news_link_url']) ? trim((string) $input['featured_news_link_url']) : '';
+    if ($linkUrl === '') {
+        $content['featured_news_link_url'] = '';
+    } else {
+        $validatedLink = admin_safe_url($linkUrl, 500);
+        if ($validatedLink === null) {
+            throw new InvalidArgumentException('La URL del enlace de la noticia destacada no es válida.');
+        }
+        $content['featured_news_link_url'] = $validatedLink;
+    }
+
+    $linkLabel = isset($input['featured_news_link_label']) ? trim((string) $input['featured_news_link_label']) : '';
+    $validatedLabel = admin_text($linkLabel !== '' ? $linkLabel : 'Más información', 40);
+    $content['featured_news_link_label'] = $validatedLabel !== null ? $validatedLabel : 'Más información';
+
+    for ($i = 1; $i <= 3; $i++) {
+        $key = 'featured_news_image_' . $i;
+        $imgVal = isset($input[$key]) ? trim((string) $input[$key]) : '';
+        if ($imgVal === '') {
+            $content[$key] = '';
+        } else {
+            $validatedImg = admin_safe_url($imgVal, 300);
+            if ($validatedImg === null) {
+                throw new InvalidArgumentException('La imagen ' . $i . ' de la noticia destacada no es válida.');
+            }
+            $content[$key] = $validatedImg;
+        }
+    }
+
+    // Audio y letra de la marcha / conmemoración (opcional si se usa en featured_news)
+    $audioUrl = isset($input['featured_news_audio_url']) ? trim((string) $input['featured_news_audio_url']) : '';
+    if ($audioUrl === '') {
+        $content['featured_news_audio_url'] = '';
+    } else {
+        $validatedAudio = admin_safe_url($audioUrl, 400);
+        $content['featured_news_audio_url'] = $validatedAudio !== null ? $validatedAudio : '';
+    }
+
+    $audioTitle = isset($input['featured_news_audio_title']) ? trim((string) $input['featured_news_audio_title']) : '';
+    $content['featured_news_audio_title'] = $audioTitle !== '' ? (admin_text($audioTitle, 100) ?: 'Marcha de los panaderos') : 'Marcha de los panaderos';
+
+    $audioAuthor = isset($input['featured_news_audio_author']) ? trim((string) $input['featured_news_audio_author']) : '';
+    $content['featured_news_audio_author'] = $audioAuthor !== '' ? (admin_text($audioAuthor, 100) ?: 'Rodriguez Lobos') : 'Rodriguez Lobos';
+
+    $lyrics = isset($input['featured_news_lyrics']) ? trim((string) $input['featured_news_lyrics']) : '';
+    $content['featured_news_lyrics'] = $lyrics !== '' ? (admin_multiline($lyrics, 4000) ?: '') : '';
+
+    // Sección 4 de Agosto - Día del Obrero Panadero
+    $content['dia_panadero_enabled'] = !empty($input['dia_panadero_enabled']);
+
+    $dpBadge = admin_text(isset($input['dia_panadero_badge']) ? $input['dia_panadero_badge'] : '', 50);
+    $content['dia_panadero_badge'] = $dpBadge !== null ? $dpBadge : '4 de Agosto · Conmemoración';
+
+    $dpTitle = admin_text(isset($input['dia_panadero_title']) ? $input['dia_panadero_title'] : '', 100);
+    $content['dia_panadero_title'] = $dpTitle !== null ? $dpTitle : '4 DE AGOSTO - DÍA DEL OBRERO PANADERO';
+
+    $dpDesc = admin_multiline(isset($input['dia_panadero_description']) ? $input['dia_panadero_description'] : '', 2500);
+    $content['dia_panadero_description'] = $dpDesc !== null ? $dpDesc : '';
+
+    $dpImg = isset($input['dia_panadero_image']) ? trim((string) $input['dia_panadero_image']) : '';
+    if ($dpImg === '') {
+        $content['dia_panadero_image'] = 'images/dia-panaderos.png';
+    } else {
+        $validatedDpImg = admin_safe_url($dpImg, 300);
+        $content['dia_panadero_image'] = $validatedDpImg !== null ? $validatedDpImg : 'images/dia-panaderos.png';
+    }
+
+    $dpAudio = isset($input['dia_panadero_audio']) ? trim((string) $input['dia_panadero_audio']) : '';
+    if ($dpAudio === '') {
+        $content['dia_panadero_audio'] = '';
+    } else {
+        $validatedDpAudio = admin_safe_url($dpAudio, 400);
+        $content['dia_panadero_audio'] = $validatedDpAudio !== null ? $validatedDpAudio : '';
+    }
+
+    $dpAudioTitle = isset($input['dia_panadero_audio_title']) ? trim((string) $input['dia_panadero_audio_title']) : '';
+    $content['dia_panadero_audio_title'] = $dpAudioTitle !== '' ? (admin_text($dpAudioTitle, 100) ?: 'Marcha de los panaderos') : 'Marcha de los panaderos';
+
+    $dpAudioAuthor = isset($input['dia_panadero_audio_author']) ? trim((string) $input['dia_panadero_audio_author']) : '';
+    $content['dia_panadero_audio_author'] = $dpAudioAuthor !== '' ? (admin_text($dpAudioAuthor, 100) ?: 'Rodriguez Lobos') : 'Rodriguez Lobos';
+
+    $dpLyrics = isset($input['dia_panadero_lyrics']) ? trim((string) $input['dia_panadero_lyrics']) : '';
+    $content['dia_panadero_lyrics'] = $dpLyrics !== '' ? (admin_multiline($dpLyrics, 4000) ?: '') : '';
 
     return $content;
 }
@@ -426,6 +533,71 @@ function admin_validate_servicios(array $input)
     }
 
     $content['items'] = $items;
+    return $content;
+}
+
+function admin_validate_afiliaciones(array $input)
+{
+    $limits = array(
+        'page_label' => 60,
+        'page_title' => 50,
+        'page_intro' => 250,
+        'section_kicker' => 45,
+        'section_title' => 70,
+        'venue_kicker' => 45,
+        'venue_lead' => 90,
+        'venue_address' => 140,
+        'venue_maps_url' => 350,
+        'requirements_kicker' => 45,
+        'requirements_title' => 70,
+        'highlight_title' => 90,
+        'highlight_text' => 250
+    );
+    $content = array();
+    foreach ($limits as $field => $maximum) {
+        if ($field === 'venue_maps_url') {
+            $content[$field] = admin_safe_url(isset($input[$field]) ? $input[$field] : '', $maximum);
+            if ($content[$field] === null) {
+                throw new InvalidArgumentException('Revisá el enlace al mapa (URL válida requerida, máx. ' . $maximum . ' caracteres).');
+            }
+        } else {
+            $content[$field] = admin_text(isset($input[$field]) ? $input[$field] : '', $maximum);
+            if ($content[$field] === null) {
+                throw new InvalidArgumentException('Revisá el campo “' . $field . '” (máx. ' . $maximum . ' caracteres).');
+            }
+        }
+    }
+
+    $rawRequirements = isset($input['requirements']) && is_array($input['requirements']) ? $input['requirements'] : array();
+    if (empty($rawRequirements)) {
+        throw new InvalidArgumentException('Debe haber al menos un requisito de afiliación.');
+    }
+
+    $requirements = array();
+    foreach ($rawRequirements as $req) {
+        if (!is_array($req)) {
+            continue;
+        }
+        $number = admin_text(isset($req['number']) ? $req['number'] : sprintf('%02d', count($requirements) + 1), 10);
+        $title = admin_text(isset($req['title']) ? $req['title'] : '', 90);
+        $description = admin_text(isset($req['description']) ? $req['description'] : '', 200);
+        $badge = admin_text(isset($req['badge']) ? $req['badge'] : '', 35);
+        $icon = admin_text(isset($req['icon']) ? $req['icon'] : 'fa-check', 40);
+
+        if ($title === null || $description === null || $badge === null || $icon === null) {
+            throw new InvalidArgumentException('Revisá los requisitos de afiliación (título máx. 90, descripción máx. 200, etiqueta máx. 35, ícono máx. 40).');
+        }
+
+        $requirements[] = array(
+            'number' => $number !== null ? $number : sprintf('%02d', count($requirements) + 1),
+            'title' => $title,
+            'description' => $description,
+            'badge' => $badge,
+            'icon' => $icon
+        );
+    }
+
+    $content['requirements'] = $requirements;
     return $content;
 }
 
@@ -625,6 +797,9 @@ function admin_validate_instalaciones(array $input)
         }
     }
 
+    $content['reels_kicker'] = admin_text(isset($input['reels_kicker']) && trim((string)$input['reels_kicker']) !== '' ? $input['reels_kicker'] : 'En video', 35);
+    $content['reels_title'] = admin_text(isset($input['reels_title']) && trim((string)$input['reels_title']) !== '' ? $input['reels_title'] : 'Recorré las instalaciones', 60);
+
     $rawItems = isset($input['items']) && is_array($input['items']) ? $input['items'] : array();
     if (empty($rawItems)) {
         throw new InvalidArgumentException('Debe haber al menos una fotografía de las instalaciones.');
@@ -649,13 +824,38 @@ function admin_validate_instalaciones(array $input)
     }
 
     $content['items'] = $items;
+
+    $rawReels = isset($input['reels']) && is_array($input['reels']) ? $input['reels'] : array();
+    $reels = array();
+    foreach ($rawReels as $reel) {
+        if (!is_array($reel)) {
+            continue;
+        }
+        $video = admin_safe_url(isset($reel['video']) ? $reel['video'] : '', 255);
+        if ($video === null || $video === '') {
+            continue;
+        }
+        $poster = admin_safe_url(isset($reel['poster']) ? $reel['poster'] : '', 255);
+        $title = admin_text(isset($reel['title']) ? $reel['title'] : '', 60);
+        if ($title === null) {
+            throw new InvalidArgumentException('Revisá el título del video reel (máx. 60 caracteres).');
+        }
+        $reels[] = array(
+            'video' => $video,
+            'poster' => $poster !== null ? $poster : '',
+            'title' => $title
+        );
+    }
+    $content['reels'] = $reels;
+
     return $content;
 }
 
-function admin_field($name, $label, array $content, $type = 'text', $maxlength = null, $hint = '')
+function admin_field($name, $label, array $content, $type = 'text', $maxlength = null, $hint = '', $required = true)
 {
     $value = isset($content[$name]) ? $content[$name] : '';
     $maxAttr = $maxlength !== null ? ' maxlength="' . (int) $maxlength . '"' : '';
+    $reqAttr = $required ? ' required' : '';
     ?>
     <label class="admin-field" for="<?php echo site_escape($name); ?>">
         <div class="admin-field-head">
@@ -665,12 +865,139 @@ function admin_field($name, $label, array $content, $type = 'text', $maxlength =
             <?php } ?>
         </div>
         <?php if ($type === 'textarea') { ?>
-            <textarea id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" rows="3"<?php echo $maxAttr; ?> required><?php echo site_escape($value); ?></textarea>
+            <textarea id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" rows="3"<?php echo $maxAttr . $reqAttr; ?>><?php echo site_escape($value); ?></textarea>
         <?php } else { ?>
-            <input id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" type="<?php echo site_escape($type); ?>" value="<?php echo site_escape($value); ?>"<?php echo $maxAttr; ?> required>
+            <input id="<?php echo site_escape($name); ?>" name="<?php echo site_escape($name); ?>" type="<?php echo site_escape($type); ?>" value="<?php echo site_escape($value); ?>"<?php echo $maxAttr . $reqAttr; ?>>
         <?php } ?>
         <?php if ($hint !== '') { ?><small><?php echo site_escape($hint); ?></small><?php } ?>
     </label>
+    <?php
+}
+
+function admin_icon_catalog()
+{
+    return array(
+        'Trámites y Documentación' => array(
+            'fa-credit-card'     => 'DNI / Credencial',
+            'fa-file-text-o'     => 'Alta temprana / Constancia',
+            'fa-money'           => 'Recibo de sueldo / Haberes',
+            'fa-users'           => 'Presencial / Afiliados / Familia',
+            'fa-files-o'         => 'Original y copia / Documentos',
+            'fa-file-text'       => 'Comprobante / Formulario',
+            'fa-building-o'      => 'Sede sindical / Presencial',
+            'fa-check'           => 'Tilde / Verificado',
+            'fa-check-square-o'  => 'Requisito cumplido / Aprobado',
+            'fa-pencil-square-o' => 'Firma / Planilla de afiliación',
+            'fa-folder-open-o'   => 'Legajo / Carpeta',
+            'fa-user'            => 'Titular / Afiliado'
+        ),
+        'Salud y Farmacia' => array(
+            'fa-plus-square' => 'Farmacia / Medicamentos',
+            'fa-flask'       => 'Laboratorio / Análisis',
+            'fa-user-md'     => 'Médico / Consulta general',
+            'fa-stethoscope' => 'Atención médica / Chequeos',
+            'fa-hospital-o'  => 'Hospital / Sanatorio',
+            'fa-medkit'      => 'Botiquín / Auxilios',
+            'fa-ambulance'   => 'Emergencias / Ambulancia',
+            'fa-eye'         => 'Óptica / Oftalmología'
+        ),
+        'Familia y Hogar' => array(
+            'fa-heart'   => 'Casamiento / Unión',
+            'fa-users'   => 'Familia / Nacimiento / Afiliados',
+            'fa-smile-o' => 'Niñez / Infancia',
+            'fa-home'    => 'Hogar / Vivienda'
+        ),
+        'Servicios y Traslados' => array(
+            'fa-truck' => 'Mudanzas / Fletes',
+            'fa-car'   => 'Remise / Movilidad',
+            'fa-plane' => 'Viajes / Turismo'
+        ),
+        'Educación y Capacitación' => array(
+            'fa-book'   => 'Kits escolares / Libros',
+            'fa-pencil' => 'Útiles / Capacitación'
+        ),
+        'Gremial y Legal' => array(
+            'fa-legal'       => 'Asesoría legal / Abogado',
+            'fa-briefcase'   => 'Trámites gremiales',
+            'fa-money'       => 'Subsidios / Ayuda económica',
+            'fa-credit-card' => 'Credencial / Tarjeta'
+        ),
+        'Turismo y Recreación' => array(
+            'fa-sun-o'    => 'Verano / Temporada',
+            'fa-umbrella' => 'Vacaciones / Turismo',
+            'fa-leaf'     => 'Camping / Aire libre',
+            'fa-coffee'   => 'Refrigerio / Encuentros'
+        ),
+        'Beneficios Generales' => array(
+            'fa-gift'         => 'Presentes / Cajas',
+            'fa-tag'          => 'Descuentos en comercios',
+            'fa-ticket'       => 'Entradas y eventos',
+            'fa-shield'       => 'Seguro / Cobertura',
+            'fa-check-circle' => 'Beneficio general',
+            'fa-calendar'     => 'Turnos y reservas'
+        )
+    );
+}
+
+function admin_icon_name($iconCode)
+{
+    $catalog = admin_icon_catalog();
+    foreach ($catalog as $cat => $icons) {
+        if (isset($icons[$iconCode])) {
+            return $icons[$iconCode];
+        }
+    }
+    return 'Icono seleccionado';
+}
+
+function admin_render_icon_picker($inputName, $selectedIcon)
+{
+    $catalog = admin_icon_catalog();
+    $iconName = admin_icon_name($selectedIcon);
+    ?>
+    <div class="icon-picker-field">
+        <div class="admin-field-head">
+            <span>Icono representativo</span>
+            <span class="admin-field-limit">Seleccioná visualmente</span>
+        </div>
+        <input type="hidden" name="<?php echo $inputName; ?>" class="icon-picker-input" value="<?php echo site_escape($selectedIcon); ?>" required>
+        
+        <div class="icon-picker-display">
+            <div class="icon-picker-current">
+                <div class="icon-preview-box">
+                    <i class="fa <?php echo site_escape($selectedIcon); ?>" aria-hidden="true"></i>
+                </div>
+                <div class="icon-preview-meta">
+                    <strong class="icon-preview-name"><?php echo site_escape($iconName); ?></strong>
+                </div>
+            </div>
+            <button type="button" class="btn-toggle-icon-palette" title="Cambiar icono visual"><i class="fa fa-th"></i> Elegir icono...</button>
+        </div>
+
+        <div class="icon-picker-palette" style="display:none;">
+            <div class="icon-palette-head">
+                <span>Elegí el icono haciendo clic sobre él:</span>
+                <button type="button" class="btn-close-palette" title="Cerrar">✕</button>
+            </div>
+            <div class="icon-palette-groups">
+                <?php foreach ($catalog as $groupName => $groupIcons) { ?>
+                <div class="icon-palette-group">
+                    <span class="icon-palette-group-title"><?php echo site_escape($groupName); ?></span>
+                    <div class="icon-palette-grid">
+                        <?php foreach ($groupIcons as $faClass => $faLabel) { 
+                            $isSelected = ($faClass === $selectedIcon);
+                        ?>
+                        <button type="button" class="icon-option<?php echo $isSelected ? ' is-selected' : ''; ?>" data-icon="<?php echo site_escape($faClass); ?>" data-name="<?php echo site_escape($faLabel); ?>" title="<?php echo site_escape($faLabel); ?>">
+                            <i class="fa <?php echo site_escape($faClass); ?>" aria-hidden="true"></i>
+                            <span class="icon-option-label"><?php echo site_escape($faLabel); ?></span>
+                        </button>
+                        <?php } ?>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+    </div>
     <?php
 }
 
@@ -708,7 +1035,11 @@ function admin_header_html()
 
 function admin_render_end()
 {
-    ?><script src="admin.js"></script></body>
+    ?>
+    <button type="button" id="admin-back-to-top" class="admin-back-to-top" aria-label="Volver arriba" title="Volver arriba">
+        <i class="fa fa-arrow-up" aria-hidden="true"></i>
+    </button>
+    <script src="admin.js"></script></body>
 </html><?php
 }
 

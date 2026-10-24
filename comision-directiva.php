@@ -11,19 +11,23 @@ require_once('page-header.php');
     <div class="container">
         <p class="section-kicker"><?php echo site_escape($comision_content['section_kicker']); ?></p>
         <h2 class="section-title"><?php echo site_escape($comision_content['section_title']); ?></h2>
-        <div class="committee-grid">
-            <?php foreach ($comision_content['members'] as $index => $member) {
-                $photo = !empty($member['photo']) ? site_escape($member['photo']) : 'images/directivos/sin-foto.jpg';
-            ?>
-            <article class="committee-member">
-                <span><?php echo str_pad($index + 1, 2, '0', STR_PAD_LEFT); ?></span>
-                <div class="committee-member__portrait">
-                    <img src="<?php echo $photo; ?>" alt="<?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?>">
-                </div>
-                <h3><?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?></h3>
-                <p><?php echo site_escape(isset($member['role']) ? $member['role'] : ''); ?></p>
-            </article>
-            <?php } ?>
+        <div class="branch-table branch-table--committee" role="region" aria-label="Nómina de Comisión Directiva" tabindex="0">
+            <table role="table">
+                <thead>
+                    <tr role="row">
+                        <th role="columnheader">Cargo</th>
+                        <th role="columnheader">Nombre y apellido</th>
+                    </tr>
+                </thead>
+                <tbody role="rowgroup">
+                    <?php foreach ($comision_content['members'] as $member) { ?>
+                    <tr role="row">
+                        <td role="cell" data-label="Cargo"><?php echo site_escape(isset($member['role']) ? $member['role'] : ''); ?></td>
+                        <td role="cell" data-label="Nombre y apellido"><?php echo site_escape(isset($member['name']) ? $member['name'] : ''); ?></td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
     </div>
 </section>

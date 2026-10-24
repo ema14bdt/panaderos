@@ -12,22 +12,22 @@ require_once('page-header.php');
         <p class="section-kicker"><?php echo site_escape($filiales_content['section_kicker']); ?></p>
         <h2 class="section-title"><?php echo site_escape($filiales_content['section_title']); ?></h2>
         <div class="branch-table" role="region" aria-label="Directorio de filiales" tabindex="0">
-            <table>
+            <table role="table">
                 <thead>
-                    <tr>
-                        <th>Filial</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Secretaría general</th>
+                    <tr role="row">
+                        <th role="columnheader">Filial</th>
+                        <th role="columnheader">Dirección</th>
+                        <th role="columnheader">Teléfono</th>
+                        <th role="columnheader">Secretaría general</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody role="rowgroup">
                     <?php foreach ($filiales_content['items'] as $branch) { ?>
-                    <tr>
-                        <td><?php echo site_escape(isset($branch['name']) ? $branch['name'] : ''); ?></td>
-                        <td><?php echo site_escape(isset($branch['address']) ? $branch['address'] : ''); ?></td>
-                        <td><?php echo site_escape(isset($branch['phone']) ? $branch['phone'] : ''); ?></td>
-                        <td><?php echo site_escape(isset($branch['secretary']) ? $branch['secretary'] : ''); ?></td>
+                    <tr role="row">
+                        <td role="cell" data-label="Filial"><?php echo site_escape(isset($branch['name']) ? $branch['name'] : ''); ?></td>
+                        <td role="cell" data-label="Dirección"><?php echo site_escape(isset($branch['address']) ? $branch['address'] : ''); ?></td>
+                        <td role="cell" data-label="Teléfono"><?php echo site_escape(isset($branch['phone']) ? $branch['phone'] : ''); ?></td>
+                        <td role="cell" data-label="Secretaría general"><?php echo site_escape(isset($branch['secretary']) ? $branch['secretary'] : ''); ?></td>
                     </tr>
                     <?php } ?>
                 </tbody>

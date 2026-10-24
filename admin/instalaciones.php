@@ -19,7 +19,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         if (isset($_POST['items']) && is_array($_POST['items'])) {
             $content['items'] = $_POST['items'];
         }
-        foreach (array('page_label', 'page_title', 'page_intro', 'section_kicker', 'section_title') as $field) {
+        if (isset($_POST['reels']) && is_array($_POST['reels'])) {
+            $content['reels'] = $_POST['reels'];
+        }
+        foreach (array('page_label', 'page_title', 'page_intro', 'section_kicker', 'section_title', 'reels_kicker', 'reels_title') as $field) {
             if (isset($_POST[$field])) {
                 $content[$field] = $_POST[$field];
             }
@@ -60,7 +63,67 @@ admin_render_start('Editar instalaciones');
         </section>
 
         <section class="editor-section">
-            <h2 class="editor-section-title"><span>02</span> Galería de imágenes y espacios</h2>
+            <h2 class="editor-section-title"><span>02</span> Videos cortos estilo Reels</h2>
+            <div class="form-grid">
+                <?php admin_field('reels_kicker', 'Antetítulo de sección reels', $content, 'text', 35); ?>
+                <?php admin_field('reels_title', 'Título de sección reels', $content, 'text', 60); ?>
+            </div>
+            <div id="reels-container" class="repeater-list" data-array-name="reels">
+                <?php 
+                $reelsList = isset($content['reels']) && is_array($content['reels']) ? $content['reels'] : array();
+                foreach ($reelsList as $index => $reel) {
+                    $videoPath = isset($reel['video']) ? $reel['video'] : '';
+                    $posterPath = isset($reel['poster']) ? $reel['poster'] : '';
+                ?>
+                <div class="repeater-item" data-index="<?php echo $index; ?>">
+                    <div class="repeater-head">
+                        <strong>Reel #<span class="item-number"><?php echo $index + 1; ?></span>: <span class="item-title-preview"><?php echo site_escape(isset($reel['title']) ? $reel['title'] : ''); ?></span></strong>
+                        <button type="button" class="btn-remove">Eliminar</button>
+                    </div>
+                    <label class="admin-field">
+                        <div class="admin-field-head">
+                            <span>Título o descripción del Reel</span>
+                            <span class="admin-field-limit">máx. 60 car.</span>
+                        </div>
+                        <input type="text" name="reels[<?php echo $index; ?>][title]" value="<?php echo site_escape(isset($reel['title']) ? $reel['title'] : ''); ?>" maxlength="60" required>
+                    </label>
+
+                    <div class="video-picker-field" data-folder="instalaciones">
+                        <div class="admin-field-head">
+                            <span>Archivo de video (Reel)</span>
+                            <span class="admin-field-limit">máx. 60 seg · MP4/WebM/MOV</span>
+                        </div>
+                        <div class="video-picker-wrap">
+                            <div class="video-preview-thumb">
+                                <video src="<?php echo $videoPath !== '' ? '../' . site_escape($videoPath) : ''; ?>" <?php if ($posterPath !== '') { ?>poster="../<?php echo site_escape($posterPath); ?>"<?php } ?> muted playsinline preload="metadata" style="<?php echo $videoPath === '' ? 'display:none;' : ''; ?>"></video>
+                                <div class="video-preview-empty" style="<?php echo $videoPath !== '' ? 'display:none;' : ''; ?>">
+                                    <i class="fa fa-video-camera"></i>
+                                    <span>Sin video</span>
+                                </div>
+                            </div>
+                            <div class="video-picker-body">
+                                <div class="video-guideline">
+                                    <span><strong>Recomendado:</strong> Vertical (9:16) · Duración máx. 60 s · Optimización automática FFmpeg (720p · faststart)</span>
+                                </div>
+                                <div class="video-picker-actions">
+                                    <button type="button" class="video-upload-btn"><i class="fa fa-film"></i> Subir video...</button>
+                                    <input type="file" class="video-file-input" accept="video/mp4,video/webm,video/quicktime" style="display:none;">
+                                    <input type="text" class="video-path-input" name="reels[<?php echo $index; ?>][video]" value="<?php echo site_escape($videoPath); ?>" maxlength="255" placeholder="videos/instalaciones/video.mp4" required>
+                                    <input type="hidden" class="video-poster-input" name="reels[<?php echo $index; ?>][poster]" value="<?php echo site_escape($posterPath); ?>">
+                                    <?php if ($videoPath !== '') { ?><button type="button" class="btn-clear-video">Quitar</button><?php } ?>
+                                </div>
+                                <span class="video-status-badge"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php } ?>
+            </div>
+            <button type="button" class="btn-add" data-action="add-item" data-template="tmpl-reel" data-target="reels-container">+ Agregar video reel</button>
+        </section>
+
+        <section class="editor-section">
+            <h2 class="editor-section-title"><span>03</span> Galería de imágenes y espacios</h2>
             <div id="facilities-container" class="repeater-list" data-array-name="items">
                 <?php foreach ($content['items'] as $index => $item) {
                     $imgPath = isset($item['image']) && trim((string)$item['image']) !== '' ? $item['image'] : 'images/instalaciones/instalaciones-01.jpg';
@@ -145,6 +208,48 @@ admin_render_start('Editar instalaciones');
                         <input type="text" class="image-path-input" name="items[__INDEX__][image]" value="images/instalaciones/instalaciones-01.jpg" maxlength="200" required>
                     </div>
                     <span class="image-status-badge"></span>
+                </div>
+            </div>
+        </div>
+</template>
+
+<template id="tmpl-reel">
+    <div class="repeater-item" data-index="__INDEX__">
+        <div class="repeater-head">
+            <strong>Reel #<span class="item-number">__NUMBER__</span></strong>
+            <button type="button" class="btn-remove">Eliminar</button>
+        </div>
+        <label class="admin-field">
+            <div class="admin-field-head">
+                <span>Título o descripción del Reel</span>
+                <span class="admin-field-limit">máx. 60 car.</span>
+            </div>
+            <input type="text" name="reels[__INDEX__][title]" maxlength="60" required>
+        </label>
+        <div class="video-picker-field" data-folder="instalaciones">
+            <div class="admin-field-head">
+                <span>Archivo de video (Reel)</span>
+                <span class="admin-field-limit">máx. 60 seg · MP4/WebM/MOV</span>
+            </div>
+            <div class="video-picker-wrap">
+                <div class="video-preview-thumb">
+                    <video src="" muted playsinline preload="metadata" style="display:none;"></video>
+                    <div class="video-preview-empty">
+                        <i class="fa fa-video-camera"></i>
+                        <span>Sin video</span>
+                    </div>
+                </div>
+                <div class="video-picker-body">
+                    <div class="video-guideline">
+                        <span><strong>Recomendado:</strong> Vertical (9:16) · Duración máx. 60 s · Optimización automática FFmpeg (720p · faststart)</span>
+                    </div>
+                    <div class="video-picker-actions">
+                        <button type="button" class="video-upload-btn"><i class="fa fa-film"></i> Subir video...</button>
+                        <input type="file" class="video-file-input" accept="video/mp4,video/webm,video/quicktime" style="display:none;">
+                        <input type="text" class="video-path-input" name="reels[__INDEX__][video]" value="" maxlength="255" placeholder="videos/instalaciones/video.mp4" required>
+                        <input type="hidden" class="video-poster-input" name="reels[__INDEX__][poster]" value="">
+                    </div>
+                    <span class="video-status-badge"></span>
                 </div>
             </div>
         </div>
