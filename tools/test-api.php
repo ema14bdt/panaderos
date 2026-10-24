@@ -188,8 +188,20 @@ assert_api("Entrega datos completos del carnet digital con Bearer token",
     && $resCarnet['data']['carnet']['dni'] === '28456123'
 );
 
-// 5. Prueba de Beneficios y Convenios
-echo "\n5. Probando /api/beneficios/index.php:\n";
+// 5. Prueba de Contenido de Inicio / Home
+echo "\n5. Probando /api/home/index.php:\n";
+
+$resHome = call_api('api/home/index.php', 'GET');
+assert_api("Entrega contenido institucional de la home (lema, escala salarial, día del panadero y redes)", 
+    isset($resHome['success']) && $resHome['success'] === true
+    && !empty($resHome['data']['hero']['title'])
+    && !empty($resHome['data']['escala_salarial']['pdf_url'])
+    && !empty($resHome['data']['dia_panadero']['title'])
+    && !empty($resHome['data']['social']['instagram_url'])
+);
+
+// 6. Prueba de Beneficios y Convenios
+echo "\n6. Probando /api/beneficios/index.php:\n";
 
 $resBeneficios = call_api('api/beneficios/index.php', 'GET');
 assert_api("Entrega listado de beneficios y rubros", 
@@ -322,6 +334,101 @@ assert_api("El padrón físico permanece intacto mientras que password y email s
     && empty($afiliadoDb['email'])
     && empty($afiliadoDb['auth_token'])
 );
+
+// 9-10. Pruebas de Endpoints de Administración Sindical
+// Requieren la contraseña del administrador de pruebas por variable de entorno
+// (no se almacena en el repositorio): PANADEROS_ADMIN_TEST_PASSWORD
+$adminTestPassword = getenv('PANADEROS_ADMIN_TEST_PASSWORD');
+if (empty($adminTestPassword)) {
+    echo "\n9-10. [OMITIDAS] Setee PANADEROS_ADMIN_TEST_PASSWORD para probar los endpoints de administración.\n";
+} else {
+
+    // Iniciar sesión como administrador
+    $resAdminLogin = call_api('api/auth/login.php', 'POST', array(
+        'usuario' => '00000000',
+        'password' => $adminTestPassword
+    ));
+    assert_api("Inicia sesión como administrador sindical", 
+        isset($resAdminLogin['success']) && $resAdminLogin['success'] === true
+        && isset($resAdminLogin['data']['afiliado']['rol'])
+        && $resAdminLogin['data']['afiliado']['rol'] === 'admin'
+    );
+    $adminToken = $resAdminLogin['data']['auth_token'];
+
+    // Consultar métricas
+    $resMetricas = call_api('api/admin/metricas.php', 'GET', array(), array(
+        'Authorization' => 'Bearer ' . $adminToken
+    ));
+    assert_api("Entrega métricas sindicales y de eventos a administradores", 
+        isset($resMetricas['success']) && $resMetricas['success'] === true
+        && isset($resMetricas['data']['total_padron'])
+        && isset($resMetricas['data']['eventos_activos'])
+    );
+
+    // Validar comprobante inexistente
+    $resCompInvalido = call_api('api/admin/validar-comprobante.php', 'POST', array(
+        'codigo_comprobante' => 'UTILES-INEXISTENTE'
+    ), array('Authorization' => 'Bearer ' . $adminToken));
+    assert_api("Rechaza validación de comprobante no registrado", 
+        isset($resCompInvalido['success']) && $resCompInvalido['success'] === false
+    );
+
+    // 10. Pruebas de Detalle de Afiliados, Inscriptos y Edición de Eventos
+    echo "\n10. Probando detalle de afiliados, inscriptos y gestión de eventos:\n";
+
+    // Listado de afiliados
+    $resAfiliados = call_api('api/admin/afiliados.php', 'GET', array(), array(
+        'Authorization' => 'Bearer ' . $adminToken
+    ));
+    assert_api("Entrega listado de afiliados con estado de padrón y app", 
+        isset($resAfiliados['success']) && $resAfiliados['success'] === true
+        && isset($resAfiliados['data']['afiliados'])
+        && is_array($resAfiliados['data']['afiliados'])
+        && count($resAfiliados['data']['afiliados']) > 0
+    );
+
+    // Listado de inscripciones
+    $resInscripciones = call_api('api/admin/inscripciones.php', 'GET', array(), array(
+        'Authorization' => 'Bearer ' . $adminToken
+    ));
+    assert_api("Entrega listado de inscriptos con datos de beneficiarios", 
+        isset($resInscripciones['success']) && $resInscripciones['success'] === true
+        && isset($resInscripciones['data']['inscripciones'])
+        && is_array($resInscripciones['data']['inscripciones'])
+    );
+
+    // Listado de eventos para administración
+    $resAdminEventos = call_api('api/admin/eventos.php', 'GET', array(), array(
+        'Authorization' => 'Bearer ' . $adminToken
+    ));
+    assert_api("Entrega listado completo de eventos con estadísticas", 
+        isset($resAdminEventos['success']) && $resAdminEventos['success'] === true
+        && isset($resAdminEventos['data']['eventos'])
+        && count($resAdminEventos['data']['eventos']) > 0
+    );
+
+    // Edición de un evento existente
+    $resGuardarEvento = call_api('api/admin/guardar-evento.php', 'POST', array(
+        'id' => 1,
+        'titulo' => 'Campaña Útiles Escolares 2027 (Actualizado)',
+        'descripcion' => 'Entrega de mochilas y kits escolares para hijos de afiliados.',
+        'tipo' => 'utiles',
+        'fecha_inicio_inscripcion' => '2027-02-01',
+        'fecha_fin_inscripcion' => '2027-03-05',
+        'fecha_entrega' => '2027-03-10',
+        'edad_minima_hijo' => 3,
+        'edad_maxima_hijo' => 17,
+        'requiere_escolaridad' => 1,
+        'requiere_talle' => 1,
+        'estado' => 'abierto'
+    ), array('Authorization' => 'Bearer ' . $adminToken));
+    assert_api("Permite al administrador editar un evento correctamente", 
+        isset($resGuardarEvento['success']) && $resGuardarEvento['success'] === true
+        && isset($resGuardarEvento['data']['evento']['titulo'])
+        && $resGuardarEvento['data']['evento']['titulo'] === 'Campaña Útiles Escolares 2027 (Actualizado)'
+    );
+
+}
 
 echo "\n=======================================================\n";
 echo "RESULTADO: " . $testsPassed . " de " . $totalTests . " pruebas superadas.\n";
