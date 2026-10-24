@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `afiliados` (
     `empresa_panaderia`       VARCHAR(150) NULL DEFAULT NULL,
     `categoria_laboral`       VARCHAR(100) NULL DEFAULT NULL,
     `estado`                  ENUM('activo', 'inactivo', 'suspendido') NOT NULL DEFAULT 'activo',
+    `rol`                     ENUM('afiliado', 'admin') NOT NULL DEFAULT 'afiliado',
     `fecha_afiliacion`        DATE NULL DEFAULT NULL,
     `fecha_vencimiento`       DATE NULL DEFAULT NULL,
     

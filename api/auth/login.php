@@ -87,6 +87,7 @@ try {
             'empresa_panaderia' => $afiliado['empresa_panaderia'],
             'categoria_laboral' => $afiliado['categoria_laboral'],
             'estado'            => $afiliado['estado'],
+            'rol'               => isset($afiliado['rol']) ? $afiliado['rol'] : 'afiliado',
             'foto_url'          => $afiliado['foto_url']
         ),
         'mensaje'         => 'Sesión iniciada correctamente.'

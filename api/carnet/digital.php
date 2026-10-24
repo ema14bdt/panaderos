@@ -51,6 +51,7 @@ try {
             'empresa_panaderia' => $afiliado['empresa_panaderia'],
             'categoria_laboral' => $afiliado['categoria_laboral'],
             'estado'            => $afiliado['estado'],
+            'rol'               => isset($afiliado['rol']) ? $afiliado['rol'] : 'afiliado',
             'fecha_afiliacion'  => $afiliado['fecha_afiliacion'],
             'fecha_vencimiento' => $afiliado['fecha_vencimiento'],
             'foto_url'          => $afiliado['foto_url'],
