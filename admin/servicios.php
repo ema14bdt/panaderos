@@ -107,15 +107,34 @@ admin_render_start('Editar servicios y beneficios');
         <section class="editor-section">
             <h2 class="editor-section-title"><span>02</span> Listado de beneficios</h2>
             <div id="items-container" class="repeater-list" data-array-name="items">
-                <?php foreach ($content['items'] as $index => $item) { 
+                <?php 
+                $totalItems = count($content['items']);
+                foreach ($content['items'] as $index => $item) { 
                     $itemIcon = isset($item['icon']) && !empty($item['icon']) ? $item['icon'] : 'fa-check-circle';
                     $itemImage = isset($item['image']) ? $item['image'] : '';
                     $itemAddress = isset($item['address']) ? $item['address'] : '';
+                    $isActive = !isset($item['active']) || (!empty($item['active']) && $item['active'] !== '0' && $item['active'] !== 0 && $item['active'] !== false);
                 ?>
-                <div class="repeater-item" data-index="<?php echo $index; ?>">
+                <div class="repeater-item<?php echo $isActive ? '' : ' is-inactive'; ?>" data-index="<?php echo $index; ?>">
                     <div class="repeater-head">
-                        <strong>Beneficio #<span class="item-number"><?php echo $index + 1; ?></span>: <span class="item-title-preview"><?php echo site_escape(isset($item['title']) ? $item['title'] : ''); ?></span></strong>
-                        <button type="button" class="btn-remove">Eliminar</button>
+                        <div class="repeater-head-title">
+                            <strong>Beneficio #<span class="item-number"><?php echo $index + 1; ?></span><span class="item-title-preview"><?php echo !empty($item['title']) ? ': ' . site_escape($item['title']) : ''; ?></span></strong>
+                            <span class="item-status-badge <?php echo $isActive ? 'item-status-badge--active' : 'item-status-badge--inactive'; ?>">
+                                <?php echo $isActive ? 'Activo' : 'Inactivo / Pausado'; ?>
+                            </span>
+                        </div>
+                        <div class="repeater-head-actions">
+                            <label class="item-toggle-label" title="Activar o desactivar este beneficio del sitio público">
+                                <input type="hidden" name="items[<?php echo $index; ?>][active]" value="0">
+                                <input type="checkbox" name="items[<?php echo $index; ?>][active]" value="1" class="item-active-checkbox" <?php echo $isActive ? 'checked' : ''; ?>>
+                                <span>Activo</span>
+                            </label>
+                            <div class="item-reorder-group" role="group" aria-label="Reordenar beneficio">
+                                <button type="button" class="btn-move btn-move-up" title="Mover arriba" <?php echo $index === 0 ? 'disabled' : ''; ?>><i class="fa fa-arrow-up" aria-hidden="true"></i> Subir</button>
+                                <button type="button" class="btn-move btn-move-down" title="Mover abajo" <?php echo $index === $totalItems - 1 ? 'disabled' : ''; ?>><i class="fa fa-arrow-down" aria-hidden="true"></i> Bajar</button>
+                            </div>
+                            <button type="button" class="btn-remove" title="Eliminar este beneficio permanentemente">Eliminar</button>
+                        </div>
                     </div>
 
                     <div class="form-grid">
@@ -193,9 +212,24 @@ admin_render_start('Editar servicios y beneficios');
 <template id="tmpl-item">
     <div class="repeater-item" data-index="__INDEX__">
         <div class="repeater-head">
-            <strong>Beneficio #<span class="item-number">__NUMBER__</span>: <span class="item-title-preview">Nuevo</span></strong>
-            <button type="button" class="btn-remove">Eliminar</button>
+            <div class="repeater-head-title">
+                <strong>Beneficio #<span class="item-number">__NUMBER__</span>: <span class="item-title-preview">Nuevo</span></strong>
+                <span class="item-status-badge item-status-badge--active">Activo</span>
+            </div>
+            <div class="repeater-head-actions">
+                <label class="item-toggle-label" title="Activar o desactivar este beneficio del sitio público">
+                    <input type="hidden" name="items[__INDEX__][active]" value="0">
+                    <input type="checkbox" name="items[__INDEX__][active]" value="1" class="item-active-checkbox" checked>
+                    <span>Activo</span>
+                </label>
+                <div class="item-reorder-group" role="group" aria-label="Reordenar beneficio">
+                    <button type="button" class="btn-move btn-move-up" title="Mover arriba"><i class="fa fa-arrow-up" aria-hidden="true"></i> Subir</button>
+                    <button type="button" class="btn-move btn-move-down" title="Mover abajo"><i class="fa fa-arrow-down" aria-hidden="true"></i> Bajar</button>
+                </div>
+                <button type="button" class="btn-remove" title="Eliminar este beneficio permanentemente">Eliminar</button>
+            </div>
         </div>
+
         <div class="form-grid">
             <label class="admin-field">
                 <div class="admin-field-head">

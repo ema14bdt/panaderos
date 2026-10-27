@@ -521,6 +521,11 @@ function admin_validate_servicios(array $input)
             throw new InvalidArgumentException('Todos los campos de cada servicio son obligatorios y deben respetar los límites de longitud.');
         }
 
+        $active = true;
+        if (array_key_exists('active', $item)) {
+            $active = (!empty($item['active']) && $item['active'] !== '0' && $item['active'] !== 0 && $item['active'] !== false);
+        }
+
         $items[] = array(
             'icon' => $icon,
             'theme' => $theme,
@@ -528,7 +533,8 @@ function admin_validate_servicios(array $input)
             'description' => $desc,
             'detail' => $detail,
             'address' => $address,
-            'image' => $image
+            'image' => $image,
+            'active' => $active
         );
     }
 

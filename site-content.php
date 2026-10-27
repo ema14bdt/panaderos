@@ -61,7 +61,8 @@ function site_servicios_defaults()
                 'description' => 'Análisis clínicos, bacteriológicos y de alta complejidad.',
                 'detail' => "Ituzaingó 1807 · Lanús Este\n4225-3230 · Lun. a vie., 8:00 a 18:30",
                 'address' => 'Ituzaingó 1807, Lanús Este',
-                'image' => ''
+                'image' => '',
+                'active' => true
             ),
             array(
                 'icon' => 'fa-heart',
@@ -70,7 +71,8 @@ function site_servicios_defaults()
                 'description' => 'Remise al Registro Civil o iglesia y una torta alegórica para la celebración.',
                 'detail' => 'Presentá recibo de sueldo, certificado prenupcial y DNI.',
                 'address' => '',
-                'image' => ''
+                'image' => '',
+                'active' => true
             ),
             array(
                 'icon' => 'fa-users',
@@ -79,7 +81,8 @@ function site_servicios_defaults()
                 'description' => 'Bolso de pañales descartables y ajuar para acompañar a la familia.',
                 'detail' => 'Presentá recibo de sueldo, certificado de nacimiento y DNI.',
                 'address' => '',
-                'image' => ''
+                'image' => '',
+                'active' => true
             ),
             array(
                 'icon' => 'fa-plus-square',
@@ -88,7 +91,8 @@ function site_servicios_defaults()
                 'description' => 'Reintegro del 50% en medicamentos para el afiliado y su grupo familiar.',
                 'detail' => 'Sitio de Montevideo 1640 · Lanús Oeste',
                 'address' => 'Sitio de Montevideo 1640, Lanús Oeste',
-                'image' => ''
+                'image' => '',
+                'active' => true
             ),
             array(
                 'icon' => 'fa-truck',
@@ -97,7 +101,8 @@ function site_servicios_defaults()
                 'description' => 'Reintegro de hasta el 50% del servicio de transporte de mudanza.',
                 'detail' => 'Presentá la boleta a nombre del afiliado y el último recibo de sueldo.',
                 'address' => '',
-                'image' => ''
+                'image' => '',
+                'active' => true
             )
         ),
         'callout_kicker' => '¿Tenés una consulta?',

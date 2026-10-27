@@ -13,6 +13,9 @@ require_once('page-header.php');
         <h2 class="section-title"><?php echo site_escape($servicios_content['section_title']); ?></h2>
         <div class="content-grid benefits-grid">
             <?php foreach ($servicios_content['items'] as $item) {
+                if (isset($item['active']) && empty($item['active'])) {
+                    continue;
+                }
                 $hasImage = !empty($item['image']);
                 $cardClass = 'content-card benefit-card' 
                     . ($hasImage ? ' benefit-card--with-media' : '') 

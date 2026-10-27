@@ -11,6 +11,7 @@
 
     function reindexContainer(container, arrayName) {
         var items = container.querySelectorAll('.repeater-item');
+        var total = items.length;
         items.forEach(function(item, idx) {
             item.setAttribute('data-index', idx);
             var num = item.querySelector('.item-number');
@@ -19,7 +20,7 @@
             }
             var titleSpan = item.querySelector('.item-title-preview');
             if (titleSpan) {
-                var input = item.querySelector('input[type="text"]');
+                var input = item.querySelector('input[name$="[title]"], input[name$="[name]"], input[type="text"]');
                 if (input && input.value) {
                     titleSpan.textContent = ': ' + input.value;
                 }
@@ -31,6 +32,15 @@
                     input.setAttribute('name', name.replace(regex, arrayName + '[' + idx + ']'));
                 }
             });
+
+            var upBtn = item.querySelector('.btn-move-up');
+            var downBtn = item.querySelector('.btn-move-down');
+            if (upBtn) {
+                upBtn.disabled = (idx === 0);
+            }
+            if (downBtn) {
+                downBtn.disabled = (idx === total - 1);
+            }
         });
     }
 
@@ -362,9 +372,50 @@
     }
 
     function initRepeaters() {
+        document.querySelectorAll('.repeater-list').forEach(function(container) {
+            var arrayName = container.getAttribute('data-array-name') || 'items';
+            reindexContainer(container, arrayName);
+        });
+
         document.addEventListener('click', function(e) {
             var target = e.target;
             if (!target) return;
+
+            // Move Up button
+            if (target.matches('.btn-move-up') || target.closest('.btn-move-up')) {
+                var upBtn = target.matches('.btn-move-up') ? target : target.closest('.btn-move-up');
+                var item = upBtn.closest('.repeater-item');
+                var container = item ? item.closest('.repeater-list') : null;
+                if (container && item && item.previousElementSibling && item.previousElementSibling.classList.contains('repeater-item')) {
+                    var prev = item.previousElementSibling;
+                    container.insertBefore(item, prev);
+                    var arrayName = container.getAttribute('data-array-name') || 'items';
+                    reindexContainer(container, arrayName);
+                    triggerChange(container);
+                    try {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } catch(err) {}
+                }
+                return;
+            }
+
+            // Move Down button
+            if (target.matches('.btn-move-down') || target.closest('.btn-move-down')) {
+                var downBtn = target.matches('.btn-move-down') ? target : target.closest('.btn-move-down');
+                var item = downBtn.closest('.repeater-item');
+                var container = item ? item.closest('.repeater-list') : null;
+                if (container && item && item.nextElementSibling && item.nextElementSibling.classList.contains('repeater-item')) {
+                    var next = item.nextElementSibling;
+                    container.insertBefore(item, next.nextElementSibling);
+                    var arrayName = container.getAttribute('data-array-name') || 'items';
+                    reindexContainer(container, arrayName);
+                    triggerChange(container);
+                    try {
+                        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    } catch(err) {}
+                }
+                return;
+            }
 
             // Remove button
             if (target.matches('.btn-remove') || target.closest('.btn-remove')) {
@@ -385,6 +436,7 @@
                     reindexContainer(container, arrayName);
                     triggerChange(container);
                 }
+                return;
             }
 
             // Add button
@@ -409,6 +461,28 @@
                         initImagePickers();
                         initVideoPickers();
                         triggerChange(list);
+                    }
+                }
+                return;
+            }
+        });
+
+        // Toggle active/inactive checkbox change event
+        document.addEventListener('change', function(e) {
+            if (e.target && e.target.classList.contains('item-active-checkbox')) {
+                var item = e.target.closest('.repeater-item');
+                if (item) {
+                    var isActive = e.target.checked;
+                    item.classList.toggle('is-inactive', !isActive);
+                    var badge = item.querySelector('.item-status-badge');
+                    if (badge) {
+                        if (isActive) {
+                            badge.className = 'item-status-badge item-status-badge--active';
+                            badge.textContent = 'Activo';
+                        } else {
+                            badge.className = 'item-status-badge item-status-badge--inactive';
+                            badge.textContent = 'Inactivo / Pausado';
+                        }
                     }
                 }
             }
