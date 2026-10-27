@@ -143,6 +143,25 @@ try {
     $serviciosConFoto['items'][0]['address'] = 'Ituzaingó 1807, Lanús Este';
     $validConFoto = admin_validate_servicios($serviciosConFoto);
     assert_test("admin_validate_servicios acepta beneficio con imagen y dirección", $validConFoto['items'][0]['image'] === 'images/servicios/laboratorio.jpg' && $validConFoto['items'][0]['address'] === 'Ituzaingó 1807, Lanús Este');
+
+    // Validar estado activo / inactivo y reordenamiento de beneficios
+    $serviciosReorderToggle = $servicios;
+    // Intercambiar orden de items 0 y 1
+    $firstItem = $serviciosReorderToggle['items'][0];
+    $secondItem = $serviciosReorderToggle['items'][1];
+    $secondItem['active'] = '0'; // Desactivar el beneficio que pasa al primer lugar
+    $firstItem['active'] = '1';  // Mantener activo el segundo
+    $serviciosReorderToggle['items'][0] = $secondItem;
+    $serviciosReorderToggle['items'][1] = $firstItem;
+    $validReorder = admin_validate_servicios($serviciosReorderToggle);
+    assert_test("admin_validate_servicios preserva reordenamiento de beneficios", $validReorder['items'][0]['title'] === $secondItem['title'] && $validReorder['items'][1]['title'] === $firstItem['title']);
+    assert_test("admin_validate_servicios desactiva beneficio con active='0' o false", $validReorder['items'][0]['active'] === false && $validReorder['items'][1]['active'] === true);
+
+    // Validar compatibilidad cuando active no está seteado (debe ser true por defecto)
+    $serviciosLegacy = $servicios;
+    unset($serviciosLegacy['items'][0]['active']);
+    $validLegacy = admin_validate_servicios($serviciosLegacy);
+    assert_test("admin_validate_servicios asigna active=true por defecto si no está definido", $validLegacy['items'][0]['active'] === true);
 } catch (Exception $e) {
     assert_test("admin_validate_servicios falló con datos válidos: " . $e->getMessage(), false);
 }
@@ -285,6 +304,64 @@ foreach ($pages as $page) {
     include $baseDir . '/' . $page;
     $output = ob_get_clean();
     assert_test("Renderizado de {$page} completado (longitud: " . strlen($output) . " bytes)", strlen($output) > 0);
+}
+
+// Test de filtrado de beneficio inactivo en servicios.php
+$serviciosJsonFile = $baseDir . '/private-content/servicios.json';
+if (file_exists($serviciosJsonFile)) {
+    $originalServiciosRaw = file_get_contents($serviciosJsonFile);
+    $testServicios = json_decode($originalServiciosRaw, true);
+    if (isset($testServicios['items']) && count($testServicios['items']) >= 2) {
+        $testServicios['items'][0]['title'] = 'BENEFICIO_ACTIVO_TEST';
+        $testServicios['items'][0]['active'] = true;
+        $testServicios['items'][1]['title'] = 'BENEFICIO_INACTIVO_TEST';
+        $testServicios['items'][1]['active'] = false;
+        file_put_contents($serviciosJsonFile, json_encode($testServicios, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+
+        ob_start();
+        include $baseDir . '/servicios.php';
+        $outputServicios = ob_get_clean();
+
+        file_put_contents($serviciosJsonFile, $originalServiciosRaw);
+
+        assert_test("servicios.php renderiza beneficios activos", strpos($outputServicios, 'BENEFICIO_ACTIVO_TEST') !== false);
+        assert_test("servicios.php no muestra beneficios inactivos", strpos($outputServicios, 'BENEFICIO_INACTIVO_TEST') === false);
+    }
+}
+
+// 6. Validación de sintaxis JavaScript
+echo "\n6. Validando sintaxis de scripts JavaScript (Frontend y Administración):\n";
+$jsFiles = array(
+    'admin/admin.js',
+    'js/main.js',
+    'galeria/js/gallery.js'
+);
+
+$hasNode = false;
+$nodeBinary = trim((string) @shell_exec('which node 2>/dev/null'));
+if ($nodeBinary !== '' && is_executable($nodeBinary)) {
+    $hasNode = true;
+}
+
+foreach ($jsFiles as $jsFile) {
+    $fullPath = $baseDir . '/' . $jsFile;
+    if (!file_exists($fullPath)) {
+        assert_test("Archivo {$jsFile} existe", false);
+        continue;
+    }
+
+    if ($hasNode) {
+        $cmdOutput = array();
+        $returnCode = 0;
+        exec(escapeshellcmd($nodeBinary) . ' --check ' . escapeshellarg($fullPath) . ' 2>&1', $cmdOutput, $returnCode);
+        $errorMsg = !empty($cmdOutput) ? implode(' ', $cmdOutput) : '';
+        assert_test("Sintaxis JavaScript en {$jsFile}" . ($returnCode !== 0 ? ": {$errorMsg}" : ""), $returnCode === 0);
+    } else {
+        $code = file_get_contents($fullPath);
+        $openBraces = substr_count($code, '{');
+        $closeBraces = substr_count($code, '}');
+        assert_test("Balance estructural en {$jsFile}", $openBraces === $closeBraces);
+    }
 }
 
 echo "\n=======================================================\n";
